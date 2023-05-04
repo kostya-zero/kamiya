@@ -1,4 +1,4 @@
-use std::process::exit;
+use std::{process::exit, path::Path};
 use actions::Actions;
 use clap::{Command, Arg};
 use config::Manager;
@@ -112,6 +112,27 @@ fn main() {
             }
 
             Actions::edit(name);
+        },
+        Some(("save", _sub)) => {
+            let name: String = _sub.get_one::<String>("name").expect("Cannot read argument content.").to_string();
+            let filename: String = _sub.get_one::<String>("filename").expect("Cannot read argument content.").to_string();
+
+            if &name == "" {
+                Term::fatal("You didn't give a name for the note.");
+                exit(1);
+            }
+
+            if &filename == "" {
+                Term::fatal("Bad name for file!");
+                exit(1);
+            }
+
+            if Path::new(&filename).exists() {
+                Term::fatal("Same file already exists in file system.");
+                exit(1);
+            }
+
+            Actions::save(&name, &filename);
         },
         Some(("get", _sub)) => {
             let name: String = _sub.get_one::<String>("name").expect("Cannot read argument content.").to_string();

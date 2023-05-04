@@ -42,6 +42,20 @@ impl Actions {
         }
     }
 
+    pub fn save(name: &String, filename: &String) {
+        let mut config: Config = Manager::load_config();
+
+        if !&config.entries.iter().any(|i| i.name == name.clone()) {
+            Term::fatal("Note not found!");
+            exit(1);
+        }
+
+        let note_number = &config.entries.iter().position(|p| p.name == name.clone()).unwrap();
+        let note = &config.entries[*note_number];
+        fs::write(filename.clone(), &note.content).expect("Failed to write note content into file.");
+        Term::message(format!("Note content saved as file called '{}'.", filename).as_str());
+    }
+
     pub fn edit(name: String) {
         let mut config: Config = Manager::load_config();
 
