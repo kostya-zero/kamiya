@@ -1,4 +1,4 @@
-use std::{process::{exit, Command, Stdio}, fs};
+use std::{process::{exit, Command, Stdio}, fs, env};
 use crate::{config::{Manager, Config, Note}, utils::Utils, term::Term};
 
 pub struct Actions;
@@ -67,12 +67,18 @@ impl Actions {
         let note_number = &config.entries.iter().position(|p| p.name == name).unwrap();
         let temp_dir: String = Utils::get_temp_dir();
         let temp_note_path: String = format!("{}{}",&temp_dir ,&name);
-
         fs::write(&temp_note_path, &config.entries[*note_number].content).expect("Error");
+        let mut editor_name: String = config.editor.to_string();
+        if editor_name == "".to_string() {
+            if env::var("EDITOR").is_err() {
+                Term::fatal("Editor not specified! Set 'editor' option in config or set EDITOR environment variable.");
+                exit(1);
+            }
 
-        let editor_name = config.editor.as_str();
+            editor_name = env::var("EDITOR").unwrap();
+        }
 
-        match editor_name {
+        match editor_name.as_str() {
             "nvim" => Term::message("Launching Neovim to edit note..."),
             "vim" => Term::message("Launching Vim to edit note..."),
             "nano" => Term::message("Launching Nano to edit note..."),
