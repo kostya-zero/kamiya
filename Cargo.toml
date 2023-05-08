@@ -1,5 +1,5 @@
 [package]
-name = "kami"
+name = "kamiya"
 description = "Storage space for your notes - directly in the terminal."
 version = "0.1.0"
 edition = "2021"

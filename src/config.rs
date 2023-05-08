@@ -17,13 +17,12 @@ pub struct Config {
 }
 
 impl Config {
-    // Let it there before I find solutions to use impl.
 }
 
 pub struct Manager;
 impl Manager {
     pub fn get_config_path() -> String {
-        home_dir().expect("Unable to retrieve the path to the user's home directory.").display().to_string() + "/.config/notelet.json"
+        home_dir().expect("Unable to retrieve the path to the user's home directory.").display().to_string() + "/.config/kamiya.json"
     }
 
     pub fn load_config() -> Config {
