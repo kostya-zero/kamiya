@@ -31,7 +31,7 @@ It's a YAML file and has the following structure.
 
 ```yml
 options: 
-    name_template: NewNote&
+    name_template: NewNote&i
     editor: nano
 entries: []
 ```
