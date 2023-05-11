@@ -11,8 +11,13 @@ Kamiya is a note taking program that works in terminal and allows you to get qui
 
 ### Installation
 
-You can install **Kamiya** by downloading package from release.
-Then unpack package and place executable to directory that exists in `PATH` variable.
+At this time you need to compiler Kamiya by yourself.
+There a small guide to how to get started:
+
+1. Install stable Rust Toolchain with `rustup` (if you already have `rustc` and `cargo`, you can skip this step).
+2. Clone this repository.
+3. Go to cloned repository directory in terminal and run `cargo build --release`. It will compile an optimized version for you.
+4. Place executable in `target/release/` to the directory which exists in `PATH`.
 
 To check which directory are in `PATH`, use this command:
 
