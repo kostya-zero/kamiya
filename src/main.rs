@@ -10,7 +10,7 @@ mod utils;
 mod term;
 
 fn cli() -> Command {
-    Command::new("kami")
+    Command::new("kamiya")
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .version(env!("CARGO_PKG_VERSION"))
         .arg_required_else_help(true)
@@ -157,3 +157,4 @@ fn main() {
         _ => Term::fatal("Unknown command! Use argument '--help' to get full list of available commands.")
     }
 }
+

@@ -43,7 +43,7 @@ impl Actions {
     }
 
     pub fn save(name: &String, filename: &String) {
-        let mut config: Config = Manager::load_config();
+        let config: Config = Manager::load_config();
 
         if !&config.entries.iter().any(|i| i.name == name.clone()) {
             Term::fatal("Note not found!");
