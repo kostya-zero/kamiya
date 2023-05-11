@@ -48,7 +48,6 @@ If you encoter a problem feel free to report about it on GitHub or GitLab issues
 Want to suggest fixes? Add new feature? Typo fixes? 
 Feel free to this repository and send merge request for fixes/feature implementation/code refactoring.
 
-
 ### Links
 
 - GitHub Repository - https://github.com/kostya-zero/kamiya

@@ -27,13 +27,14 @@ impl Default for Config {
             options: Options { 
                 name_template: "NewNote&i".to_string(), 
                 editor: "nano".to_string() 
-            }, 
+            },
             entries: vec![] 
         }
     }
 }
 
 impl Config {
+    // TBD...
 }
 
 pub struct Manager;

@@ -33,15 +33,4 @@ impl Utils {
         };
         temp
     }
-
-    pub fn get_user_config() -> String {
-        let platform: CurrentPlatform = Self::detect_platform();
-        let config_path: String = match platform {
-            CurrentPlatform::Windows => Self::get_user_home() + "\\AppData\\Local\\notelet.json",
-            CurrentPlatform::Linux => Self::get_user_home() + "/.config/notelet.json",
-            CurrentPlatform::Mac => Self::get_user_home() + "/.config/notelet.json",
-            CurrentPlatform::Unknown => panic!("Unknown platform detected!")
-        };
-        config_path
-    }
 }
