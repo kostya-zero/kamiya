@@ -2,7 +2,7 @@
 
 Kamiya is a note taking program that works in terminal and allows you to get quick access to your notes.
 
-[![asciicast](https://asciinema.org/a/584606.svg)](https://asciinema.org/a/584606?speed=2&autoplay=1)
+[![asciicast](https://asciinema.org/a/584606.svg)](https://asciinema.org/a/584606?speed=1.5&autoplay=1)
 
 ### Features
 
