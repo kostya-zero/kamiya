@@ -2,6 +2,8 @@
 
 Kamiya is a note taking program that works in terminal and allows you to get quick access to your notes.
 
+[![asciicast](https://asciinema.org/a/584606.svg)](https://asciinema.org/a/584606?speed=2&autoplay=1)
+
 ### Features
 
 - Make notes faster.
@@ -9,21 +11,18 @@ Kamiya is a note taking program that works in terminal and allows you to get qui
 - Lightweight and fast.
 - Easy to configure.
 
-### Installation
+### Quick start
 
-At this time you need to compiler Kamiya by yourself.
-There a small guide to how to get started:
+You can download package from releases and unpack it to the directory that exists in `PATH` variable.
 
-1. Install stable Rust Toolchain with `rustup` (if you already have `rustc` and `cargo`, you can skip this step).
-2. Clone this repository.
-3. Go to cloned repository directory in terminal and run `cargo build --release`. It will compile an optimized version for you.
-4. Place executable in `target/release/` to the directory which exists in `PATH`.
+> **Warning:** At this moment we cant provide packages for Windows and macOS because of cross compiling issues.
 
-To check which directory are in `PATH`, use this command:
+### Build from source
 
-```shell
-echo $PATH
-```
+1. Install `rustup` and install latest stable Rust toolchain.
+2. Clone this repository and enter their directory.
+3. Run `cargo build` to compile debug executable, or `cargo build --release` to compile optimized executable.
+4. Executable file will appear in `/target/[debug, release]` directory. You can move them to directory which exists in `PATH` variable.
 
 ### Usage
 
