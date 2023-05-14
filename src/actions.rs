@@ -55,15 +55,15 @@ impl Actions {
         Term::message(format!("Note content saved as file called '{}'.", filename).as_str());
     }
 
-    pub fn edit(name: String) {
+    pub fn edit(name: &String) {
         let mut config: Config = Manager::load_config();
 
-        if !config.note_exists(&name) {
+        if !config.note_exists(name) {
             Term::fatal("Note not found!");
             exit(1);
         }
 
-        let note_number = &config.entries.iter().position(|p| p.name == name).unwrap();
+        let note_number = &config.entries.iter().position(|p| p.name == name.clone()).unwrap();
         let temp_dir: String = Utils::get_temp_dir();
         let temp_note_path: String = format!("{}{}",&temp_dir ,&name);
         fs::write(&temp_note_path, &config.entries[*note_number].content).expect("Error");

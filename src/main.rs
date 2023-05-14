@@ -111,7 +111,7 @@ fn main() {
                 exit(1);
             }
 
-            Actions::edit(name);
+            Actions::edit(&name);
         },
         Some(("save", _sub)) => {
             let name: String = _sub.get_one::<String>("name").expect("Cannot read argument content.").to_string();
