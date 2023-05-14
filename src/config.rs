@@ -34,7 +34,12 @@ impl Default for Config {
 }
 
 impl Config {
-    // TBD...
+    pub fn note_exists(&self, name: &String) -> bool {
+        if self.entries.iter().any(|item| item.name == name.clone()) {
+            return true;
+        }
+        return false;
+    }
 }
 
 pub struct Manager;

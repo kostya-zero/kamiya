@@ -17,11 +17,9 @@ impl Actions {
             new_name = config.options.name_template.replace("&i", &note_number.to_string());
         }
 
-        for i in &config.entries {
-            if i.name == name.to_string() {
-                Term::fatal("Note with same name already exists!");
-                exit(1);
-            }
+        if config.note_exists(name){
+            Term::fatal("Note with same name already exists!");
+            exit(1);
         }
 
         let new_note: Note = Note { name: new_name.clone(), content: content.to_string() };
@@ -46,7 +44,7 @@ impl Actions {
     pub fn save(name: &String, filename: &String) {
         let config: Config = Manager::load_config();
 
-        if !&config.entries.iter().any(|i| i.name == name.clone()) {
+        if !config.note_exists(name) {
             Term::fatal("Note not found!");
             exit(1);
         }
@@ -60,7 +58,7 @@ impl Actions {
     pub fn edit(name: String) {
         let mut config: Config = Manager::load_config();
 
-        if !&config.entries.iter().any(|i| i.name == name) {
+        if !config.note_exists(&name) {
             Term::fatal("Note not found!");
             exit(1);
         }
@@ -113,7 +111,7 @@ impl Actions {
         let config: Config = Manager::load_config();
         let mut content: String = "".to_string();
 
-        if !&config.entries.iter().any(|i| i.name == name.clone()) {
+        if !config.note_exists(name) {
             Term::fatal("Note not found!");
             exit(1);
         }
@@ -130,23 +128,14 @@ impl Actions {
 
     pub fn rm(name: &String) {
         let mut config: Config = Manager::load_config();
-        let mut note_number = 0;
 
         if !&config.entries.iter().any(|i| i.name == name.clone()) {
             Term::fatal("Note not found!");
             exit(1);
         }
 
-        loop {
-            let note_taken = &config.entries[note_number];
-            if note_taken.name == name.clone() {
-                break;
-            } else {
-                note_number += 1;
-            }
-        }
-
-        config.entries.remove(note_number);
+        let note_number = &config.entries.iter().position(|item| item.name == name.clone()).expect("Note not found!");
+        config.entries.remove(*note_number);
         Manager::write_config(config);
         Term::message("Note deleted!");
     }
