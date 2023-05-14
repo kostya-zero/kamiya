@@ -24,10 +24,10 @@ impl Actions {
             }
         }
 
-        let new_note: Note = Note { name: new_name, content: content.to_string() };
+        let new_note: Note = Note { name: new_name.clone(), content: content.to_string() };
         config.entries.push(new_note);
         Manager::write_config(config);
-        Term::message("Note have been recorded to storage.")
+        Term::message(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
     }
 
     pub fn list() {
@@ -37,7 +37,8 @@ impl Actions {
             exit(1);
         }
 
-        for i in config.entries {
+        Term::message(format!("Total notes: {}", config.entries.len()).as_str());
+        for i in &config.entries {
             Term::sub_message(&i.name);
         }
     }
