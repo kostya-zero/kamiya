@@ -1,6 +1,8 @@
-use std::{fs, path::Path};
+use std::{fs, path::Path, process::exit};
 use serde::{Serialize, Deserialize};
 use home::home_dir;
+
+use crate::term::Term;
 
 #[derive(Serialize, Deserialize)]
 pub struct Note {
@@ -42,6 +44,16 @@ impl Config {
 
     pub fn get_note_index(&self, name: &str) -> usize {
         return self.entries.iter().position(|item| item.name == *name.to_owned()).expect("Note not found!");
+    }
+
+    pub fn generate_name(&self) -> String {
+        if !self.options.name_template.contains("&i") {
+            Term::fatal("You give empty name and your `name_template` option in config not contain `&i` symbol. Cannot continue.");
+            exit(1);
+        }
+        let note_number = self.entries.len() + 1;
+        let new_name: String = self.options.name_template.replace("&i", &note_number.to_string());
+        new_name
     }
 }
 

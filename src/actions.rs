@@ -1,4 +1,4 @@
-use std::{process::{exit, Command, Stdio}, fs, env};
+use std::{process::{exit, Command, Stdio}, fs, env, path::Path};
 use crate::{config::{Manager, Config, Note}, utils::Utils, term::Term};
 
 pub struct Actions;
@@ -23,6 +23,34 @@ impl Actions {
         }
 
         let new_note: Note = Note { name: new_name.clone(), content: content.to_string() };
+        config.entries.push(new_note);
+        Manager::write_config(config);
+        Term::message(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
+    }
+
+    pub fn record(filename: &str, name: &str) {
+        let mut config: Config = Manager::load_config();
+        let mut new_name: String = String::new();
+
+        if !Path::new(filename).exists() {
+            Term::fatal("File not found!");
+            exit(1)
+        }
+
+        if name.is_empty() {
+            new_name = config.generate_name();
+        }
+
+        if !name.is_empty() {
+            if config.note_exists(name) {
+                new_name = config.generate_name();
+            } else {
+                new_name = name.to_string();
+            }
+        }
+
+        let file_content: String = fs::read_to_string(filename).expect("Failed to read file.");
+        let new_note: Note = Note { name: new_name.clone(), content: file_content };
         config.entries.push(new_note);
         Manager::write_config(config);
         Term::message(format!("Note have been recorded to storage as '{}'.", new_name).as_str());

@@ -35,6 +35,26 @@ fn cli() -> Command {
                 .value_parser(clap::value_parser!(String))
             ]),
 
+            Command::new("record")
+                .about("Save content of file as note.")
+                .args([
+                    Arg::new("name")
+                    .help("Name of new note.")
+                    .short('n')
+                    .long("name")
+                    .required(false)
+                    .default_value("")
+                    .value_parser(clap::value_parser!(String)),
+                    
+                    Arg::new("filename")
+                    .help("Path to file.")
+                    .short('f')
+                    .long("filename")
+                    .required(true)
+                    .default_value("")
+                    .value_parser(clap::value_parser!(String))
+                ]),
+
             Command::new("list")
             .about("Get a list of the notes in the storage."),
 
@@ -100,6 +120,17 @@ fn main() {
 
             Actions::take(&content, &name);
         },
+        Some(("record", _sub)) => {
+            let filename: String = _sub.get_one::<String>("filename").expect("Cannot read argument content.").to_string();
+            let name: String = _sub.get_one::<String>("name").expect("Cannot read argument content.").to_string();
+
+            if filename.is_empty() {
+                Term::fatal("You give no path to file.");
+                exit(1);
+            }
+
+            Actions::record(filename.as_str(), name.as_str());
+       },
         Some(("list", _sub)) => {
             Actions::list();
         },
