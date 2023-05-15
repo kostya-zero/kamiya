@@ -12,10 +12,10 @@ pub struct Utils;
 impl Utils {
     pub fn detect_platform() -> CurrentPlatform {
         match env::consts::OS {
-            "linux" => return CurrentPlatform::Linux,
-            "macos" => return CurrentPlatform::Mac,
-            "windows" => return CurrentPlatform::Windows,
-            _ => return CurrentPlatform::Unknown
+            "linux" => CurrentPlatform::Linux,
+            "macos" => CurrentPlatform::Mac,
+            "windows" => CurrentPlatform::Windows,
+            _ => CurrentPlatform::Unknown
         }
     }
 
