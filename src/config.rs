@@ -1,6 +1,5 @@
 use std::{fs, path::Path};
 use serde::{Serialize, Deserialize};
-use serde_yaml;
 use home::home_dir;
 
 #[derive(Serialize, Deserialize)]
@@ -34,15 +33,15 @@ impl Default for Config {
 }
 
 impl Config {
-    pub fn note_exists(&self, name: &String) -> bool {
-        if self.entries.iter().any(|item| item.name == name.clone()) {
+    pub fn note_exists(&self, name: &str) -> bool {
+        if self.entries.iter().any(|item| item.name == *name.to_owned()) {
             return true;
         }
-        return false;
+        false
     }
 
-    pub fn get_note_index(&self, name: &String) -> usize {
-        return self.entries.iter().position(|item| item.name == name.clone()).expect("Note not found!");
+    pub fn get_note_index(&self, name: &str) -> usize {
+        return self.entries.iter().position(|item| item.name == *name.to_owned()).expect("Note not found!");
     }
 }
 
@@ -55,7 +54,7 @@ impl Manager {
     pub fn load_config() -> Config {
         let content = fs::read_to_string(Self::get_config_path()).expect("Unable to read the file.");
         let cfg: Config = serde_yaml::from_str(&content).expect("Error when parsing the configuration file.");
-        return cfg;
+        cfg
     }
 
     pub fn write_config(cfg: Config) {
@@ -76,7 +75,7 @@ impl Manager {
         if !Path::new(&Self::get_config_path()).exists() {
             let config: Config = Config { ..Default::default() };
             let content = serde_yaml::to_string(&config).expect("Error when parsing the configuration file.");
-            fs::write(&Self::get_config_path(), content).expect("Unable to write data to file.");
+            fs::write(Self::get_config_path(), content).expect("Unable to write data to file.");
         }
     }
 }
