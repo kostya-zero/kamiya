@@ -93,7 +93,7 @@ fn main() {
             let content: String = _sub.get_one::<String>("content").expect("Cannot read argument content.").to_string();
             let name: String = _sub.get_one::<String>("name").expect("Cannot read argument content.").to_string();
 
-            if content == "" {
+            if content.is_empty() {
                 Term::fatal("You cannot take a note with empty content.");
                 exit(1);
             }
@@ -106,7 +106,7 @@ fn main() {
         Some(("edit", _sub)) => {
             let name: String = _sub.get_one::<String>("name").expect("Cannot read argument content.").to_string();
 
-            if &name == "" {
+            if name.is_empty(){
                 Term::fatal("You didn't give a name for the note.");
                 exit(1);
             }
@@ -117,12 +117,12 @@ fn main() {
             let name: String = _sub.get_one::<String>("name").expect("Cannot read argument content.").to_string();
             let filename: String = _sub.get_one::<String>("filename").expect("Cannot read argument content.").to_string();
 
-            if &name == "" {
+            if name.is_empty() {
                 Term::fatal("You didn't give a name for the note.");
                 exit(1);
             }
 
-            if &filename == "" {
+            if filename.is_empty() {
                 Term::fatal("Bad name for file!");
                 exit(1);
             }
@@ -137,7 +137,7 @@ fn main() {
         Some(("get", _sub)) => {
             let name: String = _sub.get_one::<String>("name").expect("Cannot read argument content.").to_string();
 
-            if &name == "" {
+            if name.is_empty() {
                 Term::fatal("You didn't give a name for the note.");
                 exit(1);
             }
@@ -147,7 +147,7 @@ fn main() {
         Some(("rm", _sub)) => {
             let name: String = _sub.get_one::<String>("name").expect("Cannot read argument content.").to_string();
             
-            if name == "" {
+            if name.is_empty() {
                 Term::fatal("You did not pass a name to search for.");
                 exit(1);
             }

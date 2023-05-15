@@ -40,6 +40,10 @@ impl Config {
         }
         return false;
     }
+
+    pub fn get_note_index(&self, name: &String) -> usize {
+        return self.entries.iter().position(|item| item.name == name.clone()).expect("Note not found!");
+    }
 }
 
 pub struct Manager;

@@ -8,7 +8,7 @@ impl Actions {
         let mut config: Config = Manager::load_config();
         let mut new_name: String = name.to_string();
 
-        if name == "" {
+        if name.is_empty() {
             if !config.options.name_template.contains("&i") {
                 Term::fatal("You give empty name and your `name_template` option in config not contain `&i` symbol. Cannot continue.");
                 exit(1);
@@ -68,7 +68,7 @@ impl Actions {
         let temp_note_path: String = format!("{}{}",&temp_dir ,&name);
         fs::write(&temp_note_path, &config.entries[*note_number].content).expect("Error");
         let mut editor_name: String = config.options.editor.to_string();
-        if editor_name == "".to_string() {
+        if editor_name.is_empty() {
             if env::var("EDITOR").is_err() {
                 Term::fatal("Editor not specified! Set 'editor' option in config or set EDITOR environment variable.");
                 exit(1);
