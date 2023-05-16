@@ -1,15 +1,24 @@
-# Kamiya
+<h1 align="center">🗒️ Kamiya</h1>
 
-Kamiya is a note taking program that works in terminal and allows you to get quick access to your notes.
+<div align="center">
+    <img alt="GitLab Release (latest by date)" src="https://img.shields.io/gitlab/v/release/kostya-zero/kamiya?style=flat">
+    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/kostya-zero/kamiya?style=flat">
+</div>
 
-[![asciicast](https://asciinema.org/a/584606.svg)](https://asciinema.org/a/584606?speed=1.5&autoplay=1)
+<p align="center">
+    Note taking program that works in terminal and allows you to get quick access to your notes.
+</p>
+
+<div align="center">
+    <a href="https://asciinema.org/a/584606" target="_blank"><img src="https://asciinema.org/a/584606.svg" /></a>
+</div>
 
 ### Features
 
 - Make notes faster.
 - Manage your notes directly in  terminal.
 - Lightweight and fast.
-- Easy to configure.
+- Easy to backup database and configure.
 
 ### Quick start
 
@@ -23,6 +32,8 @@ You can download package from releases and unpack it to the directory that exist
 2. Clone this repository and enter their directory.
 3. Run `cargo build` to compile debug executable, or `cargo build --release` to compile optimized executable.
 4. Executable file will appear in `/target/[debug, release]` directory. You can move them to directory which exists in `PATH` variable.
+
+> Note: If you have troubles when compiling Kamiya on Windows, try to compile it with WSL.
 
 ### Usage
 
