@@ -1,7 +1,7 @@
 [package]
 name = "kamiya"
-description = "Storage space for your notes - directly in the terminal."
-version = "0.1.1"
+description = "Note storage directly in the terminal."
+version = "0.2.0"
 edition = "2021"
 
 [dependencies]
