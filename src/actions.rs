@@ -13,8 +13,7 @@ impl Actions {
                 Term::fatal("You give empty name and your `name_template` option in config not contain `&i` symbol. Cannot continue.");
                 exit(1);
             }
-            let note_number = config.entries.len() + 1;
-            new_name = config.options.name_template.replace("&i", &note_number.to_string());
+            new_name = config.generate_name();
         }
 
         if config.note_exists(name) {
@@ -91,10 +90,10 @@ impl Actions {
             exit(1);
         }
 
-        let note_number = &config.entries.iter().position(|p| p.name == name.clone()).unwrap();
+        let note_number = config.get_note_index(name);
         let temp_dir: String = Utils::get_temp_dir();
         let temp_note_path: String = format!("{}{}",&temp_dir ,&name);
-        fs::write(&temp_note_path, &config.entries[*note_number].content).expect("Error");
+        fs::write(&temp_note_path, &config.entries[note_number].content).expect("Error");
         let mut editor_name: String = config.options.editor.to_string();
         if editor_name.is_empty() {
             if env::var("EDITOR").is_err() {
@@ -130,7 +129,7 @@ impl Actions {
         
         let new_content: String = fs::read_to_string(&temp_note_path).expect("Error");
         fs::remove_file(&temp_note_path).expect("Error");
-        config.entries[*note_number].content = new_content;
+        config.entries[note_number].content = new_content;
         Manager::write_config(config);
         Term::message("Changes have been saved.");
     }
@@ -162,8 +161,8 @@ impl Actions {
             exit(1);
         }
 
-        let note_number = &config.entries.iter().position(|item| item.name == *name.to_owned()).expect("Note not found!");
-        config.entries.remove(*note_number);
+        let note_number = config.get_note_index(name);
+        config.entries.remove(note_number);
         Manager::write_config(config);
         Term::message("Note deleted!");
     }
