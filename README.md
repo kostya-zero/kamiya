@@ -50,9 +50,9 @@ options:
     editor: nano
 entries: []
 ```
-- `name_template` - An example of a title for a new post. Note that the contents of this parameter must contain `&i`, otherwise the program will give an error.
+- `name_template` - An example of a title for a new note. Note that the contents of this option must contain `&i`, otherwise the program will give an error.
 - `editor` - Which editor will be opened to edit note content.
-- `entries` - Array of notes. **Do not edit it.**
+- `entries` - Array of notes. **Do not edit.**
 
 ### Reporting problems
 
