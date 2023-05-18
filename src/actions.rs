@@ -21,10 +21,11 @@ impl Actions {
             exit(1);
         }
 
+        Term::work("Recording note to database...");
         let new_note: Note = Note { name: new_name.clone(), content: content.to_string() };
         config.entries.push(new_note);
         Manager::write_config(config);
-        Term::message(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
+        Term::success(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
     }
 
     pub fn record(filename: &str, name: &str) {
@@ -48,11 +49,12 @@ impl Actions {
             }
         }
 
+        Term::work("Recording note to database...");
         let file_content: String = fs::read_to_string(filename).expect("Failed to read file.");
         let new_note: Note = Note { name: new_name.clone(), content: file_content };
         config.entries.push(new_note);
         Manager::write_config(config);
-        Term::message(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
+        Term::success(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
     }
 
     pub fn list() {
@@ -62,7 +64,7 @@ impl Actions {
             exit(1);
         }
 
-        Term::message(format!("Total notes: {}", config.entries.len()).as_str());
+        Term::title(format!("Total notes: {}", config.entries.len()).as_str());
         for i in &config.entries {
             Term::sub_message(&i.name);
         }
@@ -76,10 +78,11 @@ impl Actions {
             exit(1);
         }
 
+        Term::work("Writing note content to file...");
         let note_number = &config.entries.iter().position(|p| p.name == *name.to_owned()).unwrap();
         let note = &config.entries[*note_number];
         fs::write(filename.clone(), &note.content).expect("Failed to write note content into file.");
-        Term::message(format!("Note content saved as file called '{}'.", filename).as_str());
+        Term::success(format!("Note content saved as file called '{}'.", filename).as_str());
     }
 
     pub fn edit(name: &String) {
@@ -105,12 +108,12 @@ impl Actions {
         }
 
         match editor_name.as_str() {
-            "nvim" => Term::message("Launching Neovim to edit note..."),
-            "vim" => Term::message("Launching Vim to edit note..."),
-            "nano" => Term::message("Launching Nano to edit note..."),
-            "gnome-text-editor" => Term::message("Launching GNOME Text Editor to edit note..."),
-            "kate" => Term::message("Launching Kate to edit note..."),
-            _ => Term::message("Launching editor to edit note...")
+            "nvim" => Term::work("Launching Neovim to edit note..."),
+            "vim" => Term::work("Launching Vim to edit note..."),
+            "nano" => Term::work("Launching Nano to edit note..."),
+            "gnome-text-editor" => Term::work("Launching GNOME Text Editor to edit note..."),
+            "kate" => Term::work("Launching Kate to edit note..."),
+            _ => Term::work("Launching editor to edit note...")
         }
         
         let status = Command::new(editor_name)
@@ -127,11 +130,12 @@ impl Actions {
             exit(1);
         }
         
+        Term::work("Recording changes...");
         let new_content: String = fs::read_to_string(&temp_note_path).expect("Error");
         fs::remove_file(&temp_note_path).expect("Error");
         config.entries[note_number].content = new_content;
         Manager::write_config(config);
-        Term::message("Changes have been saved.");
+        Term::success("Changes have been saved.");
     }
 
     pub fn get(name: &str) {
@@ -164,6 +168,6 @@ impl Actions {
         let note_number = config.get_note_index(name);
         config.entries.remove(note_number);
         Manager::write_config(config);
-        Term::message("Note deleted!");
+        Term::success("Note deleted!");
     }
 }

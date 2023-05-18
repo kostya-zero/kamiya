@@ -105,7 +105,9 @@ fn cli() -> Command {
 
 fn main() {
     if !Manager::check_config() {
+        Term::work("Generating new database...");
         Manager::make_default();
+        Term::success("Done.");
     }
     let args = cli().get_matches();
     match args.subcommand() {
@@ -179,7 +181,7 @@ fn main() {
             let name: String = _sub.get_one::<String>("name").expect("Cannot read argument content.").to_string();
             
             if name.is_empty() {
-                Term::fatal("You did not pass a name to search for.");
+                Term::fatal("You didn't pass a name to search for.");
                 exit(1);
             }
 
