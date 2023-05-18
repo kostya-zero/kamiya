@@ -17,23 +17,23 @@ fn cli() -> Command {
         .subcommand_required(true)
         .subcommands([
             Command::new("take")
-            .about("Create a new note.")
-            .args([
-                Arg::new("content")
-                .short('c')
-                .long("content")
-                .help("The contents of the note.")
-                .required(true)
-                .value_parser(clap::value_parser!(String)),
+                .about("Create a new note.")
+                .args([
+                    Arg::new("content")
+                    .short('c')
+                    .long("content")
+                    .help("The contents of the note.")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String)),
 
-                Arg::new("name")
-                .short('n')
-                .long("name")
-                .help("Name of the note.")
-                .required(false)
-                .default_value("")
-                .value_parser(clap::value_parser!(String))
-            ]),
+                    Arg::new("name")
+                    .short('n')
+                    .long("name")
+                    .help("Name of the note.")
+                    .required(false)
+                    .default_value("")
+                    .value_parser(clap::value_parser!(String))
+                ]),
 
             Command::new("record")
                 .about("Save content of file as note.")
@@ -56,7 +56,7 @@ fn cli() -> Command {
                 ]),
 
             Command::new("list")
-            .about("Get a list of the notes in the storage."),
+                .about("Get a list of the notes in the storage."),
 
             Command::new("save")
                 .about("Save note from storage as file.")
@@ -93,13 +93,27 @@ fn cli() -> Command {
                 ),
 
             Command::new("rm")
-            .about("Delete a note from the storage.")
-            .arg(
-                Arg::new("name")
-                .help("Name of the note to be deleted.")
-                .required(true)
-                .value_parser(clap::value_parser!(String))
-            ),
+                .about("Delete a note from the storage.")
+                .arg(
+                    Arg::new("name")
+                    .help("Name of the note to be deleted.")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String))
+                ), 
+
+            Command::new("export")
+                .about("Export database."),
+
+            Command::new("import")
+                .about("Import notes from new database.")
+                .arg(
+                    Arg::new("filename")
+                    .help("Path to database.")
+                    .short('f')
+                    .long("file")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String))
+                )
         ])
 }
 
@@ -186,6 +200,13 @@ fn main() {
             }
 
             Actions::rm(&name);
+        },
+        Some(("export", _sub)) => {
+            Actions::export();
+        },
+        Some(("import", _sub)) => {
+            let filename: String = _sub.get_one::<String>("filename").expect("Cannot read argument content.").to_string();
+            Actions::import(filename.as_str());
         }
         _ => Term::fatal("Unknown command! Use argument '--help' to get full list of available commands.")
     }

@@ -48,6 +48,7 @@ impl Actions {
                 new_name = name.to_string();
             }
         }
+        
 
         Term::work("Recording note to database...");
         let file_content: String = fs::read_to_string(filename).expect("Failed to read file.");
@@ -169,5 +170,43 @@ impl Actions {
         config.entries.remove(note_number);
         Manager::write_config(config);
         Term::success("Note deleted!");
+    }
+
+    pub fn export() {
+        let config: Config = Manager::load_config();
+
+        Term::work("Exporting database...");
+        let backup_config = serde_yaml::to_string(&config).expect("Failed to format config.");
+        fs::write("kamiya_exported.yml", backup_config).expect("Failed to write content to file.");
+        Term::success("Database exported as 'kamiya_exported.yml'.");
+    }
+
+    pub fn import(filename: &str) {
+        let mut config: Config = Manager::load_config();
+        
+        if !Path::new(filename).exists() {
+            Term::fatal("Cant find new database.");
+            exit(1);
+        }
+        
+        Term::work("Getting new database content...");
+        let new_db: String = fs::read_to_string(filename).expect("Failed to read file.");
+        let new_config: Config = serde_yaml::from_str(new_db.as_str()).expect("Failed to import notes. Maybe, bad config formatting.");
+        Term::work("Importing...");
+        for i in new_config.entries {
+            
+            if config.note_exists(&i.name) {
+                Term::warn(format!("Note with name '{}' already exists in database.", &i.name.clone()).as_str());
+            } else {
+                Term::work(format!("Adding new note: {}", &i.name.clone()).as_str());
+                config.entries.push(i);
+            }
+        }
+        Term::work("Writing database changes...");
+        let config_content: String = serde_yaml::to_string(&config).expect("Failed to format config.");
+        fs::write(Manager::get_config_path(), config_content).expect("Failed to write content to file.");
+        Term::success("New notes imported.")
+
+
     }
 }
