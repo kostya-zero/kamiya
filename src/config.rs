@@ -46,6 +46,11 @@ impl Config {
         return self.entries.iter().position(|item| item.name == *name.to_owned()).expect("Note not found!");
     }
 
+    pub fn get_note_by_name(&self, name: &str) -> &Note {
+        let index: usize = self.get_note_index(name);
+        return self.entries.get(index).expect("Failed to find required note.");
+    }
+
     pub fn generate_name(&self) -> String {
         if !self.options.name_template.contains("&i") {
             Term::fatal("You give empty name and your `name_template` option in config not contain `&i` symbol. Cannot continue.");
