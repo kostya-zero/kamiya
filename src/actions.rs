@@ -105,7 +105,8 @@ impl Actions {
                 exit(1);
             }
 
-            editor_name = env::var("EDITOR").unwrap();
+            editor_name = env::var("EDITOR").expect("Cannot get environment variable.");
+            
         }
 
         match editor_name.as_str() {
@@ -117,13 +118,20 @@ impl Actions {
             _ => Term::work("Launching editor to edit note...")
         }
         
-        let status = Command::new(editor_name)
-            .args([&temp_note_path])
+        let mut cmd = Command::new(editor_name);
+        cmd.args([&temp_note_path])
             .stdout(Stdio::inherit())
             .stdin(Stdio::inherit())
-            .stderr(Stdio::inherit())
-            .output()
-            .expect("Failed to launch editor. Might be executable of them not exists or permision to execute denied.");
+            .stderr(Stdio::inherit());
+
+        let result = cmd.output();
+
+        if result.is_err() {
+            Term::fatal("Failed to launch editor!");
+            exit(1);
+        }
+
+        let status = result.unwrap();
 
         if !status.status.success() {
             Term::fatal("Editor finished their work with bad exit code.");
