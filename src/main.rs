@@ -99,6 +99,16 @@ fn cli() -> Command {
                         .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ),
+            Command::new("copy")
+                .about("Copy note content into clipboard.")
+                .arg(
+                    Arg::new("name")
+                        .help("Name of note to copy.")
+                        .required(true)
+                        .value_parser(clap::value_parser!(String))
+                ),
+            Command::new("insert")
+                .about("Insert clipboard content and save it as new note."),
         ])
 }
 
