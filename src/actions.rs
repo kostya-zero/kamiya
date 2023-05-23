@@ -1,6 +1,6 @@
 use std::{process::{exit, Command, Stdio}, fs, env, path::Path, vec};
-use clipboard::{ClipboardProvider, nop_clipboard::NopClipboardContext, ClipboardContext, x11_clipboard::{X11ClipboardContext, Clipboard}};
-
+use clipboard::{ClipboardProvider, ClipboardContext};
+use wl_clipboard_rs::copy::{MimeType, Options, Source};
 use crate::{config::{Manager, Config, Note}, utils::{Utils, SessionType}, term::Term};
 
 pub struct Actions;
@@ -236,8 +236,12 @@ impl Actions {
                 }
             }
             SessionType::Wayland => {
-                Term::fatal("Support for wayland are not implemented now. Sorry! :(");
-                exit(1);
+                let opts = Options::new();
+                let copy_result = opts.copy(Source::Bytes(note.content.to_string().into_bytes().into()), MimeType::Text);
+                if copy_result.is_err() {
+                    Term::fatal("Failed to write content to clipboard.");
+                    exit(1);
+                }
             }
         }
         Term::success("Copied to the clipboard.");
