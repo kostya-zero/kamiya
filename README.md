@@ -1,22 +1,21 @@
-<h1 align="center">🗒️ Kamiya</h1>
-
-<div align="center">
-    <img alt="GitLab Release (latest by date)" src="https://img.shields.io/gitlab/v/release/kostya-zero/kamiya?style=flat">
-    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/kostya-zero/kamiya?style=flat">
-</div>
-
-<p align="center">
-    Note taking program that works in terminal and allows you to get quick access to your notes.
-</p>
-
-<div align="center">
-    <a href="https://asciinema.org/a/584606" target="_blank"><img src="https://asciinema.org/a/584606.svg" /></a>
+<div align="center" style="text-align:center">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="imgs/banner-dark.svg">
+        <source media="(prefers-color-scheme: light)" srcset="imgs/banner-light.svg">
+        <img alt="ncspot logo" height="128" src="imgs/banner-dark.svg">
+    </picture>
+    <div align="center">
+        <img alt="GitLab Release (latest by date)" src="https://img.shields.io/gitlab/v/release/kostya-zero/kamiya?style=flat">
+        <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/kostya-zero/kamiya?style=flat">
+    </div>
+    <h3>An easy and lightweight tool to create notes in terminal.</h3>
+    <a href="https://asciinema.org/a/584606" target="_blank"><img src="https://asciinema.org/a/584606.svg"></a>
 </div>
 
 ### Features
 
 - Make notes faster.
-- Manage your notes directly in  terminal.
+- Manage your notes directly in terminal.
 - Lightweight and fast.
 - Easy to backup database and configure.
 
@@ -45,7 +44,7 @@ The first time Kamiya is started, it will create a configuration file in the use
 It's a YAML file and has the following structure.
 
 ```yml
-options: 
+options:
     name_template: NewNote&i
     editor: nano
 entries: []
@@ -60,7 +59,7 @@ If you encoter a problem feel free to report about it on GitHub or GitLab issues
 
 ### Contribution
 
-Want to suggest fixes? Add new feature? Typo fixes? 
+Want to suggest fixes? Add new feature? Typo fixes?
 Feel free to this repository and send merge request for fixes/feature implementation/code refactoring.
 
 ### Links
