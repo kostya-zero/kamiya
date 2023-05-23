@@ -2,7 +2,7 @@
     <picture>
         <source media="(prefers-color-scheme: dark)" srcset="imgs/banner-dark.svg">
         <source media="(prefers-color-scheme: light)" srcset="imgs/banner-light.svg">
-        <img alt="ncspot logo" height="128" src="imgs/banner-dark.svg">
+        <img alt="Kamiya Banner" height="128" src="imgs/banner-dark.svg">
     </picture>
     <div align="center">
         <img alt="GitLab Release (latest by date)" src="https://img.shields.io/gitlab/v/release/kostya-zero/kamiya?style=flat">
