@@ -8,6 +8,12 @@ pub enum CurrentPlatform {
     Unknown
 }
 
+pub enum SessionType {
+    X11,
+    Wayland,
+    NonUnix
+}
+
 pub struct Utils;
 impl Utils {
     pub fn detect_platform() -> CurrentPlatform {
@@ -32,5 +38,20 @@ impl Utils {
             CurrentPlatform::Unknown => panic!("Unknown platform detected!")
         };
         temp
+    }
+
+    pub fn get_session_type() -> SessionType {
+        let session_type = env::var("XDG_SESSION_TYPE");
+        if session_type.is_err() {
+            return SessionType::NonUnix;
+        }
+
+        let session: &str = &session_type.unwrap();
+        
+        match session {
+            "x11" => SessionType::X11,
+            "wayland" => SessionType::Wayland,
+            &_ => panic!("Unknown type of session!")
+        }
     }
 }

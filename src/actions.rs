@@ -1,5 +1,7 @@
-use std::{process::{exit, Command, Stdio}, fs, env, path::Path};
-use crate::{config::{Manager, Config, Note}, utils::Utils, term::Term};
+use std::{process::{exit, Command, Stdio}, fs, env, path::Path, vec};
+use clipboard::{ClipboardProvider, nop_clipboard::NopClipboardContext, ClipboardContext, x11_clipboard::{X11ClipboardContext, Clipboard}};
+
+use crate::{config::{Manager, Config, Note}, utils::{Utils, SessionType}, term::Term};
 
 pub struct Actions;
 
@@ -104,9 +106,7 @@ impl Actions {
                 Term::fatal("Editor not specified! Set 'editor' option in config or set EDITOR environment variable.");
                 exit(1);
             }
-
             editor_name = env::var("EDITOR").expect("Cannot get environment variable.");
-            
         }
 
         match editor_name.as_str() {
@@ -214,7 +214,32 @@ impl Actions {
         let config_content: String = serde_yaml::to_string(&config).expect("Failed to format config.");
         fs::write(Manager::get_config_path(), config_content).expect("Failed to write content to file.");
         Term::success("New notes imported.")
+    }
 
-
+    pub fn copy(name: &str) {
+        let config: Config = Manager::load_config();
+        let note: &Note = config.get_note_by_name(name);
+        let session_type: SessionType = Utils::get_session_type();
+        
+        match session_type {
+            SessionType::NonUnix => {
+                let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+                ctx.set_contents(note.content.clone()).expect("Failed to push content to the clipboard.");
+            }
+            SessionType::X11 => {
+                let mut cmd = Command::new("sh");
+                cmd.args(vec!["-c", format!("\"echo \"{}\" | xclip -i -selection c -rmlastnl\"", note.content.as_str()).as_str()]);
+                let result = cmd.output();
+                if result.is_err() {
+                    Term::fatal("Failed to copy content to clipboard.");
+                    exit(1);
+                }
+            }
+            SessionType::Wayland => {
+                Term::fatal("Support for wayland are not implemented now. Sorry! :(");
+                exit(1);
+            }
+        }
+        Term::success("Copied to the clipboard.");
     }
 }

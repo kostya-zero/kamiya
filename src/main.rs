@@ -233,6 +233,15 @@ fn main() {
                 .to_string();
             Actions::import(filename.as_str());
         }
+        Some(("copy", _sub)) => {
+            let name: String = _sub.get_one::<String>("name").expect("Cannot read argument content.").to_string();
+            if name.is_empty() {
+                Term::fatal("You didn't pass a name to search for.");
+                exit(1);
+            }
+
+            Actions::copy(&name);
+        }
         _ => Term::fatal(
             "Unknown command! Use argument '--help' to get full list of available commands.",
         ),
