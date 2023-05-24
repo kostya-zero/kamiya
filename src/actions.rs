@@ -213,37 +213,23 @@ impl Actions {
         Term::work("Writing database changes...");
         let config_content: String = serde_yaml::to_string(&config).expect("Failed to format config.");
         fs::write(Manager::get_config_path(), config_content).expect("Failed to write content to file.");
-        Term::success("New notes imported.")
+        Term::success("New notes has been imported.");
     }
 
     pub fn copy(name: &str) {
         let config: Config = Manager::load_config();
         let note: &Note = config.get_note_by_name(name);
-        let session_type: SessionType = Utils::get_session_type();
-        
-        match session_type {
-            SessionType::NonUnix => {
-                let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
-                ctx.set_contents(note.content.clone()).expect("Failed to push content to the clipboard.");
-            }
-            SessionType::X11 => {
-                let mut cmd = Command::new("sh");
-                cmd.args(vec!["-c", format!("\"echo \"{}\" | xclip -i -selection c -rmlastnl\"", note.content.as_str()).as_str()]);
-                let result = cmd.output();
-                if result.is_err() {
-                    Term::fatal("Failed to copy content to clipboard.");
-                    exit(1);
-                }
-            }
-            SessionType::Wayland => {
-                let opts = Options::new();
-                let copy_result = opts.copy(Source::Bytes(note.content.to_string().into_bytes().into()), MimeType::Text);
-                if copy_result.is_err() {
-                    Term::fatal("Failed to write content to clipboard.");
-                    exit(1);
-                }
-            }
-        }
+        Utils::set_clipboard(&note.content);
         Term::success("Copied to the clipboard.");
+    }
+
+   pub fn insert() {
+        let mut config: Config = Manager::load_config();
+        let clipboard_content: String = Utils::get_clipboard();
+        let note_name: String = config.generate_name();
+        let new_note: Note = Note { name: note_name.clone(), content: clipboard_content };
+        config.entries.push(new_note);
+        Manager::write_config(config);
+        Term::success(format!("Clipboard content saved as note called '{}'", note_name).as_str());
     }
 }

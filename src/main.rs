@@ -242,6 +242,9 @@ fn main() {
 
             Actions::copy(&name);
         }
+        Some(("insert", _sub)) => {
+            Actions::insert();
+        }
         _ => Term::fatal(
             "Unknown command! Use argument '--help' to get full list of available commands.",
         ),
