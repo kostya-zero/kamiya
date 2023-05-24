@@ -84,7 +84,8 @@ impl Utils {
             }
         }
     }
-
+    
+    #[allow(unused_assignments)]
     pub fn get_clipboard() -> String {
         let session_type: SessionType = Utils::get_session_type();
         let mut buffer_content: String = String::new();

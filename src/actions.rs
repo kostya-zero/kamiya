@@ -1,7 +1,5 @@
-use std::{process::{exit, Command, Stdio}, fs, env, path::Path, vec};
-use clipboard::{ClipboardProvider, ClipboardContext};
-use wl_clipboard_rs::copy::{MimeType, Options, Source};
-use crate::{config::{Manager, Config, Note}, utils::{Utils, SessionType}, term::Term};
+use std::{process::{exit, Command, Stdio}, fs, env, path::Path};
+use crate::{config::{Manager, Config, Note}, utils::Utils, term::Term};
 
 pub struct Actions;
 
