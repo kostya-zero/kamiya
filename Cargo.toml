@@ -1,7 +1,7 @@
 [package]
 name = "kamiya"
 description = "An easy, fast and lightweight tool to create notes in terminal."
-version = "0.3.0"
+version = "0.4.0-dev"
 edition = "2021"
 
 [dependencies]
