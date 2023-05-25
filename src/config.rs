@@ -4,10 +4,11 @@ use home::home_dir;
 
 use crate::term::Term;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Default)]
 pub struct Note {
     pub name: String,
     pub content: String,
+    pub description: Option<String>
 }
 
 #[derive(Serialize, Deserialize)]

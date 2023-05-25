@@ -31,6 +31,22 @@ fn cli() -> Command {
                     .default_value("")
                     .value_parser(clap::value_parser!(String)),
             ]),
+            Command::new("desc")
+                .about("Add description to note.")
+                .args([
+                    Arg::new("name")
+                        .help("Name of note.")
+                        .short('n')
+                        .long("name")
+                        .required(true)
+                        .value_parser(clap::value_parser!(String)),
+                    Arg::new("desc")
+                        .help("Description for note.")
+                        .short('d')
+                        .long("desc")
+                        .required(true)
+                        .value_parser(clap::value_parser!(String))
+                ]),
             Command::new("record")
                 .about("Save content of file as note.")
                 .args([
@@ -136,6 +152,24 @@ fn main() {
             }
 
             Actions::take(&content, &name);
+        }
+        Some(("desc", _sub)) => {
+            let name: String = _sub
+                .get_one::<String>("name")
+                .expect("Cannot read argument content.")
+                .to_string();
+
+            let desc: String = _sub
+                .get_one::<String>("desc")
+                .expect("Cannot read argument content.")
+                .to_string();
+
+            if name.is_empty() {
+                Term::fatal("Cannot set description for the void.");
+                exit(1);
+            }
+
+            Actions::desc(&name, &desc);
         }
         Some(("record", _sub)) => {
             let filename: String = _sub

@@ -22,10 +22,25 @@ impl Actions {
         }
 
         Term::work("Recording note to database...");
-        let new_note: Note = Note { name: new_name.clone(), content: content.to_string() };
+        let new_note: Note = Note { name: new_name.clone(), content: content.to_string(),  description: Some(String::new()) };
         config.entries.push(new_note);
         Manager::write_config(config);
         Term::success(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
+    }
+
+    pub fn desc(name: &str, desc: &str) {
+        let mut config: Config = Manager::load_config();
+
+        if !config.note_exists(name) {
+            Term::fatal("Note with given name not found.");
+            exit(1);
+        }
+
+        let note_index: usize = config.get_note_index(name);
+        config.entries[note_index].description = Some(desc.to_string());
+        Term::work("Writing changes to database...");
+        Manager::write_config(config);
+        Term::success("Description changed.");
     }
 
     pub fn record(filename: &str, name: &str) {
@@ -52,7 +67,7 @@ impl Actions {
 
         Term::work("Recording note to database...");
         let file_content: String = fs::read_to_string(filename).expect("Failed to read file.");
-        let new_note: Note = Note { name: new_name.clone(), content: file_content };
+        let new_note: Note = Note { name: new_name.clone(), content: file_content, description: Some(String::new()) };
         config.entries.push(new_note);
         Manager::write_config(config);
         Term::success(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
@@ -67,7 +82,11 @@ impl Actions {
 
         Term::title(format!("Total notes: {}", config.entries.len()).as_str());
         for i in &config.entries {
-            Term::sub_message(&i.name);
+            if i.description.is_none() {
+                Term::sub_message(&i.name);
+            } else {
+                Term::sub_message(format!("{} - {}", i.name, i.description.clone().unwrap()).as_str());
+            }
         }
     }
 
@@ -225,7 +244,7 @@ impl Actions {
         let mut config: Config = Manager::load_config();
         let clipboard_content: String = Utils::get_clipboard();
         let note_name: String = config.generate_name();
-        let new_note: Note = Note { name: note_name.clone(), content: clipboard_content };
+        let new_note: Note = Note { name: note_name.clone(), content: clipboard_content, description: Some(String::new()) };
         config.entries.push(new_note);
         Manager::write_config(config);
         Term::success(format!("Clipboard content saved as note called '{}'", note_name).as_str());
