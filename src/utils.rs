@@ -1,5 +1,4 @@
 use std::{env, process::{Command, exit}, io::Read};
-use clipboard::{ClipboardContext, ClipboardProvider};
 use home::home_dir;
 use wl_clipboard_rs::{copy::{MimeType, Options, Source}, paste::get_contents};
 use crate::term::Term;
@@ -62,8 +61,37 @@ impl Utils {
         let session_type: SessionType = Utils::get_session_type();
         match session_type {
             SessionType::NonUnix => {
-                let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
-                ctx.set_contents(content.to_string()).expect("Failed to push content to the clipboard.");
+                let system_type: CurrentPlatform = Utils::detect_platform();
+                match system_type {
+                    CurrentPlatform::Windows => {
+                        let mut cmd = Command::new("cmd.exe");
+                        cmd.args(vec!["/C", format!("\"echo \"{}\" | clip\"", content).as_str()]);
+                        let result = cmd.output();
+                        if result.is_err() {
+                            Term::fatal("Failed to copy content to clipboard.");
+                            exit(1);
+                        }
+                    }
+                    CurrentPlatform::Mac => {
+                        let mut cmd = Command::new("zsh");
+                        cmd.args(vec!["-c", format!("\"echo \"{}\" | pbcopy\"", content).as_str()]);
+                        let result = cmd.output();
+                        if result.is_err() {
+                            Term::fatal("Failed to copy content to clipboard via pbcopy.");
+                            exit(1);
+                        }
+                    }
+                    CurrentPlatform::Linux => {
+                        Term::fatal("Kamiya cause in stupid situation.");
+                        Term::fatal("Kamiya thinks that you are using NON UNIX PLATFORM but goes to the LINUX ENTRY FOR COPY.");
+                        Term::fatal("What?...");
+                        exit(1);
+                    }
+                    CurrentPlatform::Unknown => {
+                        Term::fatal("Detected unknown platform. Cannot continue.");
+                        exit(1);
+                    }
+                }
             }
             SessionType::X11 => {
                 let mut cmd = Command::new("sh");
@@ -91,8 +119,36 @@ impl Utils {
         let mut buffer_content: String = String::new();
         match session_type {
             SessionType::NonUnix => {
-                let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
-                buffer_content = ctx.get_contents().expect("Failed to get content of clipboard.");
+                let system_type: CurrentPlatform = Utils::detect_platform();
+                match system_type {
+                    CurrentPlatform::Windows => {
+                        let mut cmd = Command::new("powershell.exe");
+                        cmd.args(vec!["get-clipboard"]);
+                        let result = cmd.output();
+                        if result.is_err() {
+                            Term::fatal("Failed to get content with PowerShell.");
+                            exit(1);
+                        }
+                    }
+                    CurrentPlatform::Mac => {
+                        let mut cmd = Command::new("pbpaste");
+                        let result = cmd.output();
+                        if result.is_err() {
+                            Term::fatal("Failed to copy content to clipboard via pbcopy.");
+                            exit(1);
+                        }
+                    }
+                    CurrentPlatform::Linux => {
+                        Term::fatal("Kamiya cause in stupid situation.");
+                        Term::fatal("Kamiya thinks that you are using NON UNIX PLATFORM but goes to the LINUX ENTRY FOR COPY.");
+                        Term::fatal("What?...");
+                        exit(1);
+                    }
+                    CurrentPlatform::Unknown => {
+                        Term::fatal("Detected unknown platform. Cannot continue.");
+                        exit(1);
+                    }
+                }
             }
             SessionType::X11 => {
                 let mut cmd = Command::new("xclip");
