@@ -1,5 +1,5 @@
-use std::{process::{exit, Command, Stdio}, fs, env, path::Path};
-use crate::{config::{Manager, Config, Note}, utils::Utils, term::Term};
+use std::{process::{exit, Command, Stdio}, fs, env, path::Path, num::ParseFloatError};
+use crate::{config::{Manager, Config, Note}, term::Term, platform::Platform, clipboard::Clipboard};
 
 pub struct Actions;
 
@@ -114,7 +114,7 @@ impl Actions {
         }
 
         let note_number = config.get_note_index(name);
-        let temp_dir: String = Utils::get_temp_dir();
+        let temp_dir: String = Platform::get_temp_dir();
         let temp_note_path: String = format!("{}{}",&temp_dir ,&name);
         fs::write(&temp_note_path, &config.entries[note_number].content).expect("Error");
         let mut editor_name: String = config.options.editor.to_string();
@@ -236,13 +236,13 @@ impl Actions {
     pub fn copy(name: &str) {
         let config: Config = Manager::load_config();
         let note: &Note = config.get_note_by_name(name);
-        Utils::set_clipboard(&note.content);
+        Clipboard::set_clipboard(&note.content);
         Term::success("Copied to the clipboard.");
     }
 
    pub fn insert() {
         let mut config: Config = Manager::load_config();
-        let clipboard_content: String = Utils::get_clipboard();
+        let clipboard_content: String = Clipboard::get_clipboard();
         let note_name: String = config.generate_name();
         let new_note: Note = Note { name: note_name.clone(), content: clipboard_content, description: Some(String::new()) };
         config.entries.push(new_note);

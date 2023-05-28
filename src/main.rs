@@ -7,7 +7,8 @@ use std::{path::Path, process::exit};
 mod actions;
 mod config;
 mod term;
-mod utils;
+mod platform;
+mod clipboard;
 
 fn cli() -> Command {
     Command::new("kamiya")
