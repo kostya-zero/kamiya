@@ -1,7 +1,13 @@
-use std::{process::{Command, exit}, io::Read};
-use wl_clipboard_rs::{copy::{Source, Options, MimeType}, paste::get_contents};
+use crate::platform::{CurrentPlatform, Platform, SessionType};
 use crate::term::Term;
-use crate::platform::{SessionType, CurrentPlatform, Platform};
+use std::{
+    io::Read,
+    process::{exit, Command},
+};
+use wl_clipboard_rs::{
+    copy::{MimeType, Options, Source},
+    paste::get_contents,
+};
 
 pub struct Clipboard;
 impl Clipboard {
@@ -13,7 +19,10 @@ impl Clipboard {
                 match system_type {
                     CurrentPlatform::Windows => {
                         let mut cmd = Command::new("cmd.exe");
-                        cmd.args(vec!["/C", format!("\"echo \"{}\" | clip\"", content).as_str()]);
+                        cmd.args(vec![
+                            "/C",
+                            format!("\"echo \"{}\" | clip\"", content).as_str(),
+                        ]);
                         let result = cmd.output();
                         if result.is_err() {
                             Term::fatal("Failed to copy content to clipboard.");
@@ -22,7 +31,10 @@ impl Clipboard {
                     }
                     CurrentPlatform::Mac => {
                         let mut cmd = Command::new("zsh");
-                        cmd.args(vec!["-c", format!("\"echo \"{}\" | pbcopy\"", content).as_str()]);
+                        cmd.args(vec![
+                            "-c",
+                            format!("\"echo \"{}\" | pbcopy\"", content).as_str(),
+                        ]);
                         let result = cmd.output();
                         if result.is_err() {
                             Term::fatal("Failed to copy content to clipboard via pbcopy.");
@@ -43,16 +55,24 @@ impl Clipboard {
             }
             SessionType::X11 => {
                 let mut cmd = Command::new("sh");
-                cmd.args(vec!["-c", format!("\"echo \"{}\" | xclip -i -selection c -rmlastnl\"", content).as_str()]);
+                cmd.args(vec![
+                    "-c",
+                    format!("\"echo \"{}\" | xclip -i -selection c -rmlastnl\"", content).as_str(),
+                ]);
                 let result = cmd.output();
                 if result.is_err() {
-                    Term::fatal("Failed to copy content to clipboard. Check if xclip installed properly.");
+                    Term::fatal(
+                        "Failed to copy content to clipboard. Check if xclip installed properly.",
+                    );
                     exit(1);
                 }
             }
             SessionType::Wayland => {
                 let opts = Options::new();
-                let copy_result = opts.copy(Source::Bytes(content.to_string().into_bytes().into()), MimeType::Text);
+                let copy_result = opts.copy(
+                    Source::Bytes(content.to_string().into_bytes().into()),
+                    MimeType::Text,
+                );
                 if copy_result.is_err() {
                     Term::fatal("Failed to write content to clipboard. Check if wl-clipboard installed properly.");
                     exit(1);
@@ -60,7 +80,7 @@ impl Clipboard {
             }
         }
     }
-    
+
     #[allow(unused_assignments)]
     pub fn get_clipboard() -> String {
         let session_type: SessionType = Platform::get_session_type();
@@ -103,20 +123,30 @@ impl Clipboard {
                 cmd.args(vec!["-o", "-selection", "c", "-rmlastnl"]);
                 let result = cmd.output();
                 if result.is_err() {
-                    Term::fatal("Failed to get clipboard content. Check if xclip installed properly.");
+                    Term::fatal(
+                        "Failed to get clipboard content. Check if xclip installed properly.",
+                    );
                     exit(1);
                 }
 
                 buffer_content = String::from_utf8_lossy(&result.unwrap().stdout).to_string();
             }
             SessionType::Wayland => {
-                let copy_result = get_contents(wl_clipboard_rs::paste::ClipboardType::Regular, wl_clipboard_rs::paste::Seat::Unspecified, wl_clipboard_rs::paste::MimeType::Text);
+                let copy_result = get_contents(
+                    wl_clipboard_rs::paste::ClipboardType::Regular,
+                    wl_clipboard_rs::paste::Seat::Unspecified,
+                    wl_clipboard_rs::paste::MimeType::Text,
+                );
                 if copy_result.is_err() {
                     Term::fatal("Failed to get content of clipboard. Check if wl-clipboard installed properly.");
                     exit(1);
                 }
                 let mut pipe_content = vec![];
-                copy_result.unwrap().0.read_to_end(&mut pipe_content).expect("Failed to read pipe stream.");
+                copy_result
+                    .unwrap()
+                    .0
+                    .read_to_end(&mut pipe_content)
+                    .expect("Failed to read pipe stream.");
                 buffer_content = String::from_utf8_lossy(&pipe_content).to_string();
             }
         }

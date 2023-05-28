@@ -5,10 +5,10 @@ use config::Manager;
 use std::{path::Path, process::exit};
 
 mod actions;
-mod config;
-mod term;
-mod platform;
 mod clipboard;
+mod config;
+mod platform;
+mod term;
 
 fn cli() -> Command {
     Command::new("kamiya")
@@ -46,7 +46,7 @@ fn cli() -> Command {
                         .short('d')
                         .long("desc")
                         .required(true)
-                        .value_parser(clap::value_parser!(String))
+                        .value_parser(clap::value_parser!(String)),
                 ]),
             Command::new("record")
                 .about("Save content of file as note.")
@@ -122,10 +122,9 @@ fn cli() -> Command {
                     Arg::new("name")
                         .help("Name of note to copy.")
                         .required(true)
-                        .value_parser(clap::value_parser!(String))
+                        .value_parser(clap::value_parser!(String)),
                 ),
-            Command::new("insert")
-                .about("Insert clipboard content and save it as new note."),
+            Command::new("insert").about("Insert clipboard content and save it as new note."),
         ])
 }
 
@@ -269,7 +268,10 @@ fn main() {
             Actions::import(filename.as_str());
         }
         Some(("copy", _sub)) => {
-            let name: String = _sub.get_one::<String>("name").expect("Cannot read argument content.").to_string();
+            let name: String = _sub
+                .get_one::<String>("name")
+                .expect("Cannot read argument content.")
+                .to_string();
             if name.is_empty() {
                 Term::fatal("You didn't pass a name to search for.");
                 exit(1);

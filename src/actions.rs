@@ -1,5 +1,14 @@
-use std::{process::{exit, Command, Stdio}, fs, env, path::Path};
-use crate::{config::{Manager, Config, Note}, term::Term, platform::Platform, clipboard::Clipboard};
+use crate::{
+    clipboard::Clipboard,
+    config::{Config, Manager, Note},
+    platform::Platform,
+    term::Term,
+};
+use std::{
+    env, fs,
+    path::Path,
+    process::{exit, Command, Stdio},
+};
 
 pub struct Actions;
 
@@ -22,7 +31,11 @@ impl Actions {
         }
 
         Term::work("Recording note to database...");
-        let new_note: Note = Note { name: new_name.clone(), content: content.to_string(),  description: Some(String::new()) };
+        let new_note: Note = Note {
+            name: new_name.clone(),
+            content: content.to_string(),
+            description: Some(String::new()),
+        };
         config.entries.push(new_note);
         Manager::write_config(config);
         Term::success(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
@@ -63,11 +76,14 @@ impl Actions {
                 new_name = name.to_string();
             }
         }
-        
 
         Term::work("Recording note to database...");
         let file_content: String = fs::read_to_string(filename).expect("Failed to read file.");
-        let new_note: Note = Note { name: new_name.clone(), content: file_content, description: Some(String::new()) };
+        let new_note: Note = Note {
+            name: new_name.clone(),
+            content: file_content,
+            description: Some(String::new()),
+        };
         config.entries.push(new_note);
         Manager::write_config(config);
         Term::success(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
@@ -85,7 +101,9 @@ impl Actions {
             if i.description.is_none() {
                 Term::sub_message(&i.name);
             } else {
-                Term::sub_message(format!("{} - {}", i.name, i.description.clone().unwrap()).as_str());
+                Term::sub_message(
+                    format!("{} - {}", i.name, i.description.clone().unwrap()).as_str(),
+                );
             }
         }
     }
@@ -99,9 +117,14 @@ impl Actions {
         }
 
         Term::work("Writing note content to file...");
-        let note_number = &config.entries.iter().position(|p| p.name == *name.to_owned()).unwrap();
+        let note_number = &config
+            .entries
+            .iter()
+            .position(|p| p.name == *name.to_owned())
+            .unwrap();
         let note = &config.entries[*note_number];
-        fs::write(filename.clone(), &note.content).expect("Failed to write note content into file.");
+        fs::write(filename.clone(), &note.content)
+            .expect("Failed to write note content into file.");
         Term::success(format!("Note content saved as file called '{}'.", filename).as_str());
     }
 
@@ -115,7 +138,7 @@ impl Actions {
 
         let note_number = config.get_note_index(name);
         let temp_dir: String = Platform::get_temp_dir();
-        let temp_note_path: String = format!("{}{}",&temp_dir ,&name);
+        let temp_note_path: String = format!("{}{}", &temp_dir, &name);
         fs::write(&temp_note_path, &config.entries[note_number].content).expect("Error");
         let mut editor_name: String = config.options.editor.to_string();
         if editor_name.is_empty() {
@@ -132,9 +155,9 @@ impl Actions {
             "nano" => Term::work("Launching Nano to edit note..."),
             "gnome-text-editor" => Term::work("Launching GNOME Text Editor to edit note..."),
             "kate" => Term::work("Launching Kate to edit note..."),
-            _ => Term::work("Launching editor to edit note...")
+            _ => Term::work("Launching editor to edit note..."),
         }
-        
+
         let mut cmd = Command::new(editor_name);
         cmd.args([&temp_note_path])
             .stdout(Stdio::inherit())
@@ -155,7 +178,7 @@ impl Actions {
             fs::remove_file(&temp_note_path).expect("Error");
             exit(1);
         }
-        
+
         Term::work("Recording changes...");
         let new_content: String = fs::read_to_string(&temp_note_path).expect("Error");
         fs::remove_file(&temp_note_path).expect("Error");
@@ -208,28 +231,36 @@ impl Actions {
 
     pub fn import(filename: &str) {
         let mut config: Config = Manager::load_config();
-        
+
         if !Path::new(filename).exists() {
             Term::fatal("Cant find new database.");
             exit(1);
         }
-        
+
         Term::work("Getting new database content...");
         let new_db: String = fs::read_to_string(filename).expect("Failed to read file.");
-        let new_config: Config = serde_yaml::from_str(new_db.as_str()).expect("Failed to import notes. Maybe, bad config formatting.");
+        let new_config: Config = serde_yaml::from_str(new_db.as_str())
+            .expect("Failed to import notes. Maybe, bad config formatting.");
         Term::work("Importing...");
         for i in new_config.entries {
-            
             if config.note_exists(&i.name) {
-                Term::warn(format!("Note with name '{}' already exists in database.", &i.name.clone()).as_str());
+                Term::warn(
+                    format!(
+                        "Note with name '{}' already exists in database.",
+                        &i.name.clone()
+                    )
+                    .as_str(),
+                );
             } else {
                 Term::work(format!("Adding new note: {}", &i.name.clone()).as_str());
                 config.entries.push(i);
             }
         }
         Term::work("Writing database changes...");
-        let config_content: String = serde_yaml::to_string(&config).expect("Failed to format config.");
-        fs::write(Manager::get_config_path(), config_content).expect("Failed to write content to file.");
+        let config_content: String =
+            serde_yaml::to_string(&config).expect("Failed to format config.");
+        fs::write(Manager::get_config_path(), config_content)
+            .expect("Failed to write content to file.");
         Term::success("New notes has been imported.");
     }
 
@@ -240,11 +271,15 @@ impl Actions {
         Term::success("Copied to the clipboard.");
     }
 
-   pub fn insert() {
+    pub fn insert() {
         let mut config: Config = Manager::load_config();
         let clipboard_content: String = Clipboard::get_clipboard();
         let note_name: String = config.generate_name();
-        let new_note: Note = Note { name: note_name.clone(), content: clipboard_content, description: Some(String::new()) };
+        let new_note: Note = Note {
+            name: note_name.clone(),
+            content: clipboard_content,
+            description: Some(String::new()),
+        };
         config.entries.push(new_note);
         Manager::write_config(config);
         Term::success(format!("Clipboard content saved as note called '{}'", note_name).as_str());

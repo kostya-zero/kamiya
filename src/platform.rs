@@ -1,17 +1,17 @@
-use std::env;
 use home::home_dir;
+use std::env;
 
 pub enum CurrentPlatform {
     Windows,
     Linux,
     Mac,
-    Unknown
+    Unknown,
 }
 
 pub enum SessionType {
     X11,
     Wayland,
-    NonUnix
+    NonUnix,
 }
 
 pub struct Platform;
@@ -21,12 +21,15 @@ impl Platform {
             "linux" => CurrentPlatform::Linux,
             "macos" => CurrentPlatform::Mac,
             "windows" => CurrentPlatform::Windows,
-            _ => CurrentPlatform::Unknown
+            _ => CurrentPlatform::Unknown,
         }
     }
 
     pub fn get_user_home() -> String {
-        home_dir().expect("Failed to get user directory (why).").display().to_string()
+        home_dir()
+            .expect("Failed to get user directory (why).")
+            .display()
+            .to_string()
     }
 
     pub fn get_temp_dir() -> String {
@@ -35,7 +38,7 @@ impl Platform {
             CurrentPlatform::Windows => Self::get_user_home() + "\\AppData\\Local\\Temp\\",
             CurrentPlatform::Linux => "/tmp/".to_string(),
             CurrentPlatform::Mac => "/tmp/".to_string(),
-            CurrentPlatform::Unknown => panic!("Unknown platform detected!")
+            CurrentPlatform::Unknown => panic!("Unknown platform detected!"),
         };
         temp
     }
@@ -47,11 +50,11 @@ impl Platform {
         }
 
         let session: &str = &session_type.unwrap();
-        
+
         match session {
             "x11" => SessionType::X11,
             "wayland" => SessionType::Wayland,
-            &_ => panic!("Unknown type of session!")
+            &_ => panic!("Unknown type of session!"),
         }
     }
 }
