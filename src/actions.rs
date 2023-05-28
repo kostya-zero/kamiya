@@ -1,4 +1,4 @@
-use std::{process::{exit, Command, Stdio}, fs, env, path::Path, num::ParseFloatError};
+use std::{process::{exit, Command, Stdio}, fs, env, path::Path};
 use crate::{config::{Manager, Config, Note}, term::Term, platform::Platform, clipboard::Clipboard};
 
 pub struct Actions;
