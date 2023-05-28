@@ -102,7 +102,7 @@ impl Actions {
                 Term::sub_message(&i.name);
             } else {
                 Term::sub_message(
-                    format!("{} - {}", i.name, i.description.clone().unwrap()).as_str(),
+                    format!("{} \x1b[0m{}", i.name, i.description.clone().unwrap()).as_str(),
                 );
             }
         }
