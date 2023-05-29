@@ -1,7 +1,7 @@
 use crate::{
-    clipboard::Clipboard,
+    utils::clipboard::Clipboard,
     config::{Config, Manager, Note},
-    platform::Platform,
+    utils::platform::Platform,
     term::Term,
 };
 use std::{

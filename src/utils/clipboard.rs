@@ -1,4 +1,4 @@
-use crate::platform::{CurrentPlatform, Platform, SessionType};
+use crate::utils::platform::{CurrentPlatform, Platform, SessionType};
 use crate::term::Term;
 use std::{
     io::Read,

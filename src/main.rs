@@ -5,10 +5,9 @@ use config::Manager;
 use std::{path::Path, process::exit};
 
 mod actions;
-mod clipboard;
 mod config;
-mod platform;
 mod term;
+mod utils;
 
 fn cli() -> Command {
     Command::new("kamiya")
