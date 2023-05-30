@@ -123,8 +123,16 @@ impl Actions {
             .position(|p| p.name == *name.to_owned())
             .unwrap();
         let note = &config.entries[*note_number];
-        fs::write(filename.clone(), &note.content)
-            .expect("Failed to write note content into file.");
+        let res = fs::write(filename.clone(), &note.content);
+        match res {
+            Ok(s) => {
+                Term::success("Done.");
+            },
+            Err(err) => {
+                Term::fatal("Failed to write to file. Maybe permissions issue?");
+                exit(1);
+            }
+        }
         Term::success(format!("Note content saved as file called '{}'.", filename).as_str());
     }
 
@@ -137,8 +145,7 @@ impl Actions {
         }
 
         let note_number = config.get_note_index(name);
-        let temp_dir: String = Platform::get_temp_dir();
-        let temp_note_path: String = format!("{}{}", &temp_dir, &name);
+        let temp_note_path: String = format!("{}{}", Platform::get_temp_dir(), &name);
         fs::write(&temp_note_path, &config.entries[note_number].content).expect("Error");
         let mut editor_name: String = config.options.editor.to_string();
         if editor_name.is_empty() {
