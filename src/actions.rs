@@ -1,8 +1,8 @@
 use crate::{
-    utils::clipboard::Clipboard,
     config::{Config, Manager, Note},
-    utils::platform::Platform,
     term::Term,
+    utils::clipboard::Clipboard,
+    utils::platform::Platform,
 };
 use std::{
     env, fs,
@@ -127,7 +127,7 @@ impl Actions {
         match res {
             Ok(s) => {
                 Term::success("Done.");
-            },
+            }
             Err(err) => {
                 Term::fatal("Failed to write to file. Maybe permissions issue?");
                 exit(1);

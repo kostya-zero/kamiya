@@ -1,14 +1,14 @@
+use crate::args::cli;
 use crate::term::Term;
 use actions::Actions;
 use config::Manager;
 use std::{path::Path, process::exit};
-use crate::args::cli;
 
 mod actions;
+mod args;
 mod config;
 mod term;
 mod utils;
-mod args;
 
 fn main() {
     if !Manager::check_config() {

@@ -1,4 +1,4 @@
-use clap::{Command, Arg};
+use clap::{Arg, Command};
 
 pub fn cli() -> Command {
     Command::new("kamiya")

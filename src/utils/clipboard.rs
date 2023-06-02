@@ -1,5 +1,5 @@
-use crate::utils::platform::{CurrentPlatform, Platform, SessionType};
 use crate::term::Term;
+use crate::utils::platform::{CurrentPlatform, Platform, SessionType};
 use std::{
     io::Read,
     process::{exit, Command},
