@@ -99,10 +99,10 @@ impl Actions {
         Term::title(format!("Total notes: {}", config.entries.len()).as_str());
         for i in &config.entries {
             if i.description.is_none() {
-                Term::sub_message(&i.name);
+                Term::list_item(&i.name);
             } else {
-                Term::sub_message(
-                    format!("{} \x1b[0m{}", i.name, i.description.clone().unwrap()).as_str(),
+                Term::list_item(
+                    format!("{} \x1b[0m({})", i.name, i.description.clone().unwrap()).as_str(),
                 );
             }
         }
@@ -125,10 +125,10 @@ impl Actions {
         let note = &config.entries[*note_number];
         let res = fs::write(filename.clone(), &note.content);
         match res {
-            Ok(s) => {
+            Ok(_s) => {
                 Term::success("Done.");
             }
-            Err(err) => {
+            Err(_err) => {
                 Term::fatal("Failed to write to file. Maybe permissions issue?");
                 exit(1);
             }
