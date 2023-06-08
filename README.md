@@ -23,7 +23,9 @@
 
 You can download package from releases and unpack it to the directory that exists in `PATH` variable.
 
-> **Warning:** At this moment we cant provide packages for Windows and macOS because of cross compiling issues.
+> Warning: At this moment we cant provide packages for Windows and macOS because of cross compiling issues.
+
+> Note: Windows and macOS support are currently in experimental.
 
 ### Build from source
 
