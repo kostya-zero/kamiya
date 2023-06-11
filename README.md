@@ -21,6 +21,16 @@
 
 ### Quick start
 
+#### Install with `cargo`
+
+You can use `cargo` to install Kamiya:
+
+```shell
+cargo install kamiya
+```
+
+#### Install from releases
+
 You can download package from releases and unpack it to the directory that exists in `PATH` variable.
 
 > Warning: At this moment we cant provide packages for Windows and macOS because of cross compiling issues.
@@ -53,7 +63,7 @@ entries: []
 ```
 - `name_template` - An example of a title for a new note. Note that the contents of this option must contain `&i`, otherwise the program will give an error.
 - `editor` - Which editor will be opened to edit note content.
-- `entries` - Array of notes. **Do not edit.**
+- `entries` - Array of notes that you have saved. **Do not edit.**
 
 ### Reporting problems
 
