@@ -47,6 +47,15 @@ impl Config {
         false
     }
 
+    pub fn remove_note(&mut self, name: &str) {
+        let note_index = self.get_note_index(name);
+        self.entries.remove(note_index);
+    }
+
+    pub fn add_note(&mut self, new_note: Note) {
+        self.entries.push(new_note);
+    }
+
     pub fn get_note_index(&self, name: &str) -> usize {
         return self
             .entries
