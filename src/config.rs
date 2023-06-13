@@ -56,6 +56,11 @@ impl Config {
         self.entries.push(new_note);
     }
 
+    pub fn set_content(&mut self, note_name: &str, new_content: &str) {
+        let index = self.get_note_index(note_name);
+        self.entries[index].description = Some(new_content.to_string());
+    }
+
     pub fn get_note_index(&self, name: &str) -> usize {
         return self
             .entries

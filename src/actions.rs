@@ -36,7 +36,7 @@ impl Actions {
             content: content.to_string(),
             description: Some(String::new()),
         };
-        config.entries.push(new_note);
+        config.add_note(new_note);
         Manager::write_config(config);
         Term::success(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
     }
@@ -84,7 +84,7 @@ impl Actions {
             content: file_content,
             description: Some(String::new()),
         };
-        config.entries.push(new_note);
+        config.add_note(new_note);
         Manager::write_config(config);
         Term::success(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
     }
@@ -144,9 +144,9 @@ impl Actions {
             exit(1);
         }
 
-        let note_number = config.get_note_index(name);
+        let note = config.get_note_by_name(name);
         let temp_note_path: String = format!("{}{}", Platform::get_temp_dir(), &name);
-        fs::write(&temp_note_path, &config.entries[note_number].content).expect("Error");
+        fs::write(&temp_note_path, &note.content).expect("Error");
         let mut editor_name: String = config.options.editor.to_string();
         if editor_name.is_empty() {
             if env::var("EDITOR").is_err() {
@@ -189,7 +189,7 @@ impl Actions {
         Term::work("Recording changes...");
         let new_content: String = fs::read_to_string(&temp_note_path).expect("Error");
         fs::remove_file(&temp_note_path).expect("Error");
-        config.entries[note_number].content = new_content;
+        config.set_content(name, &new_content);
         Manager::write_config(config);
         Term::success("Changes have been saved.");
     }
