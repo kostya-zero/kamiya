@@ -7,7 +7,7 @@ use crate::{
 use std::{
     env, fs,
     path::Path,
-    process::{exit, Command, Stdio},
+    process::{exit, Command, Stdio}, str::from_utf8_unchecked_mut,
 };
 
 pub struct Actions;
@@ -106,6 +106,23 @@ impl Actions {
                 );
             }
         }
+    }
+
+    pub fn search(pattern: &str) {
+        let config: Config = Manager::load_config();
+        let mut found_notes: Vec<String> = vec![];
+
+        for i in config.entries {
+            if i.name.contains(pattern) {
+                found_notes.push(i.name);
+            }
+        }
+
+        Term::title(format!("Found {} notes.", found_notes.len().to_string()).as_str());
+        for a in found_notes {
+            Term::list_item(&a);
+        }
+
     }
 
     pub fn save(name: &str, filename: &String) {

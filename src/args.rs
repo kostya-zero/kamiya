@@ -57,6 +57,13 @@ pub fn cli() -> Command {
                         .value_parser(clap::value_parser!(String)),
                 ]),
             Command::new("list").about("Get a list of the notes in the storage."),
+            Command::new("search")
+                .about("Search for notes by name.")
+                .arg(
+                    Arg::new("pattern")
+                    .help("Part or full name of note.")
+                    .value_parser(clap::value_parser!(String))
+                    ),
             Command::new("save")
                 .about("Save note from storage as file.")
                 .args([

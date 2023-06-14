@@ -73,6 +73,14 @@ fn main() {
         Some(("list", _sub)) => {
             Actions::list();
         }
+        Some(("search",_sub)) => {
+            let pattern: String = _sub
+                .get_one::<String>("pattern")
+                .expect("Cannot read argument content.")
+                .to_string();
+
+            Actions::search(&pattern);
+        }
         Some(("edit", _sub)) => {
             let name: String = _sub
                 .get_one::<String>("name")
