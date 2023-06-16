@@ -30,7 +30,7 @@ impl Actions {
             exit(1);
         }
 
-        Term::work("Recording note to database...");
+        Term::work("Adding note to storage...");
         let new_note: Note = Note {
             name: new_name.clone(),
             content: content.to_string(),
@@ -38,7 +38,7 @@ impl Actions {
         };
         config.add_note(new_note);
         Manager::write_config(config);
-        Term::success(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
+        Term::success(format!("Note have been added to storage as '{}'.", new_name).as_str());
     }
 
     pub fn desc(name: &str, desc: &str) {
