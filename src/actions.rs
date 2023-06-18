@@ -7,7 +7,7 @@ use crate::{
 use std::{
     env, fs,
     path::Path,
-    process::{exit, Command, Stdio}, str::from_utf8_unchecked_mut,
+    process::{exit, Command, Stdio}
 };
 
 pub struct Actions;
@@ -118,7 +118,7 @@ impl Actions {
             }
         }
 
-        Term::title(format!("Found {} notes.", found_notes.len().to_string()).as_str());
+        Term::title(format!("Found {} notes.", found_notes.len()).as_str());
         for a in found_notes {
             Term::list_item(&a);
         }
@@ -238,8 +238,7 @@ impl Actions {
             exit(1);
         }
 
-        let note_number = config.get_note_index(name);
-        config.entries.remove(note_number);
+        config.remove_note(name);
         Manager::write_config(config);
         Term::success("Note deleted!");
     }

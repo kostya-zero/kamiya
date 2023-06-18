@@ -7,7 +7,7 @@ impl Clipboard {
     pub fn set_clipboard(content: &str) {
         let session_type: SessionType = Platform::get_session_type();
         match session_type {
-            SessionType::NonUnix => {
+            SessionType::Unknown => {
                 let system_type: CurrentPlatform = Platform::detect_platform();
                 match system_type {
                     CurrentPlatform::Windows => {
@@ -77,7 +77,7 @@ impl Clipboard {
         let session_type: SessionType = Platform::get_session_type();
         let mut buffer_content: String = String::new();
         match session_type {
-            SessionType::NonUnix => {
+            SessionType::Unknown => {
                 let system_type: CurrentPlatform = Platform::detect_platform();
                 match system_type {
                     CurrentPlatform::Windows => {

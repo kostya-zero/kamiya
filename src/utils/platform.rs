@@ -11,7 +11,7 @@ pub enum CurrentPlatform {
 pub enum SessionType {
     X11,
     Wayland,
-    NonUnix,
+    Unknown,
 }
 
 pub struct Platform;
@@ -46,7 +46,7 @@ impl Platform {
     pub fn get_session_type() -> SessionType {
         let session_type = env::var("XDG_SESSION_TYPE");
         if session_type.is_err() {
-            return SessionType::NonUnix;
+            return SessionType::Unknown;
         }
 
         let session: &str = &session_type.unwrap();
