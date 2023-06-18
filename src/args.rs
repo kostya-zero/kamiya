@@ -12,12 +12,14 @@ pub fn cli() -> Command {
                     .short('c')
                     .long("content")
                     .help("The contents of the note.")
+                    .num_args(1)
                     .required(true)
                     .value_parser(clap::value_parser!(String)),
                 Arg::new("name")
                     .short('n')
                     .long("name")
                     .help("Name of the note.")
+                    .num_args(1)
                     .required(false)
                     .default_value("")
                     .value_parser(clap::value_parser!(String)),
@@ -29,12 +31,14 @@ pub fn cli() -> Command {
                         .help("Name of note.")
                         .short('n')
                         .long("name")
+                        .num_args(1)
                         .required(true)
                         .value_parser(clap::value_parser!(String)),
                     Arg::new("desc")
                         .help("Description for note.")
                         .short('d')
                         .long("desc")
+                        .num_args(1)
                         .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ]),
@@ -45,6 +49,7 @@ pub fn cli() -> Command {
                         .help("Name of new note.")
                         .short('n')
                         .long("name")
+                        .num_args(1)
                         .required(false)
                         .default_value("")
                         .value_parser(clap::value_parser!(String)),
@@ -52,6 +57,7 @@ pub fn cli() -> Command {
                         .help("Path to file.")
                         .short('f')
                         .long("filename")
+                        .num_args(1)
                         .required(true)
                         .default_value("")
                         .value_parser(clap::value_parser!(String)),
@@ -62,6 +68,8 @@ pub fn cli() -> Command {
                 .arg(
                     Arg::new("pattern")
                     .help("Part or full name of note.")
+                    .num_args(1)
+                    .required(true)
                     .value_parser(clap::value_parser!(String))
                     ),
             Command::new("save")
@@ -71,11 +79,15 @@ pub fn cli() -> Command {
                         .short('n')
                         .long("name")
                         .help("Name of note.")
+                        .num_args(1)
+                        .required(true)
                         .value_parser(clap::value_parser!(String)),
                     Arg::new("filename")
                         .short('f')
                         .long("filename")
                         .help("Name of file.")
+                        .num_args(1)
+                        .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ]),
             Command::new("get")
@@ -83,6 +95,7 @@ pub fn cli() -> Command {
                 .arg(
                     Arg::new("name")
                         .help("Name of note to read.")
+                        .num_args(1)
                         .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ),
@@ -91,6 +104,7 @@ pub fn cli() -> Command {
                 .arg(
                     Arg::new("name")
                         .help("Name of the note to edit.")
+                        .num_args(1)
                         .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ),
@@ -99,6 +113,7 @@ pub fn cli() -> Command {
                 .arg(
                     Arg::new("name")
                         .help("Name of the note to be deleted.")
+                        .num_args(1)
                         .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ),
@@ -110,6 +125,7 @@ pub fn cli() -> Command {
                         .help("Path to database.")
                         .short('f')
                         .long("file")
+                        .num_args(1)
                         .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ),
@@ -118,6 +134,7 @@ pub fn cli() -> Command {
                 .arg(
                     Arg::new("name")
                         .help("Name of note to copy.")
+                        .num_args(1)
                         .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ),
