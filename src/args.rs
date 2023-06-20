@@ -67,11 +67,11 @@ pub fn cli() -> Command {
                 .about("Search for notes by name.")
                 .arg(
                     Arg::new("pattern")
-                    .help("Part or full name of note.")
-                    .num_args(1)
-                    .required(true)
-                    .value_parser(clap::value_parser!(String))
-                    ),
+                        .help("Part or full name of note.")
+                        .num_args(1)
+                        .required(true)
+                        .value_parser(clap::value_parser!(String)),
+                ),
             Command::new("save")
                 .about("Save note from storage as file.")
                 .args([

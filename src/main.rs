@@ -73,7 +73,7 @@ fn main() {
         Some(("list", _sub)) => {
             Actions::list();
         }
-        Some(("search",_sub)) => {
+        Some(("search", _sub)) => {
             let pattern: String = _sub
                 .get_one::<String>("pattern")
                 .expect("Cannot read argument content.")

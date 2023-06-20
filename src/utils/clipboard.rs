@@ -88,7 +88,8 @@ impl Clipboard {
                             Term::fatal("Failed to get content with PowerShell.");
                             exit(1);
                         }
-                        buffer_content = String::from_utf8_lossy(&result.unwrap().stdout).to_string();
+                        buffer_content =
+                            String::from_utf8_lossy(&result.unwrap().stdout).to_string();
                     }
                     CurrentPlatform::Mac => {
                         let mut cmd = Command::new("pbpaste");
@@ -97,7 +98,8 @@ impl Clipboard {
                             Term::fatal("Failed to copy content to clipboard via pbcopy.");
                             exit(1);
                         }
-                        buffer_content = String::from_utf8_lossy(&result.unwrap().stdout).to_string();
+                        buffer_content =
+                            String::from_utf8_lossy(&result.unwrap().stdout).to_string();
                     }
                     CurrentPlatform::Linux => {
                         Term::fatal("Kamiya cause in stupid situation.");
