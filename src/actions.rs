@@ -120,7 +120,7 @@ impl Actions {
 
         Term::title(format!("Found {} notes.", found_notes.len()).as_str());
         for a in found_notes {
-            Term::list_item(&a);
+            Term::list_item(&a.replace(pattern, format!("\x1b[4m{}\x1b[0m\x1b[1m", pattern).as_str()));
         }
 
     }
