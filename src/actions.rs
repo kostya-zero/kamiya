@@ -99,11 +99,9 @@ impl Actions {
         Term::title(format!("Total notes: {}", config.entries.len()).as_str());
         for i in &config.entries {
             if i.description.is_none() {
-                Term::list_item(&i.name);
+                Term::list_item(&i.name, "");
             } else {
-                Term::list_item(
-                    format!("{} \x1b[0m({})", i.name, i.description.clone().unwrap()).as_str(),
-                );
+                Term::list_item(&i.name, &i.description.clone().unwrap());
             }
         }
     }
@@ -120,7 +118,7 @@ impl Actions {
 
         Term::title(format!("Found {} notes.", found_notes.len()).as_str());
         for a in found_notes {
-            Term::list_item(&a.replace(
+            Term::message(&a.replace(
                 pattern,
                 format!("\x1b[4m{}\x1b[0m\x1b[1m", pattern).as_str(),
             ));
