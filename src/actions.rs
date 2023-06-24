@@ -49,8 +49,7 @@ impl Actions {
             exit(1);
         }
 
-        let note_index: usize = config.get_note_index(name);
-        config.entries[note_index].description = Some(desc.to_string());
+        config.set_description(name, desc);
         Term::work("Writing changes to database...");
         Manager::write_config(config);
         Term::success("Description changed.");
@@ -161,7 +160,7 @@ impl Actions {
             exit(1);
         }
 
-        let note = config.get_note_by_name(name);
+        let note = config.get_note(name);
         let temp_note_path: String = format!("{}{}", Platform::get_temp_dir(), &name);
         fs::write(&temp_note_path, &note.content).expect("Error");
         let mut editor_name: String = config.options.editor.to_string();
@@ -289,7 +288,7 @@ impl Actions {
 
     pub fn copy(name: &str) {
         let config: Config = Manager::load_config();
-        let note: &Note = config.get_note_by_name(name);
+        let note: &Note = config.get_note(name);
         Clipboard::set_clipboard(&note.content);
         Term::success("Copied to the clipboard.");
     }

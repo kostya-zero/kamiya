@@ -1,14 +1,13 @@
 use home::home_dir;
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path, process::exit};
-
 use crate::term::Term;
 
 #[derive(Serialize, Deserialize, Default)]
 pub struct Note {
     pub name: String,
     pub content: String,
-    pub description: Option<String>,
+    pub description: Option<String>
 }
 
 #[derive(Serialize, Deserialize)]
@@ -58,7 +57,12 @@ impl Config {
 
     pub fn set_content(&mut self, note_name: &str, new_content: &str) {
         let index = self.get_note_index(note_name);
-        self.entries[index].description = Some(new_content.to_string());
+        self.entries[index].content = new_content.to_string();
+    }
+
+    pub fn set_description(&mut self, note_name: &str, new_desc: &str) {
+        let index = self.get_note_index(note_name);
+        self.entries[index].description = Some(new_desc.to_string());
     }
 
     pub fn get_note_index(&self, name: &str) -> usize {
@@ -69,7 +73,7 @@ impl Config {
             .expect("Note not found!");
     }
 
-    pub fn get_note_by_name(&self, name: &str) -> &Note {
+    pub fn get_note(&self, name: &str) -> &Note {
         let index: usize = self.get_note_index(name);
         return self
             .entries
@@ -104,9 +108,12 @@ impl Manager {
     pub fn load_config() -> Config {
         let content =
             fs::read_to_string(Self::get_config_path()).expect("Unable to read the file.");
-        let cfg: Config =
-            serde_yaml::from_str(&content).expect("Error when parsing the configuration file.");
-        cfg
+        let cfg_result = serde_yaml::from_str(&content);
+        if cfg_result.is_err() {
+            Term::fatal("Failed to parse configuration file. Maybe it have bad structure.");
+            exit(1)
+        } 
+        cfg_result.unwrap()
     }
 
     pub fn write_config(cfg: Config) {
