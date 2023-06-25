@@ -53,6 +53,11 @@ fn main() {
 
             Actions::desc(&name, &desc);
         }
+        Some(("rename", _sub)) => {
+            let old_name: String = _sub.get_one::<String>("old_name").expect("Cannot read argument content.").to_string();
+            let new_name: String = _sub.get_one::<String>("new_name").expect("Cannot read argument content.").to_string();
+            Actions::rename(&old_name, &new_name);
+        }
         Some(("record", _sub)) => {
             let filename: String = _sub
                 .get_one::<String>("filename")

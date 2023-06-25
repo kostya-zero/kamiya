@@ -88,6 +88,20 @@ impl Actions {
         Term::success(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
     }
 
+    pub fn rename(old_name: &str, new_name: &str) {
+        let mut config: Config = Manager::load_config();
+        if !config.note_exists(old_name) {
+            Term::fatal("Cannot find note to rename");
+            exit(1);
+        }
+
+        let note_index = config.get_note_index(old_name);
+        config.entries[note_index].name = new_name.to_string();
+        Term::work("Writing changes to storage...");
+        Manager::write_config(config);
+        Term::success(format!("Note '{}' now have name '{}'.", old_name, new_name).as_str());
+    }
+
     pub fn list() {
         let config: Config = Manager::load_config();
         if config.entries.is_empty() {

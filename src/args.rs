@@ -1,4 +1,4 @@
-use clap::{Arg, Command};
+use clap::{Arg, Command, value_parser};
 
 pub fn cli() -> Command {
     Command::new("kamiya")
@@ -62,6 +62,22 @@ pub fn cli() -> Command {
                         .default_value("")
                         .value_parser(clap::value_parser!(String)),
                 ]),
+                Command::new("rename")
+                    .about("Change name of note.")
+                    .args([
+                        Arg::new("old_name")
+                        .short('o')
+                        .long("old")
+                        .required(true)
+                        .help("Old note name.")
+                        .value_parser(value_parser!(String)),
+                        Arg::new("new_name")
+                        .short('n')
+                        .long("new")
+                        .required(true)
+                        .help("New note name.")
+                        .value_parser(value_parser!(String)),
+                    ]),
             Command::new("list").about("Get a list of the notes in the storage."),
             Command::new("search")
                 .about("Search for notes by name.")
