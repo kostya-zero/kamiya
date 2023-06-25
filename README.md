@@ -14,14 +14,14 @@
 
 ### Features
 
-- Make notes faster.
-- Manage your notes directly in terminal.
-- Lightweight and fast.
-- Easy to backup database and configure.
+- **Works faster.** Kamiya is designed to be as fast as possible. To do this, we use modern technology.
+- **Easy to use.** Kamiya has nothing hard to do for regular user. Only you need is have any terminal.
+- **Easy to backup.** You can backup your notes database by yourself or with integrated tools.
+- **Best choice for terminal.** If you are a regular terminal user or using editors like (neo)vim, and you need to make notes - it's a good choice for you.
 
 ### Quick start
 
-#### Install with `cargo`
+#### Install with `cargo` (recommended)
 
 You can use `cargo` to install Kamiya:
 
