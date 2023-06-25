@@ -1,13 +1,13 @@
+use crate::term::Term;
 use home::home_dir;
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path, process::exit};
-use crate::term::Term;
 
 #[derive(Serialize, Deserialize, Default)]
 pub struct Note {
     pub name: String,
     pub content: String,
-    pub description: Option<String>
+    pub description: Option<String>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -112,7 +112,7 @@ impl Manager {
         if cfg_result.is_err() {
             Term::fatal("Failed to parse configuration file. Maybe it have bad structure.");
             exit(1)
-        } 
+        }
         cfg_result.unwrap()
     }
 
