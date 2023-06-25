@@ -8,7 +8,7 @@
         <img alt="GitLab Release (latest by date)" src="https://img.shields.io/gitlab/v/release/kostya-zero/kamiya?style=flat">
         <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/kostya-zero/kamiya?style=flat">
     </div>
-    <h3>An easy and lightweight tool to create notes in terminal.</h3>
+    <h3>An easy, fast and lightweight tool to create notes in terminal.</h3>
     <a href="https://asciinema.org/a/584606" target="_blank"><img src="https://asciinema.org/a/584606.svg"></a>
 </div>
 
