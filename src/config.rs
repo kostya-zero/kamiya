@@ -8,6 +8,7 @@ pub struct Note {
     pub name: String,
     pub content: String,
     pub description: Option<String>,
+    pub tags: Option<Vec<String>>
 }
 
 #[derive(Serialize, Deserialize)]
@@ -63,6 +64,20 @@ impl Config {
     pub fn set_description(&mut self, note_name: &str, new_desc: &str) {
         let index = self.get_note_index(note_name);
         self.entries[index].description = Some(new_desc.to_string());
+    }
+
+    pub fn add_tag(&mut self, note_name: &str, tag: &str) {
+        let index = self.get_note_index(note_name);
+        let mut note_tags: Vec<String> = Vec::new();
+        if self.entries[index].tags.is_none() {
+            note_tags = Vec::new();
+            note_tags.push(tag.to_string());
+            self.entries[index].tags = Some(note_tags);
+        } else {
+            let mut note_tags_opt = self.entries[index].tags.clone().unwrap();
+            note_tags_opt.push(tag.to_string());
+            self.entries[index].tags = Some(note_tags_opt);
+        }
     }
 
     pub fn get_note_index(&self, name: &str) -> usize {

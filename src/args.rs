@@ -1,4 +1,5 @@
 use clap::{value_parser, Arg, Command};
+use serde::de::value;
 
 pub fn cli() -> Command {
     Command::new("kamiya")
@@ -76,6 +77,22 @@ pub fn cli() -> Command {
                     .help("New note name.")
                     .value_parser(value_parser!(String)),
             ]),
+            Command::new("add-tag")
+                .about("Add tag to note.")
+                .args([
+                    Arg::new("note")
+                    .help("Name of note.")
+                    .short('n')
+                    .long("note")
+                    .required(true)
+                    .value_parser(value_parser!(String)),
+                    Arg::new("tag")
+                    .help("Tag to set.")
+                    .short('t')
+                    .long("tag")
+                    .required(true)
+                    .value_parser(value_parser!(String))
+                ]),
             Command::new("list").about("Get a list of the notes in the storage."),
             Command::new("search")
                 .about("Search for notes by name.")
