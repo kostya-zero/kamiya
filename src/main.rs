@@ -64,18 +64,6 @@ fn main() {
                 .to_string();
             Actions::rename(&old_name, &new_name);
         }
-        Some(("add-tag", _sub)) => {
-            let note: String = _sub
-                .get_one::<String>("note")
-                .expect("Cannot read argument content.")
-                .to_string();
-            let tag: String = _sub
-                .get_one::<String>("tag")
-                .expect("Cannot read argument content.")
-                .to_string();
-
-            Actions::add_tag(&note, &tag);
-        }
         Some(("record", _sub)) => {
             let filename: String = _sub
                 .get_one::<String>("filename")

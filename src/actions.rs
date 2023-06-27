@@ -7,7 +7,7 @@ use crate::{
 use std::{
     env, fs,
     path::Path,
-    process::{exit, Command, Stdio},
+    process::{exit, Command, Stdio}
 };
 
 pub struct Actions;
@@ -35,7 +35,6 @@ impl Actions {
             name: new_name.clone(),
             content: content.to_string(),
             description: Some(String::new()),
-            tags: Some(Vec::new())
         };
         config.add_note(new_note);
         Manager::write_config(config);
@@ -83,7 +82,6 @@ impl Actions {
             name: new_name.clone(),
             content: file_content,
             description: Some(String::new()),
-            tags: Some(Vec::new())
         };
         config.add_note(new_note);
         Manager::write_config(config);
@@ -104,19 +102,7 @@ impl Actions {
         Term::success(format!("Note '{}' now have name '{}'.", old_name, new_name).as_str());
     }
 
-    pub fn add_tag(note_name: &str, tag: &str) {
-        let mut config: Config = Manager::load_config();
-        if !config.note_exists(note_name) {
-            Term::fatal("Note not found!");
-            exit(1);
-        }
-
-        config.add_tag(note_name, tag);
-        Term::success("Tag has been added to note.");
-        Term::message("To search by tag add '#' at start of search pattern.");
-    }
-
-    pub fn list() {
+    pub fn list() {;
         let config: Config = Manager::load_config();
         if config.entries.is_empty() {
             Term::fatal("No note added to storage.");
@@ -139,16 +125,13 @@ impl Actions {
 
         for i in config.entries {
             if i.name.contains(pattern) {
-                found_notes.push(i.name);
+                found_notes.push(format!("\x1b[4m{}\x1b[0m\x1b[1m", pattern));
             }
         }
 
         Term::title(format!("Found {} notes.", found_notes.len()).as_str());
         for a in found_notes {
-            Term::message(&a.replace(
-                pattern,
-                format!("\x1b[4m{}\x1b[0m\x1b[1m", pattern).as_str(),
-            ));
+            Term::message(&a);
         }
     }
 
@@ -329,7 +312,6 @@ impl Actions {
             name: note_name.clone(),
             content: clipboard_content,
             description: Some(String::new()),
-            tags: Some(Vec::new())
         };
         config.entries.push(new_note);
         Manager::write_config(config);
