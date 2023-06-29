@@ -102,7 +102,7 @@ impl Actions {
         Term::success(format!("Note '{}' now have name '{}'.", old_name, new_name).as_str());
     }
 
-    pub fn list() {;
+    pub fn list() {
         let config: Config = Manager::load_config();
         if config.entries.is_empty() {
             Term::fatal("No note added to storage.");
@@ -189,7 +189,8 @@ impl Actions {
             "nano" => Term::work("Launching Nano to edit note..."),
             "gnome-text-editor" => Term::work("Launching GNOME Text Editor to edit note..."),
             "kate" => Term::work("Launching Kate to edit note..."),
-            _ => Term::work("Launching editor to edit note..."),
+            "helix" => Term::work("Launching Helix to edit note..."),
+            _ => Term::work("Launching editor to edit note...")
         }
 
         let mut cmd = Command::new(editor_name);
