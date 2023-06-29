@@ -101,7 +101,6 @@ pub fn cli() -> Command {
                         .long("filename")
                         .help("Name of file.")
                         .num_args(1)
-                        .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ]),
             Command::new("get")
