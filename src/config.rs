@@ -55,6 +55,11 @@ impl Config {
         self.entries.push(new_note);
     }
 
+    pub fn set_name(&mut self, note_name: &str, new_name: &str) {
+        let index = self.get_note_index(note_name);
+        self.entries[index].name = new_name.to_string();
+    }
+
     pub fn set_content(&mut self, note_name: &str, new_content: &str) {
         let index = self.get_note_index(note_name);
         self.entries[index].content = new_content.to_string();

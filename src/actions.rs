@@ -135,12 +135,19 @@ impl Actions {
         }
     }
 
+    #[allow(unused_assignments)]
     pub fn save(name: &str, filename: &String) {
         let config: Config = Manager::load_config();
 
         if !config.note_exists(name) {
             Term::fatal("Note not found!");
             exit(1);
+        }
+        let mut new_filename = String::new();
+        if filename.is_empty() {
+            new_filename = name.to_string() + ".txt";
+        } else {
+            new_filename = filename.to_string();
         }
 
         Term::work("Writing note content to file...");
@@ -150,7 +157,7 @@ impl Actions {
             .position(|p| p.name == *name.to_owned())
             .unwrap();
         let note = &config.entries[*note_number];
-        let res = fs::write(filename.clone(), &note.content);
+        let res = fs::write(new_filename.clone(), &note.content);
         match res {
             Ok(_s) => {
                 Term::success("Done.");
