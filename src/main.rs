@@ -64,6 +64,9 @@ fn main() {
                 .to_string();
             Actions::rename(&old_name, &new_name);
         }
+        Some(("db", _sub)) => {
+            Actions::db();
+        }
         Some(("record", _sub)) => {
             let filename: String = _sub
                 .get_one::<String>("filename")

@@ -55,6 +55,10 @@ impl Config {
         self.entries.push(new_note);
     }
 
+    pub fn notes_count(&self) -> usize {
+        self.entries.len()
+    }
+
     pub fn set_name(&mut self, note_name: &str, new_name: &str) {
         let index = self.get_note_index(note_name);
         self.entries[index].name = new_name.to_string();

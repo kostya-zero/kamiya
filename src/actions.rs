@@ -38,7 +38,7 @@ impl Actions {
         };
         config.add_note(new_note);
         Manager::write_config(config);
-        Term::success(format!("Note have been added to storage as '{}'.", new_name).as_str());
+        Term::success(&format!("Note have been added to storage as '{}'.", new_name));
     }
 
     pub fn desc(name: &str, desc: &str) {
@@ -85,7 +85,7 @@ impl Actions {
         };
         config.add_note(new_note);
         Manager::write_config(config);
-        Term::success(format!("Note have been recorded to storage as '{}'.", new_name).as_str());
+        Term::success(&format!("Note have been recorded to storage as '{}'.", new_name));
     }
 
     pub fn rename(old_name: &str, new_name: &str) {
@@ -95,11 +95,10 @@ impl Actions {
             exit(1);
         }
 
-        let note_index = config.get_note_index(old_name);
-        config.entries[note_index].name = new_name.to_string();
+        config.set_name(old_name, new_name);
         Term::work("Writing changes to storage...");
         Manager::write_config(config);
-        Term::success(format!("Note '{}' now have name '{}'.", old_name, new_name).as_str());
+        Term::success(&format!("Note '{}' now have name '{}'.", old_name, new_name));
     }
 
     pub fn list() {
@@ -123,7 +122,7 @@ impl Actions {
         let config: Config = Manager::load_config();
         let mut found_notes: Vec<String> = vec![];
 
-        for i in config.entries {
+        for i in config.entries.iter() {
             if i.name.contains(pattern) {
                 found_notes.push(format!("\x1b[4m{}\x1b[0m\x1b[1m", pattern));
             }
@@ -268,6 +267,18 @@ impl Actions {
         let backup_config = serde_yaml::to_string(&config).expect("Failed to format config.");
         fs::write("kamiya_exported.yml", backup_config).expect("Failed to write content to file.");
         Term::success("Database exported as 'kamiya_exported.yml'.");
+    }
+
+    pub fn db() {
+        let config: Config = Manager::load_config();
+
+        let file_size = fs::metadata(Manager::get_config_path()).expect("Failed to get metadata about config.").len();
+        let notes_count = config.notes_count();
+
+        Term::title("Information about storage.");
+        Term::message_with_icon(&format!("Storage size: {} bytes", file_size.to_string()), "󰖡");
+        Term::message_with_icon(&format!("Notes in storage: {}", notes_count.to_string()), "󰏓");
+        Term::hint("Storage size displayed as nubmer of bytes.");
     }
 
     pub fn import(filename: &str) {

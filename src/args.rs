@@ -77,6 +77,7 @@ pub fn cli() -> Command {
                     .value_parser(value_parser!(String)),
             ]),
             Command::new("list").about("Get a list of the notes in the storage."),
+            Command::new("db").about("Show information about database status."),
             Command::new("search")
                 .about("Search for notes by name.")
                 .arg(
