@@ -5,8 +5,10 @@
         <img alt="Kamiya Banner" height="128" src="imgs/banner-dark.png">
     </picture>
     <div align="center">
-        <img alt="GitLab Release (latest by date)" src="https://img.shields.io/gitlab/v/release/kostya-zero/kamiya?style=flat">
-        <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/kostya-zero/kamiya?style=flat">
+        <img alt="Latest version" src="https://img.shields.io/gitlab/v/release/kostya-zero/kamiya?style=flat-square&labelColor=303030&color=26A269">
+        <img alt="Commit activity" src="https://img.shields.io/github/commit-activity/w/kostya-zero/kamiya?style=flat-square&labelColor=303030&color=3584E4">
+        <img alt="Project License" src="https://img.shields.io/github/license/kostya-zero%2Fkamiya?style=flat-square&labelColor=303030&color=FFA348">
+        <img alt="Crates.io" src="https://img.shields.io/crates/v/kamiya?style=flat-square&labelColor=303030&color=F8E45C">
     </div>
     <h3>An easy, fast and lightweight tool to create notes in terminal.</h3>
     <a href="https://asciinema.org/a/584606" target="_blank"><img src="https://asciinema.org/a/584606.svg"></a>
