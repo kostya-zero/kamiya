@@ -7,7 +7,7 @@ use crate::{
 use std::{
     env, fs,
     path::Path,
-    process::{exit, Command, Stdio}
+    process::{exit, Command, Stdio},
 };
 
 pub struct Actions;
@@ -38,7 +38,10 @@ impl Actions {
         };
         config.add_note(new_note);
         Manager::write_config(config);
-        Term::success(&format!("Note have been added to storage as '{}'.", new_name));
+        Term::success(&format!(
+            "Note have been added to storage as '{}'.",
+            new_name
+        ));
     }
 
     pub fn desc(name: &str, desc: &str) {
@@ -85,7 +88,10 @@ impl Actions {
         };
         config.add_note(new_note);
         Manager::write_config(config);
-        Term::success(&format!("Note have been recorded to storage as '{}'.", new_name));
+        Term::success(&format!(
+            "Note have been recorded to storage as '{}'.",
+            new_name
+        ));
     }
 
     pub fn rename(old_name: &str, new_name: &str) {
@@ -98,7 +104,10 @@ impl Actions {
         config.set_name(old_name, new_name);
         Term::work("Writing changes to storage...");
         Manager::write_config(config);
-        Term::success(&format!("Note '{}' now have name '{}'.", old_name, new_name));
+        Term::success(&format!(
+            "Note '{}' now have name '{}'.",
+            old_name, new_name
+        ));
     }
 
     pub fn editor(editor: &str) {
@@ -207,7 +216,7 @@ impl Actions {
             "gnome-text-editor" => Term::work("Launching GNOME Text Editor to edit note..."),
             "kate" => Term::work("Launching Kate to edit note..."),
             "helix" => Term::work("Launching Helix to edit note..."),
-            _ => Term::work("Launching editor to edit note...")
+            _ => Term::work("Launching editor to edit note..."),
         }
 
         let mut cmd = Command::new(editor_name);
@@ -283,12 +292,20 @@ impl Actions {
     pub fn db() {
         let config: Config = Manager::load_config();
 
-        let file_size = fs::metadata(Manager::get_config_path()).expect("Failed to get metadata about config.").len();
+        let file_size = fs::metadata(Manager::get_config_path())
+            .expect("Failed to get metadata about config.")
+            .len();
         let notes_count = config.notes_count();
 
         Term::title("Information about storage.");
-        Term::message_with_icon(&format!("Storage size: {} bytes", file_size.to_string()), "󰖡");
-        Term::message_with_icon(&format!("Notes in storage: {}", notes_count.to_string()), "󰏓");
+        Term::message_with_icon(
+            &format!("Storage size: {} bytes", file_size.to_string()),
+            "󰖡",
+        );
+        Term::message_with_icon(
+            &format!("Notes in storage: {}", notes_count.to_string()),
+            "󰏓",
+        );
         Term::hint("Storage size displayed as nubmer of bytes.");
     }
 
