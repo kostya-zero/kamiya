@@ -24,6 +24,10 @@ impl Term {
         println!("\x1b[1m\x1b[93m {}\x1b[0m\x1b[1m {}\x1b[0m", icon, msg);
     }
 
+    pub fn info(msg: &str) {
+        println!("\x1b[1m\x1b[96m \x1b[0m\x1b[1m {}\x1b[0m", msg);
+    }
+
     pub fn work(msg: &str) {
         println!("\x1b[1m\x1b[96m \x1b[0m\x1b[1m {}\x1b[0m", msg);
     }

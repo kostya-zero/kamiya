@@ -76,6 +76,14 @@ pub fn cli() -> Command {
                     .help("New note name.")
                     .value_parser(value_parser!(String)),
             ]),
+            Command::new("editor")
+                .about("Set editor for edeiting notes or check which are using now.")
+                .arg(
+                    Arg::new("editor")
+                        .help("Editor to use")
+                        .value_parser(value_parser!(String))
+                        .default_value("")
+                    ),
             Command::new("list").about("Get a list of the notes in the storage."),
             Command::new("db").about("Show information about database status."),
             Command::new("search")

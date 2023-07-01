@@ -64,6 +64,14 @@ fn main() {
                 .to_string();
             Actions::rename(&old_name, &new_name);
         }
+        Some(("editor", _sub)) => {
+            let editor: String = _sub
+                .get_one::<String>("editor")
+                .expect("Cannot read argument content.")
+                .to_string();
+
+            Actions::editor(&editor);
+        }
         Some(("db", _sub)) => {
             Actions::db();
         }

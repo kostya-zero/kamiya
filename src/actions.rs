@@ -101,6 +101,17 @@ impl Actions {
         Term::success(&format!("Note '{}' now have name '{}'.", old_name, new_name));
     }
 
+    pub fn editor(editor: &str) {
+        let mut config: Config = Manager::load_config();
+        if editor.is_empty() {
+            Term::info(&format!("Current editor: {}", config.options.editor));
+        } else {
+            config.options.editor = editor.to_string();
+            Manager::write_config(config);
+            Term::success(&format!("Editor changed to {}", editor));
+        }
+    }
+
     pub fn list() {
         let config: Config = Manager::load_config();
         if config.entries.is_empty() {
