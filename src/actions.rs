@@ -13,7 +13,7 @@ use std::{
 pub struct Actions;
 
 impl Actions {
-    pub fn take(content: &String, name: &String) {
+    pub fn take(content: &str, name: &str, desc: &str) {
         let mut config: Config = Manager::load_config();
         let mut new_name: String = name.to_string();
 
@@ -34,7 +34,7 @@ impl Actions {
         let new_note: Note = Note {
             name: new_name.clone(),
             content: content.to_string(),
-            description: Some(String::new()),
+            description: Some(desc.to_string()),
         };
         config.add_note(new_note);
         Manager::write_config(config);

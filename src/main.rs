@@ -27,13 +27,17 @@ fn main() {
                 .get_one::<String>("name")
                 .expect("Cannot read argument content.")
                 .to_string();
+            let desc: String = _sub
+                .get_one::<String>("description")
+                .expect("Cannot read argument content.")
+                .to_string();
 
             if content.is_empty() {
                 Term::fatal("You cannot take a note with empty content.");
                 exit(1);
             }
 
-            Actions::take(&content, &name);
+            Actions::take(&content, &name, &desc);
         }
         Some(("desc", _sub)) => {
             let name: String = _sub

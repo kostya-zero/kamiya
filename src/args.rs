@@ -23,6 +23,14 @@ pub fn cli() -> Command {
                     .required(false)
                     .default_value("")
                     .value_parser(clap::value_parser!(String)),
+                Arg::new("description")
+                    .short('d')
+                    .long("desc")
+                    .help("Description for new note.")
+                    .num_args(1)
+                    .required(false)
+                    .default_value("")
+                    .value_parser(value_parser!(String))
             ]),
             Command::new("desc")
                 .about("Add description to note.")
