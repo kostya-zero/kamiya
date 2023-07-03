@@ -7,7 +7,6 @@
         <img alt="Crates.io" src="https://img.shields.io/crates/v/kamiya?style=flat-square&labelColor=303030&color=F8E45C">
     </div>
     <h3>An easy, fast and lightweight tool to create notes in terminal.</h3>
-    <a href="https://asciinema.org/a/584606" target="_blank"><img src="https://asciinema.org/a/584606.svg"></a>
 </div>
 
 ### 🗺️ Navigation
