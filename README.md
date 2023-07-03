@@ -138,7 +138,7 @@ entries: []
 
 ### 📨 Reporting problems
 
-If you encoter a problem feel free to report about it on GitHub or GitLab issues of Kamiya.
+If you encounter a problem, feel free to report about it on GitHub or GitLab issues of Kamiya.
 
 ### 📦 Contribution
 
