@@ -176,7 +176,7 @@ impl Actions {
             .position(|p| p.name == *name.to_owned())
             .unwrap();
         let note = &config.entries[*note_number];
-        let res = fs::write(new_filename.clone(), &note.content);
+        let res = fs::write(new_filename, &note.content);
         match res {
             Ok(_s) => {
                 Term::success("Done.");
@@ -299,11 +299,11 @@ impl Actions {
 
         Term::title("Information about storage.");
         Term::message_with_icon(
-            &format!("Storage size: {} bytes", file_size.to_string()),
+            &format!("Storage size: {} bytes", file_size),
             "󰖡",
         );
         Term::message_with_icon(
-            &format!("Notes in storage: {}", notes_count.to_string()),
+            &format!("Notes in storage: {}", notes_count),
             "󰏓",
         );
         Term::hint("Storage size displayed as nubmer of bytes.");
