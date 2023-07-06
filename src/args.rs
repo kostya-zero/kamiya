@@ -4,7 +4,6 @@ pub fn cli() -> Command {
     Command::new("kamiya")
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .version(env!("CARGO_PKG_VERSION"))
-        .arg_required_else_help(true)
         .subcommand_required(true)
         .subcommands([
             Command::new("take").about("Create a new note.").args([
@@ -85,7 +84,7 @@ pub fn cli() -> Command {
                     .value_parser(value_parser!(String)),
             ]),
             Command::new("editor")
-                .about("Set editor for edeiting notes or check which are using now.")
+                .about("Set editor for editing notes or check which are using now.")
                 .arg(
                     Arg::new("editor")
                         .help("Editor to use")
@@ -147,7 +146,14 @@ pub fn cli() -> Command {
                         .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ),
-            Command::new("export").about("Export database."),
+            Command::new("export")
+                .about("Export database.")
+                .arg(Arg::new("path")
+                    .help("Path where database will be saved.")
+                    .short('p')
+                    .long("path")
+                    .value_parser(value_parser!(String))
+                    .default_value("kamiya_exported.yml")),
             Command::new("import")
                 .about("Import notes from new database.")
                 .arg(

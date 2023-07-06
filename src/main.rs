@@ -174,7 +174,12 @@ fn main() {
             Actions::rm(&name);
         }
         Some(("export", _sub)) => {
-            Actions::export();
+            let path: String = _sub
+                .get_one::<String>("path")
+                .expect("Cannot read argument content.")
+                .to_string();
+
+            Actions::export(&path);
         }
         Some(("import", _sub)) => {
             let filename: String = _sub

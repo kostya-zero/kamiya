@@ -280,13 +280,23 @@ impl Actions {
         Term::success("Note deleted!");
     }
 
-    pub fn export() {
+    pub fn export(path: &str) {
         let config: Config = Manager::load_config();
+
+        if Path::new(path).exists() {
+            Term::fatal(&format!("'{}' already exists. Specify new path or remove if its not needed.", path));
+            exit(1);
+        }
 
         Term::work("Exporting database...");
         let backup_config = serde_yaml::to_string(&config).expect("Failed to format config.");
-        fs::write("kamiya_exported.yml", backup_config).expect("Failed to write content to file.");
-        Term::success("Database exported as 'kamiya_exported.yml'.");
+        match fs::write(path, backup_config) {
+            Ok(_) => Term::success("File saved!"),
+            Err(i) => {
+                Term::fatal(&format!("Failed to write content to file. Error: {}", i));
+            }
+        }
+        Term::hint(&format!("Database exported as '{}'.", path));
     }
 
     pub fn db() {
