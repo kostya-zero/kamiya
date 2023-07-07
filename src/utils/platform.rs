@@ -1,5 +1,7 @@
 use home::home_dir;
-use std::env;
+use std::{env, process::exit};
+
+use crate::term::Term;
 
 pub enum CurrentPlatform {
     Windows,
@@ -26,10 +28,15 @@ impl Platform {
     }
 
     pub fn get_user_home() -> String {
-        home_dir()
-            .expect("Failed to get user directory (why).")
-            .display()
-            .to_string()
+        match home_dir() {
+            Some(path) => {
+                return path.display().to_string();
+            },
+            None => {
+                Term::fatal("Failed to get home directory (why). Maybe unsupported system.");
+                exit(1);
+            }
+        }
     }
 
     pub fn get_temp_dir() -> String {
