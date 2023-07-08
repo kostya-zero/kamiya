@@ -6,7 +6,7 @@ keywords = ["notes", "cli"]
 readme = "README.md"
 repository = "https://gitlab.com/kostya-zero/kamiya"
 license = "GPL-3.0"
-version = "0.5.0-dev"
+version = "0.5.0"
 edition = "2021"
 
 [dependencies]
