@@ -34,7 +34,7 @@ impl Actions {
         let new_note: Note = Note {
             name: new_name.clone(),
             content: content.to_string(),
-            description: Some(desc.to_string()),
+            description: desc.to_string(),
         };
         config.add_note(new_note);
         Manager::write_config(config);
@@ -84,7 +84,7 @@ impl Actions {
         let new_note: Note = Note {
             name: new_name.clone(),
             content: file_content,
-            description: Some(String::new()),
+            description: String::new(),
         };
         config.add_note(new_note);
         Manager::write_config(config);
@@ -130,10 +130,10 @@ impl Actions {
 
         Term::title(format!("Total notes: {}", config.entries.len()).as_str());
         for i in &config.entries {
-            if i.description.is_none() {
+            if i.description.is_empty() {
                 Term::list_item(&i.name, "");
             } else {
-                Term::list_item(&i.name, &i.description.clone().unwrap());
+                Term::list_item(&i.name, &i.description.clone());
             }
         }
     }
@@ -368,7 +368,7 @@ impl Actions {
         let new_note: Note = Note {
             name: note_name.clone(),
             content: clipboard_content,
-            description: Some(String::new()),
+            description: String::new(),
         };
         config.entries.push(new_note);
         Manager::write_config(config);

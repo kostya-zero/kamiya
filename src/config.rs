@@ -7,7 +7,8 @@ use std::{fs, path::Path, process::exit};
 pub struct Note {
     pub name: String,
     pub content: String,
-    pub description: Option<String>,
+    #[serde(default)]
+    pub description: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -71,7 +72,7 @@ impl Config {
 
     pub fn set_description(&mut self, note_name: &str, new_desc: &str) {
         let index = self.get_note_index(note_name);
-        self.entries[index].description = Some(new_desc.to_string());
+        self.entries[index].description = new_desc.to_string();
     }
 
     pub fn get_note_index(&self, name: &str) -> usize {
