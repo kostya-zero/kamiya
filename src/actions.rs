@@ -114,13 +114,17 @@ impl Actions {
         let mut config: Config = Manager::load_config();
 
         if config.options.editor.is_empty() {
-            Term::info("Editor not set. Please add name of executable that you want to use as editor.");
+            Term::info(
+                "Editor not set. Please add name of executable that you want to use as editor.",
+            );
             Term::hint("Example: kamiya editor vim")
         }
 
         if editor.is_empty() {
             if config.get_editor().is_empty() {
-                Term::info("Editor not set. Please add name of executable that you want to use as editor.");
+                Term::info(
+                    "Editor not set. Please add name of executable that you want to use as editor.",
+                );
                 Term::hint("Example: kamiya editor vim");
                 exit(1)
             }
@@ -295,7 +299,10 @@ impl Actions {
         let config: Config = Manager::load_config();
 
         if Path::new(path).exists() {
-            Term::fatal(&format!("'{}' already exists. Specify new path or remove if its not needed.", path));
+            Term::fatal(&format!(
+                "'{}' already exists. Specify new path or remove if its not needed.",
+                path
+            ));
             exit(1);
         }
 
@@ -319,14 +326,8 @@ impl Actions {
         let notes_count = config.notes_count();
 
         Term::title("Information about storage.");
-        Term::message_with_icon(
-            &format!("Storage size: {} bytes", file_size),
-            "󰖡",
-        );
-        Term::message_with_icon(
-            &format!("Notes in storage: {}", notes_count),
-            "󰏓",
-        );
+        Term::message_with_icon(&format!("Storage size: {} bytes", file_size), "󰖡");
+        Term::message_with_icon(&format!("Notes in storage: {}", notes_count), "󰏓");
         Term::hint("Storage size displayed as nubmer of bytes.");
     }
 

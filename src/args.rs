@@ -29,7 +29,7 @@ pub fn cli() -> Command {
                     .num_args(1)
                     .required(false)
                     .default_value("")
-                    .value_parser(value_parser!(String))
+                    .value_parser(value_parser!(String)),
             ]),
             Command::new("desc")
                 .about("Add description to note.")
@@ -146,14 +146,14 @@ pub fn cli() -> Command {
                         .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ),
-            Command::new("export")
-                .about("Export database.")
-                .arg(Arg::new("path")
+            Command::new("export").about("Export database.").arg(
+                Arg::new("path")
                     .help("Path where database will be saved.")
                     .short('p')
                     .long("path")
                     .value_parser(value_parser!(String))
-                    .default_value("kamiya_exported.yml")),
+                    .default_value("kamiya_exported.yml"),
+            ),
             Command::new("import")
                 .about("Import notes from new database.")
                 .arg(

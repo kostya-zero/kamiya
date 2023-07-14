@@ -31,7 +31,7 @@ impl Platform {
         match home_dir() {
             Some(path) => {
                 return path.display().to_string();
-            },
+            }
             None => {
                 Term::fatal("Failed to get home directory (why). Maybe unsupported system.");
                 exit(1);
