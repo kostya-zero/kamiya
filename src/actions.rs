@@ -112,10 +112,21 @@ impl Actions {
 
     pub fn editor(editor: &str) {
         let mut config: Config = Manager::load_config();
+
+        if config.options.editor.is_empty() {
+            Term::info("Editor not set. Please add name of executable that you want to use as editor.");
+            Term::hint("Example: kamiya editor vim")
+        }
+
         if editor.is_empty() {
+            if config.get_editor().is_empty() {
+                Term::info("Editor not set. Please add name of executable that you want to use as editor.");
+                Term::hint("Example: kamiya editor vim");
+                exit(1)
+            }
             Term::info(&format!("Current editor: {}", config.options.editor));
         } else {
-            config.options.editor = editor.to_string();
+            config.set_editor(editor);
             Manager::write_config(config);
             Term::success(&format!("Editor changed to {}", editor));
         }

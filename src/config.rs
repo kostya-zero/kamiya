@@ -27,8 +27,8 @@ impl Default for Config {
     fn default() -> Self {
         Config {
             options: Options {
-                name_template: "NewNote&i".to_string(),
-                editor: "nano".to_string(),
+                name_template: String::from("Note&i"),
+                editor: String::new(),
             },
             entries: vec![],
         }
@@ -54,6 +54,14 @@ impl Config {
 
     pub fn add_note(&mut self, new_note: Note) {
         self.entries.push(new_note);
+    }
+
+    pub fn get_editor(&self) -> String {
+        self.options.editor.clone()
+    }
+
+    pub fn set_editor(&mut self, editor: &str) {
+        self.options.editor = String::from(editor);
     }
 
     pub fn notes_count(&self) -> usize {
