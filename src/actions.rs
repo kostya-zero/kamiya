@@ -18,7 +18,7 @@ impl Actions {
         let mut new_name: String = name.to_string();
 
         if name.is_empty() {
-            if !config.options.name_template.contains("&i") {
+            if !config.get_template().contains("&i") {
                 Term::fatal("You give empty name and your `name_template` option in config not contain `&i` symbol. Cannot continue.");
                 exit(1);
             }
@@ -113,7 +113,7 @@ impl Actions {
     pub fn editor(editor: &str) {
         let mut config: Config = Manager::load_config();
 
-        if config.options.editor.is_empty() {
+        if config.get_editor().is_empty() {
             Term::info(
                 "Editor not set. Please add name of executable that you want to use as editor.",
             );
@@ -128,7 +128,7 @@ impl Actions {
                 Term::hint("Example: kamiya editor vim");
                 exit(1)
             }
-            Term::info(&format!("Current editor: {}", config.options.editor));
+            Term::info(&format!("Current editor: {}", config.get_editor()));
         } else {
             config.set_editor(editor);
             Manager::write_config(config);
@@ -138,13 +138,14 @@ impl Actions {
 
     pub fn list() {
         let config: Config = Manager::load_config();
-        if config.entries.is_empty() {
+        let notes: Vec<Note> = config.get_notes();
+        if notes.is_empty() {
             Term::fatal("No note added to storage.");
             exit(1);
         }
 
-        Term::title(format!("Total notes: {}", config.entries.len()).as_str());
-        for i in &config.entries {
+        Term::title(format!("Total notes: {}", notes.len()).as_str());
+        for i in &notes {
             if i.description.is_empty() {
                 Term::list_item(&i.name, "");
             } else {
@@ -157,7 +158,7 @@ impl Actions {
         let config: Config = Manager::load_config();
         let mut found_notes: Vec<String> = vec![];
 
-        for i in config.entries.iter() {
+        for i in config.get_notes().iter() {
             if i.name.contains(pattern) {
                 found_notes.push(format!("\x1b[4m{}\x1b[0m\x1b[1m", pattern));
             }
@@ -185,12 +186,12 @@ impl Actions {
         }
 
         Term::work("Writing note content to file...");
-        let note_number = &config
-            .entries
+        let notes: Vec<Note> = config.get_notes();
+        let note_number = notes
             .iter()
             .position(|p| p.name == *name.to_owned())
             .unwrap();
-        let note = &config.entries[*note_number];
+        let note = &notes[note_number];
         let res = fs::write(new_filename, &note.content);
         match res {
             Ok(_s) => {
@@ -215,7 +216,7 @@ impl Actions {
         let note = config.get_note(name);
         let temp_note_path: String = format!("{}{}", Platform::get_temp_dir(), &name);
         fs::write(&temp_note_path, &note.content).expect("Error");
-        let mut editor_name: String = config.options.editor.to_string();
+        let mut editor_name: String = config.get_editor().to_string();
         if editor_name.is_empty() {
             if env::var("EDITOR").is_err() {
                 Term::fatal("Editor not specified! Set 'editor' option in config or set EDITOR environment variable.");
@@ -272,7 +273,9 @@ impl Actions {
             exit(1);
         }
 
-        for i in &config.entries {
+        let notes: Vec<Note> = config.get_notes();
+
+        for i in notes {
             if i.name == *name.to_owned() {
                 content = i.content.clone();
                 break;
@@ -285,7 +288,7 @@ impl Actions {
     pub fn rm(name: &str) {
         let mut config: Config = Manager::load_config();
 
-        if !&config.entries.iter().any(|i| i.name == *name.to_owned()) {
+        if !config.get_notes().iter().any(|i| i.name == *name.to_owned()) {
             Term::fatal("Note not found!");
             exit(1);
         }
@@ -344,7 +347,7 @@ impl Actions {
         let new_config: Config = serde_yaml::from_str(new_db.as_str())
             .expect("Failed to import notes. Maybe, bad config formatting.");
         Term::work("Importing...");
-        for i in new_config.entries {
+        for i in new_config.get_notes() {
             if config.note_exists(&i.name) {
                 Term::warn(
                     format!(
@@ -355,7 +358,7 @@ impl Actions {
                 );
             } else {
                 Term::work(format!("Adding new note: {}", &i.name.clone()).as_str());
-                config.entries.push(i);
+                config.add_note(i);
             }
         }
         Term::work("Writing database changes...");
@@ -382,7 +385,7 @@ impl Actions {
             content: clipboard_content,
             description: String::new(),
         };
-        config.entries.push(new_note);
+        config.add_note(new_note);
         Manager::write_config(config);
         Term::success(format!("Clipboard content saved as note called '{}'", note_name).as_str());
     }

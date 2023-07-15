@@ -3,7 +3,7 @@ use home::home_dir;
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path, process::exit};
 
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Serialize, Deserialize, Default, Clone)]
 pub struct Note {
     pub name: String,
     pub content: String,
@@ -19,8 +19,8 @@ pub struct Options {
 
 #[derive(Serialize, Deserialize)]
 pub struct Config {
-    pub options: Options,
-    pub entries: Vec<Note>,
+    options: Options,
+    entries: Vec<Note>,
 }
 
 impl Default for Config {
@@ -52,8 +52,24 @@ impl Config {
         self.entries.remove(note_index);
     }
 
+    pub fn get_notes(&self) -> Vec<Note> {
+        self.entries.clone()
+    }
+
     pub fn add_note(&mut self, new_note: Note) {
         self.entries.push(new_note);
+    }
+
+    pub fn get_template(&self) -> String {
+        self.options.name_template.clone()
+    }
+
+    pub fn set_template(&mut self, template: &str) {
+        if !template.contains("&i") {
+            Term::fatal("Template name must contain '&i'.");
+            exit(1)
+        }
+        self.options.name_template = String::from(template);
     }
 
     pub fn get_editor(&self) -> String {
@@ -100,15 +116,12 @@ impl Config {
     }
 
     pub fn generate_name(&self) -> String {
-        if !self.options.name_template.contains("&i") {
+        if !self.get_template().contains("&i") {
             Term::fatal("You give empty name and your `name_template` option in config not contain `&i` symbol. Cannot continue.");
             exit(1);
         }
         let note_number = self.entries.len() + 1;
-        let new_name: String = self
-            .options
-            .name_template
-            .replace("&i", &note_number.to_string());
+        let new_name: String = self.get_template().replace("&i", &note_number.to_string());
         new_name
     }
 }
