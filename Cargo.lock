@@ -173,7 +173,7 @@ checksum = "62b02a5381cc465bd3041d84623d0fa3b66738b52b8e2fc3bab8ad63ab032f4a"
 
 [[package]]
 name = "kamiya"
-version = "0.6.0-dev"
+version = "0.5.1-dev"
 dependencies = [
  "clap",
  "home",
