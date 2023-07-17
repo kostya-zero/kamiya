@@ -10,12 +10,6 @@ pub enum CurrentPlatform {
     Unknown,
 }
 
-pub enum SessionType {
-    X11,
-    Wayland,
-    Unknown,
-}
-
 pub struct Platform;
 impl Platform {
     pub fn detect_platform() -> CurrentPlatform {
@@ -33,7 +27,7 @@ impl Platform {
                 return path.display().to_string();
             }
             None => {
-                Term::fatal("Failed to get home directory (why). Maybe unsupported system.");
+                Term::fatal("Failed to get home directory. Maybe unsupported system.");
                 exit(1);
             }
         }
@@ -48,20 +42,5 @@ impl Platform {
             CurrentPlatform::Unknown => panic!("Unknown platform detected!"),
         };
         temp
-    }
-
-    pub fn get_session_type() -> SessionType {
-        let session_type = env::var("XDG_SESSION_TYPE");
-        if session_type.is_err() {
-            return SessionType::Unknown;
-        }
-
-        let session: &str = &session_type.unwrap();
-
-        match session {
-            "x11" => SessionType::X11,
-            "wayland" => SessionType::Wayland,
-            &_ => panic!("Unknown type of session!"),
-        }
     }
 }

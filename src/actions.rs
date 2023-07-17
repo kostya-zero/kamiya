@@ -1,8 +1,8 @@
+use cli_clipboard::{ClipboardContext, ClipboardProvider};
+
 use crate::{
     config::{Config, Manager, Note},
-    term::Term,
-    utils::clipboard::Clipboard,
-    utils::platform::Platform,
+    term::Term, utils::tempfile::TempFile,
 };
 use std::{
     env, fs,
@@ -113,13 +113,6 @@ impl Actions {
     pub fn editor(editor: &str) {
         let mut config: Config = Manager::load_config();
 
-        if config.get_editor().is_empty() {
-            Term::info(
-                "Editor not set. Please add name of executable that you want to use as editor.",
-            );
-            Term::hint("Example: kamiya editor vim")
-        }
-
         if editor.is_empty() {
             if config.get_editor().is_empty() {
                 Term::info(
@@ -212,10 +205,11 @@ impl Actions {
             Term::fatal("Note not found!");
             exit(1);
         }
-
+        
         let note = config.get_note(name);
-        let temp_note_path: String = format!("{}{}", Platform::get_temp_dir(), &name);
-        fs::write(&temp_note_path, &note.content).expect("Error");
+        let tmpfile: TempFile = TempFile::new(name);
+        let tmpfile_path: String = tmpfile.init().unwrap();
+        fs::write(&tmpfile_path, note.content.clone()).expect("Failed to write content of note to temporary file.");
         let mut editor_name: String = config.get_editor().to_string();
         if editor_name.is_empty() {
             if env::var("EDITOR").is_err() {
@@ -236,7 +230,7 @@ impl Actions {
         }
 
         let mut cmd = Command::new(editor_name);
-        cmd.args([&temp_note_path])
+        cmd.args([&tmpfile_path])
             .stdout(Stdio::inherit())
             .stdin(Stdio::inherit())
             .stderr(Stdio::inherit());
@@ -252,13 +246,13 @@ impl Actions {
 
         if !status.status.success() {
             Term::fatal("Editor finished their work with bad exit code.");
-            fs::remove_file(&temp_note_path).expect("Error");
+            tmpfile.destroy().unwrap();
             exit(1);
         }
 
         Term::work("Recording changes...");
-        let new_content: String = fs::read_to_string(&temp_note_path).expect("Error");
-        fs::remove_file(&temp_note_path).expect("Error");
+        let new_content: String = fs::read_to_string(&tmpfile_path).expect("Error");
+        tmpfile.destroy().unwrap();
         config.set_content(name, &new_content);
         Manager::write_config(config);
         Term::success("Changes have been saved.");
@@ -372,13 +366,15 @@ impl Actions {
     pub fn copy(name: &str) {
         let config: Config = Manager::load_config();
         let note: &Note = config.get_note(name);
-        Clipboard::set_clipboard(&note.content);
+        // Clipboard::set_clipboard(&note.content);
+        let mut ctx = ClipboardContext::new().unwrap();
+        ctx.set_contents(note.content.to_string()).expect("Failed to set content to clipboard.");
         Term::success("Copied to the clipboard.");
     }
 
     pub fn insert() {
         let mut config: Config = Manager::load_config();
-        let clipboard_content: String = Clipboard::get_clipboard();
+        let clipboard_content: String = ClipboardProvider::new().and_then(|mut ctx: ClipboardContext| ctx.get_contents()).unwrap();
         let note_name: String = config.generate_name();
         let new_note: Note = Note {
             name: note_name.clone(),
