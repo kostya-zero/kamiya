@@ -214,15 +214,7 @@ impl Actions {
             editor_name = env::var("EDITOR").expect("Cannot get environment variable.");
         }
 
-        match editor_name.as_str() {
-            "nvim" => Term::work("Launching Neovim to edit note..."),
-            "vim" => Term::work("Launching Vim to edit note..."),
-            "nano" => Term::work("Launching Nano to edit note..."),
-            "gnome-text-editor" => Term::work("Launching GNOME Text Editor to edit note..."),
-            "kate" => Term::work("Launching Kate to edit note..."),
-            "helix" => Term::work("Launching Helix to edit note..."),
-            _ => Term::work("Launching editor to edit note..."),
-        }
+        Term::work(format!("Launching {}", editor_name).as_str());
 
         let mut cmd = Command::new(editor_name);
         cmd.args([&tmpfile_path])

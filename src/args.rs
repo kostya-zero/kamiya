@@ -8,8 +8,6 @@ pub fn cli() -> Command {
         .subcommands([
             Command::new("take").about("Create a new note.").args([
                 Arg::new("content")
-                    .short('c')
-                    .long("content")
                     .help("The contents of the note.")
                     .num_args(1)
                     .required(true)
