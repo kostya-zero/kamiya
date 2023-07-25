@@ -21,15 +21,15 @@ fn main() {
         Some(("take", _sub)) => {
             let content: String = _sub
                 .get_one::<String>("content")
-                .expect("Cannot read argument content.")
+                .expect("Failed to read argument with note content.")
                 .to_string();
             let name: String = _sub
                 .get_one::<String>("name")
-                .expect("Cannot read argument content.")
+                .expect("Failed to read argument with note name.")
                 .to_string();
             let desc: String = _sub
                 .get_one::<String>("description")
-                .expect("Cannot read argument content.")
+                .expect("Failed to read argument with note description.")
                 .to_string();
 
             if content.is_empty() {

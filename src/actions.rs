@@ -15,7 +15,7 @@ pub struct Actions;
 impl Actions {
     pub fn take(content: &str, name: &str, desc: &str) {
         let mut config: Config = Manager::load_config();
-        let mut new_name: String = name.to_string();
+        let mut new_name: String = String::from(name);
 
         if name.is_empty() {
             if !config.get_template().contains("&i") {
@@ -52,7 +52,7 @@ impl Actions {
             exit(1);
         }
 
-        config.set_description(name, desc);
+        config.set_note_description(name, desc);
         Term::work("Writing changes to database...");
         Manager::write_config(config);
         Term::success("Description changed.");
@@ -101,7 +101,7 @@ impl Actions {
             exit(1);
         }
 
-        config.set_name(old_name, new_name);
+        config.set_note_name(old_name, new_name);
         Term::work("Writing changes to storage...");
         Manager::write_config(config);
         Term::success(&format!(
@@ -179,14 +179,9 @@ impl Actions {
         }
 
         Term::work("Writing note content to file...");
-        let notes: Vec<Note> = config.get_notes();
-        let note_number = notes
-            .iter()
-            .position(|p| p.name == *name.to_owned())
-            .unwrap();
-        let note = &notes[note_number];
-        let res = fs::write(new_filename, &note.content);
-        match res {
+        let note = config.get_note(name);
+        let write_result: Result<(), std::io::Error> = fs::write(new_filename, &note.content);
+        match write_result {
             Ok(_s) => {
                 Term::success("Done.");
             }
@@ -253,7 +248,7 @@ impl Actions {
         Term::work("Recording changes...");
         let new_content: String = fs::read_to_string(&tmpfile_path).expect("Error");
         tmpfile.destroy().unwrap();
-        config.set_content(name, &new_content);
+        config.set_note_content(name, &new_content);
         Manager::write_config(config);
         Term::success("Changes have been saved.");
     }
@@ -366,7 +361,6 @@ impl Actions {
     pub fn copy(name: &str) {
         let config: Config = Manager::load_config();
         let note: &Note = config.get_note(name);
-        // Clipboard::set_clipboard(&note.content);
         let mut ctx = ClipboardContext::new().unwrap();
         ctx.set_contents(note.content.to_string()).expect("Failed to set content to clipboard.");
         Term::success("Copied to the clipboard.");

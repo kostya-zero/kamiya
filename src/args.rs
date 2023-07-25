@@ -89,7 +89,8 @@ pub fn cli() -> Command {
                     Arg::new("editor")
                         .help("Editor to use")
                         .value_parser(value_parser!(String))
-                        .default_value(""),
+                        .default_value("")
+                        .num_args(1)
                 ),
             Command::new("list").about("Get a list of the notes in the storage."),
             Command::new("db").about("Show information about database status."),

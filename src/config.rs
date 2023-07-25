@@ -37,19 +37,11 @@ impl Default for Config {
 
 impl Config {
     pub fn note_exists(&self, name: &str) -> bool {
-        if self
-            .entries
-            .iter()
-            .any(|item| item.name == *name.to_owned())
-        {
-            return true;
-        }
-        false
+        self.entries.iter().any(|item| item.name == *name.to_owned())
     }
 
     pub fn remove_note(&mut self, name: &str) {
-        let note_index = self.get_note_index(name);
-        self.entries.remove(note_index);
+        self.entries.remove(self.get_note_index(name));
     }
 
     pub fn get_notes(&self) -> Vec<Note> {
@@ -68,8 +60,9 @@ impl Config {
         if !template.contains("&i") {
             Term::fatal("Template name must contain '&i'.");
             exit(1)
+        } else {
+            self.options.name_template = String::from(template);
         }
-        self.options.name_template = String::from(template);
     }
 
     pub fn get_editor(&self) -> String {
@@ -84,17 +77,17 @@ impl Config {
         self.entries.len()
     }
 
-    pub fn set_name(&mut self, note_name: &str, new_name: &str) {
+    pub fn set_note_name(&mut self, note_name: &str, new_name: &str) {
         let index = self.get_note_index(note_name);
         self.entries[index].name = new_name.to_string();
     }
 
-    pub fn set_content(&mut self, note_name: &str, new_content: &str) {
+    pub fn set_note_content(&mut self, note_name: &str, new_content: &str) {
         let index = self.get_note_index(note_name);
         self.entries[index].content = new_content.to_string();
     }
 
-    pub fn set_description(&mut self, note_name: &str, new_desc: &str) {
+    pub fn set_note_description(&mut self, note_name: &str, new_desc: &str) {
         let index = self.get_note_index(note_name);
         self.entries[index].description = new_desc.to_string();
     }
