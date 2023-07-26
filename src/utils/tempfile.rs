@@ -10,7 +10,7 @@ impl TempFile {
         match Platform::get_temp_dir() {
             Ok(path) => {
                 Result::Ok(Self {
-                    path: String::from(path + file_name)
+                    path: path + file_name
                 })
             },
             Err(e) => {

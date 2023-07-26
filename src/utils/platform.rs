@@ -40,9 +40,9 @@ impl Platform {
                     CurrentPlatform::Windows => {
                         let user_home_dir: String = match Self::get_user_home() {
                             Ok(path) => path,
-                            Err(e) => panic!("Failed to get user home directory.")
+                            Err(_) => panic!("Failed to get user home directory.")
                         };
-                        Result::Ok(String::from(user_home_dir + "\\AppData\\Local\\Temp\\"))
+                        Result::Ok(user_home_dir + "\\AppData\\Local\\Temp\\")
                     }
                 }
             },

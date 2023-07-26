@@ -193,7 +193,7 @@ impl Actions {
         Term::success(format!("Note content saved as file called '{}'.", filename).as_str());
     }
 
-    pub fn edit(name: &String) {
+    pub fn edit(name: &str) {
         let mut config: Config = Manager::load_config();
 
         if !config.note_exists(name) {
