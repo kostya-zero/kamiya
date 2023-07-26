@@ -202,7 +202,15 @@ impl Actions {
         }
         
         let note = config.get_note(name);
-        let tmpfile: TempFile = TempFile::new(name);
+        let tmpfile_initializer = TempFile::new(name);
+        let tmpfile = match tmpfile_initializer {
+            Ok(provider) => provider,
+            Err(_) => {
+                Term::fatal("Failed initialize temporary file due to error: {}");
+                exit(1);
+            }
+        };
+
         let tmpfile_path: String = tmpfile.init().unwrap();
         fs::write(&tmpfile_path, note.content.clone()).expect("Failed to write content of note to temporary file.");
         let mut editor_name: String = config.get_editor().to_string();

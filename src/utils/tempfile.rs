@@ -1,29 +1,35 @@
 use std::{fs, io::Error};
-use super::platform::Platform;
+use super::platform::{Platform, PlatformError};
 
 pub struct TempFile {
     path: String
 }
 
 impl TempFile {
-    pub fn new(file_name: &str) -> Self {
-        let temp_dir_path: String = Platform::get_temp_dir() + &file_name;
-        Self {
-            path: temp_dir_path
+    pub fn new(file_name: &str) -> Result<Self, PlatformError> {
+        match Platform::get_temp_dir() {
+            Ok(path) => {
+                Result::Ok(Self {
+                    path: String::from(path + file_name)
+                })
+            },
+            Err(e) => {
+                Result::Err(e)
+            }
         }
     }
 
     pub fn init(&self) -> Result<String, Error> {
         match fs::write(&self.path, "") {
-            Ok(_) => Ok(self.path.clone()),
-            Err(e) => panic!("{}", e)
+            Ok(_) => Result::Ok(self.path.clone()),
+            Err(e) => Result::Err(e)
         }
     }
 
     pub fn destroy(&self) -> Result<(), Error> {
         match fs::remove_file(&self.path) {
-            Ok(_) => Ok(()),
-            Err(e) => panic!("{}", e)
+            Ok(_) => Result::Ok(()),
+            Err(e) => Result::Err(e)
         }
     }
 }
