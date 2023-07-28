@@ -2,7 +2,8 @@ use cli_clipboard::{ClipboardContext, ClipboardProvider};
 
 use crate::{
     config::{Config, Manager, Note},
-    term::Term, utils::tempfile::TempFile,
+    term::Term,
+    utils::tempfile::TempFile,
 };
 use std::{
     env, fs,
@@ -200,7 +201,7 @@ impl Actions {
             Term::fatal("Note not found!");
             exit(1);
         }
-        
+
         let note = config.get_note(name);
         let tmpfile_initializer = TempFile::new(name);
         let tmpfile = match tmpfile_initializer {
@@ -212,7 +213,8 @@ impl Actions {
         };
 
         let tmpfile_path: String = tmpfile.init().unwrap();
-        fs::write(&tmpfile_path, note.content.clone()).expect("Failed to write content of note to temporary file.");
+        fs::write(&tmpfile_path, note.content.clone())
+            .expect("Failed to write content of note to temporary file.");
         let mut editor_name: String = config.get_editor().to_string();
         if editor_name.is_empty() {
             if env::var("EDITOR").is_err() {
@@ -277,7 +279,11 @@ impl Actions {
     pub fn rm(name: &str) {
         let mut config: Config = Manager::load_config();
 
-        if !config.get_notes().iter().any(|i| i.name == *name.to_owned()) {
+        if !config
+            .get_notes()
+            .iter()
+            .any(|i| i.name == *name.to_owned())
+        {
             Term::fatal("Note not found!");
             exit(1);
         }
@@ -362,13 +368,16 @@ impl Actions {
         let config: Config = Manager::load_config();
         let note: &Note = config.get_note(name);
         let mut ctx = ClipboardContext::new().unwrap();
-        ctx.set_contents(note.content.to_string()).expect("Failed to set content to clipboard.");
+        ctx.set_contents(note.content.to_string())
+            .expect("Failed to set content to clipboard.");
         Term::success("Copied to the clipboard.");
     }
 
     pub fn insert() {
         let mut config: Config = Manager::load_config();
-        let clipboard_content: String = ClipboardProvider::new().and_then(|mut ctx: ClipboardContext| ctx.get_contents()).unwrap();
+        let clipboard_content: String = ClipboardProvider::new()
+            .and_then(|mut ctx: ClipboardContext| ctx.get_contents())
+            .unwrap();
         let note_name: String = config.generate_name();
         let new_note: Note = Note {
             name: note_name.clone(),

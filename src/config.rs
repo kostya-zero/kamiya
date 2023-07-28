@@ -37,7 +37,9 @@ impl Default for Config {
 
 impl Config {
     pub fn note_exists(&self, name: &str) -> bool {
-        self.entries.iter().any(|item| item.name == *name.to_owned())
+        self.entries
+            .iter()
+            .any(|item| item.name == *name.to_owned())
     }
 
     pub fn remove_note(&mut self, name: &str) {
