@@ -58,15 +58,6 @@ impl Config {
         self.options.name_template.clone()
     }
 
-    pub fn set_template(&mut self, template: &str) {
-        if !template.contains("&i") {
-            Term::fatal("Template name must contain '&i'.");
-            exit(1)
-        } else {
-            self.options.name_template = String::from(template);
-        }
-    }
-
     pub fn get_editor(&self) -> String {
         self.options.editor.clone()
     }
@@ -95,11 +86,13 @@ impl Config {
     }
 
     pub fn get_note_index(&self, name: &str) -> usize {
-        return self
+        match self
             .entries
             .iter()
-            .position(|item| item.name == *name.to_owned())
-            .expect("Note not found!");
+            .position(|item| item.name == *name.to_owned()) {
+                Some(index) => index,
+                None => panic!("Note not found!"),
+            }
     }
 
     pub fn get_note(&self, name: &str) -> &Note {
@@ -134,12 +127,10 @@ impl Manager {
     pub fn load_config() -> Config {
         let content =
             fs::read_to_string(Self::get_config_path()).expect("Unable to read the file.");
-        let cfg_result = serde_yaml::from_str(&content);
-        if cfg_result.is_err() {
-            Term::fatal("Failed to parse configuration file. Maybe it have bad structure.");
-            exit(1)
+        match serde_yaml::from_str(&content) {
+            Ok(cfg) => cfg,
+            Err(_) => panic!("Failed to parse configuration file."),
         }
-        cfg_result.unwrap()
     }
 
     pub fn write_config(cfg: Config) {
