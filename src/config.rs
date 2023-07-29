@@ -28,7 +28,7 @@ impl Default for Config {
         Config {
             options: Options {
                 name_template: String::from("Note&i"),
-                editor: String::new(),
+                editor: String::from("nano"),
             },
             entries: vec![],
         }
