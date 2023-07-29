@@ -1,12 +1,12 @@
 [package]
 name = "kamiya"
-description = "An easy, fast and lightweight tool to create notes in terminal."
+description = "No-nonsense note taking app for terminal."
 authors = ["Konstantin Zhigaylo <kostya.zero@outlook.org>"]
 keywords = ["notes", "cli"]
 readme = "README.md"
 repository = "https://gitlab.com/kostya-zero/kamiya"
 license = "GPL-3.0"
-version = "0.5.1-dev"
+version = "0.5.1"
 edition = "2021"
 
 [dependencies]

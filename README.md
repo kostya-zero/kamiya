@@ -6,7 +6,7 @@
         <img alt="Project License" src="https://img.shields.io/github/license/kostya-zero%2Fkamiya?style=flat-square&labelColor=303030&color=FFA348">
         <img alt="Crates.io" src="https://img.shields.io/crates/v/kamiya?style=flat-square&labelColor=303030&color=F8E45C">
     </div>
-    <h3>An easy, fast and lightweight tool to create notes in terminal.</h3>
+    <h3>No-nonsense note taking app for terminal.</h3>
 </div>
 
 ### 🗺️ Navigation
