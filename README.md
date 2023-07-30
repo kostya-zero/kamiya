@@ -67,17 +67,17 @@ Some commands dont require arguments.
 
 ##### Take your first note.
 
-To make note, use `take` command and pass `--content` or `-c` argument to give content to save.
+To make note, use `take` command and pass content to save.
 
 ```shell
-kamiya take -c "This content will be saved."
+kamiya take "This content will be saved."
 ```
 
 Also, you can provide a name for your note with `--name` or `-n` argument. 
 If not, Kamiya will generate the name for you note depending on configuration.
 
 ```shell
-kamiya take -c "This content will be saved." -n "My Awesome Note"
+kamiya take "This content will be saved." -n "My Awesome Note"
 ```
 
 ##### View saved notes.
