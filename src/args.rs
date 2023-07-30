@@ -5,6 +5,7 @@ pub fn cli() -> Command {
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .version(env!("CARGO_PKG_VERSION"))
         .subcommand_required(true)
+        .arg_required_else_help(true)
         .subcommands([
             Command::new("take").about("Create a new note.").args([
                 Arg::new("content")
