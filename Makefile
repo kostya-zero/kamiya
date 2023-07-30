@@ -12,3 +12,6 @@ update:
 
 package:
 	python package.py
+
+clean:
+	rm -rf target
