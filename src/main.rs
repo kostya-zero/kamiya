@@ -21,15 +21,24 @@ fn main() {
         Some(("take", _sub)) => {
             let content: String = _sub
                 .get_one::<String>("content")
-                .expect("Failed to read argument with note content.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get content. Bad format.");
+                    exit(1);
+                })
                 .to_string();
             let name: String = _sub
                 .get_one::<String>("name")
-                .expect("Failed to read argument with note name.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get name. Bad format.");
+                    exit(1);
+                })
                 .to_string();
             let desc: String = _sub
                 .get_one::<String>("description")
-                .expect("Failed to read argument with note description.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get description. Bad format.");
+                    exit(1);
+                })
                 .to_string();
 
             if content.is_empty() {
@@ -42,12 +51,18 @@ fn main() {
         Some(("desc", _sub)) => {
             let name: String = _sub
                 .get_one::<String>("name")
-                .expect("Cannot read argument content.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get name. Bad format.");
+                    exit(1);
+                })
                 .to_string();
 
             let desc: String = _sub
                 .get_one::<String>("desc")
-                .expect("Cannot read argument content.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get description. Bad format.");
+                    exit(1);
+                })
                 .to_string();
 
             if name.is_empty() {
@@ -60,11 +75,17 @@ fn main() {
         Some(("rename", _sub)) => {
             let old_name: String = _sub
                 .get_one::<String>("old_name")
-                .expect("Cannot read argument content.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get note name. Bad format.");
+                    exit(1);
+                })
                 .to_string();
             let new_name: String = _sub
                 .get_one::<String>("new_name")
-                .expect("Cannot read argument content.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get new name for note. Bad format.");
+                    exit(1);
+                })
                 .to_string();
             Actions::rename(&old_name, &new_name);
         }
@@ -123,11 +144,17 @@ fn main() {
         Some(("save", _sub)) => {
             let name: String = _sub
                 .get_one::<String>("name")
-                .expect("Cannot read argument content.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get note name. Bad format.");
+                    exit(1);
+                })
                 .to_string();
             let filename: String = _sub
                 .get_one::<String>("filename")
-                .expect("Cannot read argument content.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get name for file. Bad format.");
+                    exit(1);
+                })
                 .to_string();
 
             if name.is_empty() {
@@ -150,7 +177,10 @@ fn main() {
         Some(("get", _sub)) => {
             let name: String = _sub
                 .get_one::<String>("name")
-                .expect("Cannot read argument content.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get name of note. Bad format.");
+                    exit(1);
+                })
                 .to_string();
 
             if name.is_empty() {
@@ -163,7 +193,10 @@ fn main() {
         Some(("rm", _sub)) => {
             let name: String = _sub
                 .get_one::<String>("name")
-                .expect("Cannot read argument content.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get name of note to remove. Bad format.");
+                    exit(1);
+                })
                 .to_string();
 
             if name.is_empty() {
@@ -176,7 +209,10 @@ fn main() {
         Some(("export", _sub)) => {
             let path: String = _sub
                 .get_one::<String>("path")
-                .expect("Cannot read argument content.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get path for export. Bad format.");
+                    exit(1);
+                })
                 .to_string();
 
             Actions::export(&path);
@@ -184,14 +220,20 @@ fn main() {
         Some(("import", _sub)) => {
             let filename: String = _sub
                 .get_one::<String>("filename")
-                .expect("Cannot read argument content.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get file name for import. Bad format.");
+                    exit(1);
+                })
                 .to_string();
             Actions::import(filename.as_str());
         }
         Some(("copy", _sub)) => {
             let name: String = _sub
                 .get_one::<String>("name")
-                .expect("Cannot read argument content.")
+                .unwrap_or_else(|| {
+                    Term::fatal("Failed to get name of note to copy. Bad format.");
+                    exit(1);
+                })
                 .to_string();
             if name.is_empty() {
                 Term::fatal("You didn't pass a name to search for.");

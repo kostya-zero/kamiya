@@ -89,10 +89,11 @@ impl Config {
         match self
             .entries
             .iter()
-            .position(|item| item.name == *name.to_owned()) {
-                Some(index) => index,
-                None => panic!("Note not found!"),
-            }
+            .position(|item| item.name == *name.to_owned())
+        {
+            Some(index) => index,
+            None => panic!("Note not found!"),
+        }
     }
 
     pub fn get_note(&self, name: &str) -> &Note {
