@@ -1,0 +1,27 @@
+options:
+  name_template: Note&i
+  editor: nvim
+entries:
+- name: Test
+  content: |
+    New content
+  description: Test description
+- name: Note2
+  content: Test description.
+  description: ''
+- name: Note3
+  content: |
+    And again new file...
+  description: ''
+- name: Note4
+  content: нормально
+  description: ''
+- name: Note5
+  content: ''
+  description: ''
+- name: Note6
+  content: test item
+  description: ''
+- name: Note7
+  content: Test note
+  description: ''

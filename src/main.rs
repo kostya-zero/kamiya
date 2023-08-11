@@ -225,7 +225,17 @@ fn main() {
                     exit(1);
                 })
                 .to_string();
-            Actions::import(filename.as_str());
+            let replace: bool = _sub
+                .get_flag("replace");
+            let interactive: bool = _sub
+                .get_flag("interactive");
+
+            if interactive && replace {
+                Term::fatal("`interactive` and `replace` cant be set at the same time.");
+                exit(1);
+            }
+
+            Actions::import(filename.as_str(), replace, interactive);
         }
         Some(("copy", _sub)) => {
             let name: String = _sub

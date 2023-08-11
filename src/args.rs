@@ -1,4 +1,4 @@
-use clap::{value_parser, Arg, Command};
+use clap::{value_parser, Arg, Command, ArgAction};
 
 pub fn cli() -> Command {
     Command::new("kamiya")
@@ -156,15 +156,27 @@ pub fn cli() -> Command {
             ),
             Command::new("import")
                 .about("Import notes from new database.")
-                .arg(
+                .args([
                     Arg::new("filename")
                         .help("Path to database.")
                         .short('f')
                         .long("file")
                         .num_args(1)
-                        .required(true)
+                        .default_value("kamiya_exported.yml")
                         .value_parser(clap::value_parser!(String)),
-                ),
+                    Arg::new("replace")
+                        .help("Replace if note with the same name exists or not.")
+                        .short('r')
+                        .long("replace")
+                        .required(false)
+                        .action(ArgAction::SetTrue),
+                    Arg::new("interactive")
+                        .help("Ask what to do if note with same name exists.")
+                        .short('i')
+                        .long("interactive")
+                        .required(false)
+                        .action(ArgAction::SetTrue)
+                ]),
             Command::new("copy")
                 .about("Copy note content into clipboard.")
                 .arg(

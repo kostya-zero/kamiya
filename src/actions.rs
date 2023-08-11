@@ -2,13 +2,13 @@ use cli_clipboard::{ClipboardContext, ClipboardProvider};
 
 use crate::{
     config::{Config, Manager, Note},
-    term::Term,
+    term::{Term, AskDefaultAnswers},
     utils::tempfile::TempFile,
 };
 use std::{
     env, fs,
     path::Path,
-    process::{exit, Command, Stdio},
+    process::{exit, Command, Stdio}, io::{self, Write},
 };
 
 pub struct Actions;
@@ -329,7 +329,7 @@ impl Actions {
         Term::hint("Storage size displayed as nubmer of bytes.");
     }
 
-    pub fn import(filename: &str) {
+    pub fn import(filename: &str, replace: bool, interactive: bool) {
         let mut config: Config = Manager::load_config();
 
         if !Path::new(filename).exists() {
@@ -344,13 +344,32 @@ impl Actions {
         Term::work("Importing...");
         for i in new_config.get_notes() {
             if config.note_exists(&i.name) {
-                Term::warn(
-                    format!(
-                        "Note with name '{}' already exists in database.",
-                        &i.name.clone()
-                    )
-                    .as_str(),
-                );
+                if replace {
+                    Term::work(&format!("Replacing data of `{}` with from new one.", &i.name));
+                    config.set_note_content(&i.name, &i.content);
+                    config.set_note_description(&i.name, &i.description);
+                }
+
+                if interactive {
+                    let answer = Term::ask_yn(&format!("Note with name `{}` found in current storage. Do you want to replace?", &i.name), AskDefaultAnswers::Yes);
+                    match answer {
+                        AskDefaultAnswers::Yes => {
+                            Term::work(&format!("Replacing data of `{}` with from new one.", &i.name));
+                            config.set_note_content(&i.name, &i.content);
+                            config.set_note_description(&i.name, &i.description);
+                        },
+                        AskDefaultAnswers::No => Term::warn("Skipping...")
+                    }
+                }
+                if !replace && !interactive {
+                    Term::warn(
+                        format!(
+                            "Note with name '{}' already exists in database.",
+                            &i.name.clone()
+                        )
+                        .as_str(),
+                    );
+                }
             } else {
                 Term::work(format!("Adding new note: {}", &i.name.clone()).as_str());
                 config.add_note(i);
