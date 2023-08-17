@@ -1,5 +1,4 @@
-all:
-	cargo build
+all: debug
 
 debug: 
 	cargo build
