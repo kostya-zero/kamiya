@@ -42,7 +42,7 @@ fn main() {
                 .to_string();
 
             if content.is_empty() {
-                Term::fatal("You cannot take a note with empty content.");
+                Term::fatal("You cant take a note with empty content.");
                 exit(1);
             }
 

@@ -8,7 +8,7 @@ use crate::{
 use std::{
     env, fs,
     path::Path,
-    process::{exit, Command, Stdio}, io::{self, Write},
+    process::{exit, Command, Stdio}
 };
 
 pub struct Actions;
@@ -324,9 +324,9 @@ impl Actions {
         let notes_count = config.notes_count();
 
         Term::title("Information about storage.");
-        Term::message_with_icon(&format!("Storage size: {} bytes", file_size), "󰖡");
-        Term::message_with_icon(&format!("Notes in storage: {}", notes_count), "󰏓");
-        Term::hint("Storage size displayed as nubmer of bytes.");
+        Term::display_data("Storage size", file_size.to_string().as_str());
+        Term::display_data("Notes in storage", notes_count.to_string().as_str());
+        Term::hint("Storage size are displayed as nubmer of bytes.");
     }
 
     pub fn import(filename: &str, replace: bool, interactive: bool) {
