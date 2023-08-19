@@ -117,7 +117,7 @@ impl Actions {
         if editor.is_empty() {
             if config.get_editor().is_empty() {
                 Term::info(
-                    "Editor not set. Please add name of executable that you want to use as editor.",
+                    "Editor not set. Please set name or path to executable of the editor."
                 );
                 Term::hint("Example: kamiya editor vim");
                 exit(1)
@@ -134,7 +134,7 @@ impl Actions {
         let config: Config = Manager::load_config();
         let notes: Vec<Note> = config.get_notes();
         if notes.is_empty() {
-            Term::fatal("No note added to storage.");
+            Term::fatal("Noting added to storage!");
             exit(1);
         }
 
@@ -181,8 +181,7 @@ impl Actions {
 
         Term::work("Writing note content to file...");
         let note = config.get_note(name);
-        let write_result: Result<(), std::io::Error> = fs::write(new_filename, &note.content);
-        match write_result {
+        match fs::write(new_filename, &note.content) {
             Ok(_s) => {
                 Term::success("Done.");
             }
@@ -207,7 +206,7 @@ impl Actions {
         let tmpfile = match tmpfile_initializer {
             Ok(provider) => provider,
             Err(_) => {
-                Term::fatal("Failed initialize temporary file due to error: {}");
+                Term::fatal("Failed initialize temporary file due to unknown error.");
                 exit(1);
             }
         };
@@ -257,23 +256,14 @@ impl Actions {
 
     pub fn get(name: &str) {
         let config: Config = Manager::load_config();
-        let mut content: String = "".to_string();
 
         if !config.note_exists(name) {
             Term::fatal("Note not found!");
             exit(1);
         }
+        let note = config.get_note(name);
 
-        let notes: Vec<Note> = config.get_notes();
-
-        for i in notes {
-            if i.name == *name.to_owned() {
-                content = i.content.clone();
-                break;
-            }
-        }
-
-        println!("{}", content);
+        println!("{}", note.content);
     }
 
     pub fn rm(name: &str) {
@@ -305,14 +295,16 @@ impl Actions {
         }
 
         Term::work("Exporting database...");
-        let backup_config = serde_yaml::to_string(&config).expect("Failed to format config.");
+        let backup_config = serde_yaml::to_string(&config).unwrap();
         match fs::write(path, backup_config) {
-            Ok(_) => Term::success("File saved!"),
+            Ok(_) => {
+                Term::success("File saved!");
+                Term::hint(&format!("Database exported as '{}'.", path));
+            }
             Err(i) => {
                 Term::fatal(&format!("Failed to write content to file. Error: {}", i));
             }
         }
-        Term::hint(&format!("Database exported as '{}'.", path));
     }
 
     pub fn db() {
@@ -375,12 +367,11 @@ impl Actions {
                 config.add_note(i);
             }
         }
-        Term::work("Writing database changes...");
         let config_content: String =
             serde_yaml::to_string(&config).expect("Failed to format config.");
         fs::write(Manager::get_config_path(), config_content)
             .expect("Failed to write content to file.");
-        Term::success("New notes has been imported.");
+        Term::success("Import finished.");
     }
 
     pub fn copy(name: &str) {
