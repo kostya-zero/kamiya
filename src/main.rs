@@ -225,10 +225,8 @@ fn main() {
                     exit(1);
                 })
                 .to_string();
-            let replace: bool = _sub
-                .get_flag("replace");
-            let interactive: bool = _sub
-                .get_flag("interactive");
+            let replace: bool = _sub.get_flag("replace");
+            let interactive: bool = _sub.get_flag("interactive");
 
             if interactive && replace {
                 Term::fatal("`interactive` and `replace` cant be set at the same time.");

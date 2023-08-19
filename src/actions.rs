@@ -2,13 +2,13 @@ use cli_clipboard::{ClipboardContext, ClipboardProvider};
 
 use crate::{
     config::{Config, Manager, Note},
-    term::{Term, AskDefaultAnswers},
+    term::{AskDefaultAnswers, Term},
     utils::tempfile::TempFile,
 };
 use std::{
     env, fs,
     path::Path,
-    process::{exit, Command, Stdio}
+    process::{exit, Command, Stdio},
 };
 
 pub struct Actions;
@@ -116,9 +116,7 @@ impl Actions {
 
         if editor.is_empty() {
             if config.get_editor().is_empty() {
-                Term::info(
-                    "Editor not set. Please set name or path to executable of the editor."
-                );
+                Term::info("Editor not set. Please set name or path to executable of the editor.");
                 Term::hint("Example: kamiya editor vim");
                 exit(1)
             }
@@ -337,20 +335,32 @@ impl Actions {
         for i in new_config.get_notes() {
             if config.note_exists(&i.name) {
                 if replace {
-                    Term::work(&format!("Replacing data of `{}` with from new one.", &i.name));
+                    Term::work(&format!(
+                        "Replacing data of `{}` with from new one.",
+                        &i.name
+                    ));
                     config.set_note_content(&i.name, &i.content);
                     config.set_note_description(&i.name, &i.description);
                 }
 
                 if interactive {
-                    let answer = Term::ask_yn(&format!("Note with name `{}` found in current storage. Do you want to replace?", &i.name), AskDefaultAnswers::Yes);
+                    let answer = Term::ask_yn(
+                        &format!(
+                            "Note with name `{}` found in current storage. Do you want to replace?",
+                            &i.name
+                        ),
+                        AskDefaultAnswers::Yes,
+                    );
                     match answer {
                         AskDefaultAnswers::Yes => {
-                            Term::work(&format!("Replacing data of `{}` with from new one.", &i.name));
+                            Term::work(&format!(
+                                "Replacing data of `{}` with from new one.",
+                                &i.name
+                            ));
                             config.set_note_content(&i.name, &i.content);
                             config.set_note_description(&i.name, &i.description);
-                        },
-                        AskDefaultAnswers::No => Term::warn("Skipping...")
+                        }
+                        AskDefaultAnswers::No => Term::warn("Skipping..."),
                     }
                 }
                 if !replace && !interactive {

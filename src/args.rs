@@ -1,4 +1,4 @@
-use clap::{value_parser, Arg, Command, ArgAction};
+use clap::{value_parser, Arg, ArgAction, Command};
 
 pub fn cli() -> Command {
     Command::new("kamiya")
@@ -175,7 +175,7 @@ pub fn cli() -> Command {
                         .short('i')
                         .long("interactive")
                         .required(false)
-                        .action(ArgAction::SetTrue)
+                        .action(ArgAction::SetTrue),
                 ]),
             Command::new("copy")
                 .about("Copy note content into clipboard.")
