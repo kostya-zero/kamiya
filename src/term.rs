@@ -27,10 +27,6 @@ impl Term {
         println!("\x1b[1m 󰌵 {}\x1b[0m", msg);
     }
 
-    pub fn message_with_icon(msg: &str, icon: &str) {
-        println!("\x1b[1m\x1b[93m {}\x1b[0m\x1b[1m {}\x1b[0m", icon, msg);
-    }
-
     pub fn ask_yn(msg: &str, default_answer: AskDefaultAnswers) -> AskDefaultAnswers {
         let default_answer_display = match default_answer {
             AskDefaultAnswers::Yes => "(Y/n)",

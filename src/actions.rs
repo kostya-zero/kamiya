@@ -14,16 +14,15 @@ use std::{
 pub struct Actions;
 
 impl Actions {
-    pub fn take(content: &str, name: &str, desc: &str) {
+    pub fn take(content: &str, name: &mut String, desc: &str) {
         let mut config: Config = Manager::load_config();
-        let mut new_name: String = String::from(name);
 
         if name.is_empty() {
             if !config.get_template().contains("&i") {
                 Term::fatal("You give empty name and your `name_template` option in config not contain `&i` symbol. Cannot continue.");
                 exit(1);
             }
-            new_name = config.generate_name();
+            name.push_str(&config.generate_name());
         }
 
         if config.note_exists(name) {
@@ -33,7 +32,7 @@ impl Actions {
 
         Term::work("Adding note to storage...");
         let new_note: Note = Note {
-            name: new_name.clone(),
+            name: name.clone(),
             content: content.to_string(),
             description: desc.to_string(),
         };
@@ -41,7 +40,7 @@ impl Actions {
         Manager::write_config(config);
         Term::success(&format!(
             "Note have been added to storage as '{}'.",
-            new_name
+            name
         ));
     }
 

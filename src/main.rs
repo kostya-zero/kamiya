@@ -26,13 +26,13 @@ fn main() {
                     exit(1);
                 })
                 .as_str();
-            let name: &str = _sub
+            let mut name: String = _sub
                 .get_one::<String>("name")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get name. Bad format.");
                     exit(1);
                 })
-                .as_str();
+                .to_string();
             let desc: &str = _sub
                 .get_one::<String>("description")
                 .unwrap_or_else(|| {
@@ -46,7 +46,7 @@ fn main() {
                 exit(1);
             }
 
-            Actions::take(content, name, desc);
+            Actions::take(content, &mut name, desc);
         }
         Some(("desc", _sub)) => {
             let name: &str = _sub
