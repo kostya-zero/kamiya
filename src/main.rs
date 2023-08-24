@@ -19,143 +19,143 @@ fn main() {
     let args = cli().get_matches();
     match args.subcommand() {
         Some(("take", _sub)) => {
-            let content: String = _sub
+            let content: &str = _sub
                 .get_one::<String>("content")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get content. Bad format.");
                     exit(1);
                 })
-                .to_string();
-            let name: String = _sub
+                .as_str();
+            let name: &str = _sub
                 .get_one::<String>("name")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get name. Bad format.");
                     exit(1);
                 })
-                .to_string();
-            let desc: String = _sub
+                .as_str();
+            let desc: &str = _sub
                 .get_one::<String>("description")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get description. Bad format.");
                     exit(1);
                 })
-                .to_string();
+                .as_str();
 
             if content.is_empty() {
                 Term::fatal("You cant take a note with empty content.");
                 exit(1);
             }
 
-            Actions::take(&content, &name, &desc);
+            Actions::take(content, name, desc);
         }
         Some(("desc", _sub)) => {
-            let name: String = _sub
+            let name: &str = _sub
                 .get_one::<String>("name")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get name. Bad format.");
                     exit(1);
                 })
-                .to_string();
+                .as_str();
 
-            let desc: String = _sub
+            let desc: &str = _sub
                 .get_one::<String>("desc")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get description. Bad format.");
                     exit(1);
                 })
-                .to_string();
+                .as_str();
 
             if name.is_empty() {
                 Term::fatal("Cannot set description for the void.");
                 exit(1);
             }
 
-            Actions::desc(&name, &desc);
+            Actions::desc(name, desc);
         }
         Some(("rename", _sub)) => {
-            let old_name: String = _sub
+            let old_name: &str = _sub
                 .get_one::<String>("old_name")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get note name. Bad format.");
                     exit(1);
                 })
-                .to_string();
-            let new_name: String = _sub
+                .as_str();
+            let new_name: &str = _sub
                 .get_one::<String>("new_name")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get new name for note. Bad format.");
                     exit(1);
                 })
-                .to_string();
-            Actions::rename(&old_name, &new_name);
+                .as_str();
+            Actions::rename(old_name, new_name);
         }
         Some(("editor", _sub)) => {
-            let editor: String = _sub
+            let editor: &str = _sub
                 .get_one::<String>("editor")
                 .expect("Cannot read argument content.")
-                .to_string();
+                .as_str();
 
-            Actions::editor(&editor);
+            Actions::editor(editor);
         }
         Some(("db", _sub)) => {
             Actions::db();
         }
         Some(("record", _sub)) => {
-            let filename: String = _sub
+            let filename: &str = _sub
                 .get_one::<String>("filename")
                 .expect("Cannot read argument content.")
-                .to_string();
-            let name: String = _sub
+                .as_str();
+            let name: &str = _sub
                 .get_one::<String>("name")
                 .expect("Cannot read argument content.")
-                .to_string();
+                .as_str();
 
             if filename.is_empty() {
                 Term::fatal("You give no path to file.");
                 exit(1);
             }
 
-            Actions::record(filename.as_str(), name.as_str());
+            Actions::record(filename, name);
         }
         Some(("list", _sub)) => {
             Actions::list();
         }
         Some(("search", _sub)) => {
-            let pattern: String = _sub
+            let pattern: &str = _sub
                 .get_one::<String>("pattern")
                 .expect("Cannot read argument content.")
-                .to_string();
+                .as_str();
 
-            Actions::search(&pattern);
+            Actions::search(pattern);
         }
         Some(("edit", _sub)) => {
-            let name: String = _sub
+            let name: &str = _sub
                 .get_one::<String>("name")
                 .expect("Cannot read argument content.")
-                .to_string();
+                .as_str();
 
             if name.is_empty() {
                 Term::fatal("You didn't give a name for the note.");
                 exit(1);
             }
 
-            Actions::edit(&name);
+            Actions::edit(name);
         }
         Some(("save", _sub)) => {
-            let name: String = _sub
+            let name: &str = _sub
                 .get_one::<String>("name")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get note name. Bad format.");
                     exit(1);
                 })
-                .to_string();
-            let filename: String = _sub
+                .as_str();
+            let filename: &str = _sub
                 .get_one::<String>("filename")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get name for file. Bad format.");
                     exit(1);
                 })
-                .to_string();
+                .as_str();
 
             if name.is_empty() {
                 Term::fatal("You didn't give a name for the note.");
@@ -172,59 +172,59 @@ fn main() {
                 exit(1);
             }
 
-            Actions::save(&name, &filename);
+            Actions::save(name, filename);
         }
         Some(("get", _sub)) => {
-            let name: String = _sub
+            let name: &str = _sub
                 .get_one::<String>("name")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get name of note. Bad format.");
                     exit(1);
                 })
-                .to_string();
+                .as_str();
 
             if name.is_empty() {
                 Term::fatal("You didn't give a name for the note.");
                 exit(1);
             }
 
-            Actions::get(&name);
+            Actions::get(name);
         }
         Some(("rm", _sub)) => {
-            let name: String = _sub
+            let name: &str = _sub
                 .get_one::<String>("name")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get name of note to remove. Bad format.");
                     exit(1);
                 })
-                .to_string();
+                .as_str();
 
             if name.is_empty() {
                 Term::fatal("You didn't pass a name to search for.");
                 exit(1);
             }
 
-            Actions::rm(&name);
+            Actions::rm(name);
         }
         Some(("export", _sub)) => {
-            let path: String = _sub
+            let path: &str = _sub
                 .get_one::<String>("path")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get path for export. Bad format.");
                     exit(1);
                 })
-                .to_string();
+                .as_str();
 
-            Actions::export(&path);
+            Actions::export(path);
         }
         Some(("import", _sub)) => {
-            let filename: String = _sub
+            let filename: &str = _sub
                 .get_one::<String>("filename")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get file name for import. Bad format.");
                     exit(1);
                 })
-                .to_string();
+                .as_str();
             let replace: bool = _sub.get_flag("replace");
             let interactive: bool = _sub.get_flag("interactive");
 
@@ -233,22 +233,22 @@ fn main() {
                 exit(1);
             }
 
-            Actions::import(filename.as_str(), replace, interactive);
+            Actions::import(filename, replace, interactive);
         }
         Some(("copy", _sub)) => {
-            let name: String = _sub
+            let name: &str = _sub
                 .get_one::<String>("name")
                 .unwrap_or_else(|| {
                     Term::fatal("Failed to get name of note to copy. Bad format.");
                     exit(1);
                 })
-                .to_string();
+                .as_str();
             if name.is_empty() {
                 Term::fatal("You didn't pass a name to search for.");
                 exit(1);
             }
 
-            Actions::copy(&name);
+            Actions::copy(name);
         }
         Some(("insert", _sub)) => {
             Actions::insert();

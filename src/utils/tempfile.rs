@@ -15,9 +15,9 @@ impl TempFile {
         }
     }
 
-    pub fn init(&self) -> Result<String, Error> {
+    pub fn init(&self) -> Result<&str, Error> {
         match fs::write(&self.path, "") {
-            Ok(_) => Result::Ok(self.path.clone()),
+            Ok(_) => Result::Ok(self.path.as_str()),
             Err(e) => Result::Err(e),
         }
     }

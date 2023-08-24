@@ -136,7 +136,7 @@ impl Actions {
             exit(1);
         }
 
-        Term::title(format!("Total notes: {}", notes.len()).as_str());
+        Term::title("Notes in storage:");
         for i in &notes {
             if i.description.is_empty() {
                 Term::list_item(&i.name, "");
@@ -163,7 +163,7 @@ impl Actions {
     }
 
     #[allow(unused_assignments)]
-    pub fn save(name: &str, filename: &String) {
+    pub fn save(name: &str, filename: &str) {
         let config: Config = Manager::load_config();
 
         if !config.note_exists(name) {
@@ -181,14 +181,13 @@ impl Actions {
         let note = config.get_note(name);
         match fs::write(new_filename, &note.content) {
             Ok(_s) => {
-                Term::success("Done.");
+                Term::success(format!("Note content saved as file called '{}'.", filename).as_str());
             }
             Err(_err) => {
                 Term::fatal("Failed to write to file. Maybe permissions issue?");
                 exit(1);
             }
         }
-        Term::success(format!("Note content saved as file called '{}'.", filename).as_str());
     }
 
     pub fn edit(name: &str) {
@@ -209,8 +208,8 @@ impl Actions {
             }
         };
 
-        let tmpfile_path: String = tmpfile.init().unwrap();
-        fs::write(&tmpfile_path, note.content.clone())
+        let tmpfile_path: &str = tmpfile.init().unwrap();
+        fs::write(tmpfile_path, note.content.clone())
             .expect("Failed to write content of note to temporary file.");
         let mut editor_name: String = config.get_editor().to_string();
         if editor_name.is_empty() {
@@ -224,7 +223,7 @@ impl Actions {
         Term::work(format!("Launching {}", editor_name).as_str());
 
         let mut cmd = Command::new(editor_name);
-        cmd.args([&tmpfile_path])
+        cmd.args([tmpfile_path])
             .stdout(Stdio::inherit())
             .stdin(Stdio::inherit())
             .stderr(Stdio::inherit());
@@ -245,7 +244,7 @@ impl Actions {
         }
 
         Term::work("Recording changes...");
-        let new_content: String = fs::read_to_string(&tmpfile_path).expect("Error");
+        let new_content: String = fs::read_to_string(tmpfile_path).expect("Error");
         tmpfile.destroy().unwrap();
         config.set_note_content(name, &new_content);
         Manager::write_config(config);
@@ -261,7 +260,7 @@ impl Actions {
         }
         let note = config.get_note(name);
 
-        println!("{}", note.content);
+        println!("{}", note.content.trim_end());
     }
 
     pub fn rm(name: &str) {
