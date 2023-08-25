@@ -4,9 +4,9 @@ description = "No-nonsense note taking app for terminal."
 authors = ["Konstantin Zhigaylo <kostya.zero@outlook.org>"]
 keywords = ["notes", "cli"]
 readme = "README.md"
-repository = "https://gitlab.com/kostya-zero/kamiya"
+repository = "https://github.com/kostya-zero/kamiya"
 license = "GPL-3.0"
-version = "0.5.2"
+version = "0.6.0-dev"
 edition = "2021"
 
 [dependencies]
