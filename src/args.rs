@@ -1,6 +1,6 @@
 use clap::{value_parser, Arg, ArgAction, Command};
 
-pub fn cli() -> Command {
+pub fn args() -> Command {
     Command::new("kamiya")
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .version(env!("CARGO_PKG_VERSION"))
@@ -177,15 +177,5 @@ pub fn cli() -> Command {
                         .required(false)
                         .action(ArgAction::SetTrue),
                 ]),
-            Command::new("copy")
-                .about("Copy note content into clipboard.")
-                .arg(
-                    Arg::new("name")
-                        .help("Name of note to copy.")
-                        .num_args(1)
-                        .required(true)
-                        .value_parser(clap::value_parser!(String)),
-                ),
-            Command::new("insert").about("Insert clipboard content and save it as new note."),
         ])
 }

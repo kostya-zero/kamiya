@@ -1,5 +1,3 @@
-use cli_clipboard::{ClipboardContext, ClipboardProvider};
-
 use crate::{
     config::{Config, Manager, Note},
     term::{AskDefaultAnswers, Term},
@@ -380,30 +378,5 @@ impl Actions {
         fs::write(Manager::get_config_path(), config_content)
             .expect("Failed to write content to file.");
         Term::success("Import finished.");
-    }
-
-    pub fn copy(name: &str) {
-        let config: Config = Manager::load_config();
-        let note: &Note = config.get_note(name);
-        let mut ctx = ClipboardContext::new().unwrap();
-        ctx.set_contents(note.content.to_string())
-            .expect("Failed to set content to clipboard.");
-        Term::success("Copied to the clipboard.");
-    }
-
-    pub fn insert() {
-        let mut config: Config = Manager::load_config();
-        let clipboard_content: String = ClipboardProvider::new()
-            .and_then(|mut ctx: ClipboardContext| ctx.get_contents())
-            .unwrap();
-        let note_name: String = config.generate_name();
-        let new_note: Note = Note {
-            name: note_name.clone(),
-            content: clipboard_content,
-            description: String::new(),
-        };
-        config.add_note(new_note);
-        Manager::write_config(config);
-        Term::success(format!("Clipboard content saved as note called '{}'", note_name).as_str());
     }
 }

@@ -1,4 +1,4 @@
-use crate::args::cli;
+use crate::args::args;
 use crate::term::Term;
 use actions::Actions;
 use config::Manager;
@@ -16,7 +16,7 @@ fn main() {
         Manager::make_default();
         Term::success("Done.");
     }
-    let args = cli().get_matches();
+    let args = args().get_matches();
     match args.subcommand() {
         Some(("take", _sub)) => {
             let content: &str = _sub
@@ -195,21 +195,6 @@ fn main() {
             }
 
             Actions::import(filename, replace, interactive);
-        }
-        Some(("copy", _sub)) => {
-            let name: &str = _sub
-                .get_one::<String>("name")
-                .unwrap()
-                .as_str();
-            if name.is_empty() {
-                Term::fatal("You didn't pass a name to search for.");
-                exit(1);
-            }
-
-            Actions::copy(name);
-        }
-        Some(("insert", _sub)) => {
-            Actions::insert();
         }
         _ => Term::fatal(
             "Unknown command! Use argument '--help' to get full list of available commands.",
