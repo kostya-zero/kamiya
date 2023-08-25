@@ -21,24 +21,15 @@ fn main() {
         Some(("take", _sub)) => {
             let content: &str = _sub
                 .get_one::<String>("content")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get content. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .as_str();
             let mut name: String = _sub
                 .get_one::<String>("name")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get name. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .to_string();
             let desc: &str = _sub
                 .get_one::<String>("description")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get description. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .as_str();
 
             if content.is_empty() {
@@ -51,18 +42,12 @@ fn main() {
         Some(("desc", _sub)) => {
             let name: &str = _sub
                 .get_one::<String>("name")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get name. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .as_str();
 
             let desc: &str = _sub
                 .get_one::<String>("desc")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get description. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .as_str();
 
             if name.is_empty() {
@@ -75,17 +60,11 @@ fn main() {
         Some(("rename", _sub)) => {
             let old_name: &str = _sub
                 .get_one::<String>("old_name")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get note name. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .as_str();
             let new_name: &str = _sub
                 .get_one::<String>("new_name")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get new name for note. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .as_str();
             Actions::rename(old_name, new_name);
         }
@@ -144,17 +123,11 @@ fn main() {
         Some(("save", _sub)) => {
             let name: &str = _sub
                 .get_one::<String>("name")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get note name. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .as_str();
             let filename: &str = _sub
                 .get_one::<String>("filename")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get name for file. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .as_str();
 
             if name.is_empty() {
@@ -177,10 +150,7 @@ fn main() {
         Some(("get", _sub)) => {
             let name: &str = _sub
                 .get_one::<String>("name")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get name of note. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .as_str();
 
             if name.is_empty() {
@@ -193,10 +163,7 @@ fn main() {
         Some(("rm", _sub)) => {
             let name: &str = _sub
                 .get_one::<String>("name")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get name of note to remove. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .as_str();
 
             if name.is_empty() {
@@ -209,10 +176,7 @@ fn main() {
         Some(("export", _sub)) => {
             let path: &str = _sub
                 .get_one::<String>("path")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get path for export. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .as_str();
 
             Actions::export(path);
@@ -220,10 +184,7 @@ fn main() {
         Some(("import", _sub)) => {
             let filename: &str = _sub
                 .get_one::<String>("filename")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get file name for import. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .as_str();
             let replace: bool = _sub.get_flag("replace");
             let interactive: bool = _sub.get_flag("interactive");
@@ -238,10 +199,7 @@ fn main() {
         Some(("copy", _sub)) => {
             let name: &str = _sub
                 .get_one::<String>("name")
-                .unwrap_or_else(|| {
-                    Term::fatal("Failed to get name of note to copy. Bad format.");
-                    exit(1);
-                })
+                .unwrap()
                 .as_str();
             if name.is_empty() {
                 Term::fatal("You didn't pass a name to search for.");
