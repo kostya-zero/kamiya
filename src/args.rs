@@ -33,20 +33,18 @@ pub fn args() -> Command {
             Command::new("add")
                 .about("Save content of file as note.")
                 .args([
+                    Arg::new("filename")
+                        .help("Path to file.")
+                        .num_args(1)
+                        .required(true)
+                        .default_value("")
+                        .value_parser(clap::value_parser!(String)),
                     Arg::new("name")
                         .help("Name of new note.")
                         .short('n')
                         .long("name")
                         .num_args(1)
                         .required(false)
-                        .default_value("")
-                        .value_parser(clap::value_parser!(String)),
-                    Arg::new("filename")
-                        .help("Path to file.")
-                        .short('f')
-                        .long("filename")
-                        .num_args(1)
-                        .required(true)
                         .default_value("")
                         .value_parser(clap::value_parser!(String)),
                 ]),
