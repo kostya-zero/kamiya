@@ -30,25 +30,7 @@ pub fn args() -> Command {
                     .default_value("")
                     .value_parser(value_parser!(String)),
             ]),
-            Command::new("desc")
-                .about("Add description to note.")
-                .args([
-                    Arg::new("name")
-                        .help("Name of note.")
-                        .short('n')
-                        .long("name")
-                        .num_args(1)
-                        .required(true)
-                        .value_parser(clap::value_parser!(String)),
-                    Arg::new("desc")
-                        .help("Description for note.")
-                        .short('d')
-                        .long("desc")
-                        .num_args(1)
-                        .required(true)
-                        .value_parser(clap::value_parser!(String)),
-                ]),
-            Command::new("record")
+            Command::new("add")
                 .about("Save content of file as note.")
                 .args([
                     Arg::new("name")
@@ -66,6 +48,24 @@ pub fn args() -> Command {
                         .num_args(1)
                         .required(true)
                         .default_value("")
+                        .value_parser(clap::value_parser!(String)),
+                ]),
+            Command::new("desc")
+                .about("Add description to note.")
+                .args([
+                    Arg::new("name")
+                        .help("Name of note.")
+                        .short('n')
+                        .long("name")
+                        .num_args(1)
+                        .required(true)
+                        .value_parser(clap::value_parser!(String)),
+                    Arg::new("desc")
+                        .help("Description for note.")
+                        .short('d')
+                        .long("desc")
+                        .num_args(1)
+                        .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ]),
             Command::new("rename").about("Change name of note.").args([

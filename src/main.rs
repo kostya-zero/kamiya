@@ -79,22 +79,22 @@ fn main() {
         Some(("db", _sub)) => {
             Actions::db();
         }
-        Some(("record", _sub)) => {
+        Some(("add", _sub)) => {
             let filename: &str = _sub
                 .get_one::<String>("filename")
                 .expect("Cannot read argument content.")
                 .as_str();
-            let name: &str = _sub
+            let mut name: String = _sub
                 .get_one::<String>("name")
                 .expect("Cannot read argument content.")
-                .as_str();
+                .to_string();
 
             if filename.is_empty() {
                 Term::fatal("You give no path to file.");
                 exit(1);
             }
 
-            Actions::record(filename, name);
+            Actions::add(filename, &mut name);
         }
         Some(("list", _sub)) => {
             Actions::list();

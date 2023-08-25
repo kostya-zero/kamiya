@@ -28,7 +28,7 @@ impl Actions {
             exit(1);
         }
 
-        Term::work("Adding note to storage...");
+        Term::work("Adding note to database...");
         let new_note: Note = Note {
             name: name.clone(),
             content: content.to_string(),
@@ -37,7 +37,7 @@ impl Actions {
         config.add_note(new_note);
         Manager::write_config(config);
         Term::success(&format!(
-            "Note have been added to storage as '{}'.",
+            "Note have been added to database as '{}'.",
             name
         ));
     }
@@ -56,9 +56,8 @@ impl Actions {
         Term::success("Description changed.");
     }
 
-    pub fn record(filename: &str, name: &str) {
+    pub fn add(filename: &str, name: &mut String) {
         let mut config: Config = Manager::load_config();
-        let mut new_name: String = String::new();
 
         if !Path::new(filename).exists() {
             Term::fatal("File not found!");
@@ -66,29 +65,21 @@ impl Actions {
         }
 
         if name.is_empty() {
-            new_name = config.generate_name();
+            name.push_str(Path::new(filename).file_stem().unwrap().to_str().unwrap());
         }
 
-        if !name.is_empty() {
-            if config.note_exists(name) {
-                new_name = config.generate_name();
-            } else {
-                new_name = name.to_string();
-            }
-        }
-
-        Term::work("Recording note to database...");
+        Term::work("Adding file as note to database...");
         let file_content: String = fs::read_to_string(filename).expect("Failed to read file.");
         let new_note: Note = Note {
-            name: new_name.clone(),
+            name: name.clone(),
             content: file_content,
             description: String::new(),
         };
         config.add_note(new_note);
         Manager::write_config(config);
         Term::success(&format!(
-            "Note have been recorded to storage as '{}'.",
-            new_name
+            "Note have been recorded to database as '{}'.",
+            name
         ));
     }
 
@@ -100,7 +91,7 @@ impl Actions {
         }
 
         config.set_note_name(old_name, new_name);
-        Term::work("Writing changes to storage...");
+        Term::work("Writing changes to database...");
         Manager::write_config(config);
         Term::success(&format!(
             "Note '{}' now have name '{}'.",
@@ -159,7 +150,6 @@ impl Actions {
         }
     }
 
-    #[allow(unused_assignments)]
     pub fn save(name: &str, filename: &str) {
         let config: Config = Manager::load_config();
 
