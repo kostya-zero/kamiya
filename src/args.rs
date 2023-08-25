@@ -36,7 +36,7 @@ pub fn args() -> Command {
                     Arg::new("filename")
                         .help("Path to file.")
                         .num_args(1)
-                        .required(true)
+                        .required(false)
                         .default_value("")
                         .value_parser(clap::value_parser!(String)),
                     Arg::new("name")
