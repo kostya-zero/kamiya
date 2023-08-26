@@ -1,29 +1,33 @@
 use crate::{
-    config::{Config, Manager, Note},
+    config::Config,
+    manager::Manager,
+    database::{Database, Note},
     term::{AskDefaultAnswers, Term},
     utils::tempfile::TempFile,
 };
 use std::{
     env, fs,
     path::Path,
-    process::{exit, Command, Stdio},
+    process::{exit, Command, Stdio}, mem,
 };
 
 pub struct Actions;
 
 impl Actions {
     pub fn take(content: &str, name: &mut String, desc: &str) {
-        let mut config: Config = Manager::load_config();
+        let config: Config = Manager::load_config();
+        let mut database: Database = Manager::load_database();
 
         if name.is_empty() {
             if !config.get_template().contains("&i") {
                 Term::fatal("You give empty name and your `name_template` option in config not contain `&i` symbol. Cannot continue.");
                 exit(1);
             }
-            name.push_str(&config.generate_name());
+            name.push_str(&database.generate_name(&config.get_template()));
         }
+        mem::forget(config);
 
-        if config.note_exists(name) {
+        if database.note_exists(name) {
             Term::fatal("Note with same name already exists!");
             exit(1);
         }
@@ -34,8 +38,8 @@ impl Actions {
             content: content.to_string(),
             description: desc.to_string(),
         };
-        config.add_note(new_note);
-        Manager::write_config(config);
+        database.add_note(new_note);
+        Manager::write_database(database);
         Term::success(&format!(
             "Note have been added to database as '{}'.",
             name
@@ -43,21 +47,21 @@ impl Actions {
     }
 
     pub fn desc(name: &str, desc: &str) {
-        let mut config: Config = Manager::load_config();
+        let mut database: Database = Manager::load_database();
 
-        if !config.note_exists(name) {
+        if !database.note_exists(name) {
             Term::fatal("Note with given name not found.");
             exit(1);
         }
 
-        config.set_note_description(name, desc);
+        database.set_note_description(name, desc);
         Term::work("Writing changes to database...");
-        Manager::write_config(config);
+        Manager::write_database(database);
         Term::success("Description changed.");
     }
 
     pub fn add(filename: &str, name: &mut String) {
-        let mut config: Config = Manager::load_config();
+        let mut database: Database = Manager::load_database();
 
         if !Path::new(filename).exists() {
             Term::fatal("File not found!");
@@ -75,8 +79,8 @@ impl Actions {
             content: file_content,
             description: String::new(),
         };
-        config.add_note(new_note);
-        Manager::write_config(config);
+        database.add_note(new_note);
+        Manager::write_database(database);
         Term::success(&format!(
             "Note have been recorded to database as '{}'.",
             name
@@ -84,15 +88,15 @@ impl Actions {
     }
 
     pub fn rename(old_name: &str, new_name: &str) {
-        let mut config: Config = Manager::load_config();
-        if !config.note_exists(old_name) {
+        let mut database: Database = Manager::load_database();
+        if !database.note_exists(old_name) {
             Term::fatal("Cannot find note to rename");
             exit(1);
         }
 
-        config.set_note_name(old_name, new_name);
+        database.set_note_name(old_name, new_name);
         Term::work("Writing changes to database...");
-        Manager::write_config(config);
+        Manager::write_database(database);
         Term::success(&format!(
             "Note '{}' now have name '{}'.",
             old_name, new_name
@@ -117,8 +121,8 @@ impl Actions {
     }
 
     pub fn list() {
-        let config: Config = Manager::load_config();
-        let notes: Vec<Note> = config.get_notes();
+        let database: Database = Manager::load_database();
+        let notes: Vec<Note> = database.get_notes();
         if notes.is_empty() {
             Term::fatal("Noting added to storage!");
             exit(1);
@@ -135,10 +139,10 @@ impl Actions {
     }
 
     pub fn search(pattern: &str) {
-        let config: Config = Manager::load_config();
+        let database: Database = Manager::load_database();
         let mut found_notes: Vec<String> = vec![];
 
-        for i in config.get_notes().iter() {
+        for i in database.get_notes().iter() {
             if i.name.contains(pattern) {
                 found_notes.push(format!("\x1b[4m{}\x1b[0m\x1b[1m", pattern));
             }
@@ -151,9 +155,9 @@ impl Actions {
     }
 
     pub fn save(name: &str, filename: &str) {
-        let config: Config = Manager::load_config();
+        let database: Database = Manager::load_database();
 
-        if !config.note_exists(name) {
+        if !database.note_exists(name) {
             Term::fatal("Note not found!");
             exit(1);
         }
@@ -165,7 +169,7 @@ impl Actions {
         }
 
         Term::work("Writing note content to file...");
-        let note = config.get_note(name);
+        let note = database.get_note(name);
         match fs::write(new_filename, &note.content) {
             Ok(_s) => {
                 Term::success(format!("Note content saved as file called '{}'.", filename).as_str());
@@ -178,14 +182,15 @@ impl Actions {
     }
 
     pub fn edit(name: &str) {
-        let mut config: Config = Manager::load_config();
+        let config: Config = Manager::load_config();
+        let mut database: Database = Manager::load_database();
 
-        if !config.note_exists(name) {
+        if !database.note_exists(name) {
             Term::fatal("Note not found!");
             exit(1);
         }
 
-        let note = config.get_note(name);
+        let note = database.get_note(name);
         let tmpfile_initializer = TempFile::new(name);
         let tmpfile = match tmpfile_initializer {
             Ok(provider) => provider,
@@ -233,42 +238,40 @@ impl Actions {
         Term::work("Recording changes...");
         let new_content: String = fs::read_to_string(tmpfile_path).expect("Error");
         tmpfile.destroy().unwrap();
-        config.set_note_content(name, &new_content);
-        Manager::write_config(config);
+        database.set_note_content(name, &new_content);
+        Manager::write_database(database);
         Term::success("Changes have been saved.");
     }
 
     pub fn get(name: &str) {
-        let config: Config = Manager::load_config();
+        let database: Database = Manager::load_database();
 
-        if !config.note_exists(name) {
+        if !database.note_exists(name) {
             Term::fatal("Note not found!");
             exit(1);
         }
-        let note = config.get_note(name);
+        let note = database.get_note(name);
 
         println!("{}", note.content.trim_end());
     }
 
     pub fn rm(name: &str) {
-        let mut config: Config = Manager::load_config();
+        let _config: Config = Manager::load_config();
+        let mut database: Database = Manager::load_database();
 
-        if !config
-            .get_notes()
-            .iter()
-            .any(|i| i.name == *name.to_owned())
+        if !database.note_exists(name)
         {
             Term::fatal("Note not found!");
             exit(1);
         }
 
-        config.remove_note(name);
-        Manager::write_config(config);
-        Term::success("Note deleted!");
+        database.remove_note(name);
+        Manager::write_database(database);
+        Term::success("Note deleted!.");
     }
 
     pub fn export(path: &str) {
-        let config: Config = Manager::load_config();
+        let database: Database = Manager::load_database();
 
         if Path::new(path).exists() {
             Term::fatal(&format!(
@@ -279,7 +282,7 @@ impl Actions {
         }
 
         Term::work("Exporting database...");
-        let backup_config = serde_yaml::to_string(&config).unwrap();
+        let backup_config = serde_json::to_string(&database).unwrap();
         match fs::write(path, backup_config) {
             Ok(_) => {
                 Term::success("File saved!");
@@ -292,12 +295,12 @@ impl Actions {
     }
 
     pub fn db() {
-        let config: Config = Manager::load_config();
+        let database: Database = Manager::load_database();
 
         let file_size = fs::metadata(Manager::get_config_path())
             .expect("Failed to get metadata about config.")
             .len();
-        let notes_count = config.notes_count();
+        let notes_count = database.notes_count();
 
         Term::title("Information about storage.");
         Term::display_data("Storage size", file_size.to_string().as_str());
@@ -306,7 +309,8 @@ impl Actions {
     }
 
     pub fn import(filename: &str, replace: bool, interactive: bool) {
-        let mut config: Config = Manager::load_config();
+        let config: Config = Manager::load_config();
+        let mut database: Database = Manager::load_database();
 
         if !Path::new(filename).exists() {
             Term::fatal("Cant find new database.");
@@ -314,19 +318,19 @@ impl Actions {
         }
 
         Term::work("Getting new database content...");
-        let new_db: String = fs::read_to_string(filename).expect("Failed to read file.");
-        let new_config: Config = serde_yaml::from_str(new_db.as_str())
+        let new_db_file: String = fs::read_to_string(filename).expect("Failed to read file.");
+        let new_db: Database = serde_json::from_str(new_db_file.as_str())
             .expect("Failed to import notes. Maybe, bad config formatting.");
         Term::work("Importing...");
-        for i in new_config.get_notes() {
-            if config.note_exists(&i.name) {
+        for i in new_db.get_notes() {
+            if database.note_exists(&i.name) {
                 if replace {
                     Term::work(&format!(
                         "Replacing data of `{}` with from new one.",
                         &i.name
                     ));
-                    config.set_note_content(&i.name, &i.content);
-                    config.set_note_description(&i.name, &i.description);
+                    database.set_note_content(&i.name, &i.content);
+                    database.set_note_description(&i.name, &i.description);
                 }
 
                 if interactive {
@@ -343,8 +347,8 @@ impl Actions {
                                 "Replacing data of `{}` with from new one.",
                                 &i.name
                             ));
-                            config.set_note_content(&i.name, &i.content);
-                            config.set_note_description(&i.name, &i.description);
+                            database.set_note_content(&i.name, &i.content);
+                            database.set_note_description(&i.name, &i.description);
                         }
                         AskDefaultAnswers::No => Term::warn("Skipping..."),
                     }
@@ -360,11 +364,11 @@ impl Actions {
                 }
             } else {
                 Term::work(format!("Adding new note: {}", &i.name.clone()).as_str());
-                config.add_note(i);
+                database.add_note(i);
             }
         }
         let config_content: String =
-            serde_yaml::to_string(&config).expect("Failed to format config.");
+            serde_json::to_string(&config).expect("Failed to format config.");
         fs::write(Manager::get_config_path(), config_content)
             .expect("Failed to write content to file.");
         Term::success("Import finished.");

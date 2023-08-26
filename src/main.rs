@@ -1,21 +1,22 @@
 use crate::args::args;
 use crate::term::Term;
 use actions::Actions;
-use config::Manager;
+use manager::Manager;
 use std::{path::Path, process::exit};
 
 mod actions;
 mod args;
 mod config;
+mod database;
+mod manager;
 mod term;
 mod utils;
 
 fn main() {
-    if !Manager::check_config() {
-        Term::work("Generating new database...");
+    if !Manager::check_db() || !Manager::check_config() {
         Manager::make_default();
-        Term::success("Done.");
     }
+
     let args = args().get_matches();
     match args.subcommand() {
         Some(("take", _sub)) => {
