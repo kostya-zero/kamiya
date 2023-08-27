@@ -11,7 +11,7 @@ pub fn args() -> Command {
                 Arg::new("content")
                     .help("The contents of the note.")
                     .num_args(1)
-                    .required(true)
+                    .required(false)
                     .value_parser(clap::value_parser!(String)),
                 Arg::new("name")
                     .short('n')
