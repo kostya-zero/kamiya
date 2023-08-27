@@ -1,6 +1,4 @@
-
 use serde::{Deserialize, Serialize};
-
 
 #[derive(Serialize, Deserialize)]
 pub struct Options {
@@ -28,7 +26,7 @@ impl Config {
     pub fn get_template(&self) -> String {
         self.options.name_template.clone()
     }
-    
+
     pub fn get_editor(&self) -> String {
         self.options.editor.clone()
     }
@@ -37,4 +35,3 @@ impl Config {
         self.options.editor = String::from(editor);
     }
 }
-

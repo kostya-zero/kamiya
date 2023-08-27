@@ -6,7 +6,7 @@ use crate::{
     utils::tempfile::TempFile,
 };
 use std::{
-    env, fs,
+    fs,
     path::Path,
     process::{exit, Command, Stdio}, mem,
 };
@@ -32,12 +32,12 @@ impl Actions {
             exit(1);
         }
 
-        Term::work("Adding note to database...");
         let new_note: Note = Note {
             name: name.clone(),
             content: content.to_string(),
             description: desc.to_string(),
         };
+        
         database.add_note(new_note);
         Manager::write_database(database);
         Term::success(&format!(
@@ -55,7 +55,6 @@ impl Actions {
         }
 
         database.set_note_description(name, desc);
-        Term::work("Writing changes to database...");
         Manager::write_database(database);
         Term::success("Description changed.");
     }
@@ -72,7 +71,6 @@ impl Actions {
             name.push_str(Path::new(filename).file_stem().unwrap().to_str().unwrap());
         }
 
-        Term::work("Adding file as note to database...");
         let file_content: String = fs::read_to_string(filename).expect("Failed to read file.");
         let new_note: Note = Note {
             name: name.clone(),
@@ -82,7 +80,7 @@ impl Actions {
         database.add_note(new_note);
         Manager::write_database(database);
         Term::success(&format!(
-            "Note have been recorded to database as '{}'.",
+            "Note have been added to database as '{}'.",
             name
         ));
     }
@@ -95,7 +93,6 @@ impl Actions {
         }
 
         database.set_note_name(old_name, new_name);
-        Term::work("Writing changes to database...");
         Manager::write_database(database);
         Term::success(&format!(
             "Note '{}' now have name '{}'.",
@@ -203,13 +200,11 @@ impl Actions {
         let tmpfile_path: &str = tmpfile.init().unwrap();
         fs::write(tmpfile_path, note.content.clone())
             .expect("Failed to write content of note to temporary file.");
-        let mut editor_name: String = config.get_editor().to_string();
+        let editor_name: String = config.get_editor().to_string();
         if editor_name.is_empty() {
-            if env::var("EDITOR").is_err() {
-                Term::fatal("Editor not specified! Set 'editor' option in config or set EDITOR environment variable.");
-                exit(1);
-            }
-            editor_name = env::var("EDITOR").expect("Cannot get environment variable.");
+            Term::fatal("Edtior not set properly. Please run Kamiya with `editor` command and see if it's set or not.");
+            Term::hint("If not or set not correctly, use `editor` command to specify it. Example: `kamiya editor vim`");
+            exit(1);
         }
 
         Term::work(format!("Launching {}", editor_name).as_str());

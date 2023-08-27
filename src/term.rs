@@ -62,7 +62,7 @@ impl Term {
     }
 
     pub fn work(msg: &str) {
-        println!("\x1b[1 \x1b[0m\x1b[1m {}\x1b[0m", msg);
+        println!("\x1b[1m \x1b[0m\x1b[1m {}\x1b[0m", msg);
     }
 
     pub fn warn(msg: &str) {
