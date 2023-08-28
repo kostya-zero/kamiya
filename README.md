@@ -1,24 +1,9 @@
-<div align="center" style="text-align:center">
-    <img src="imgs/banner.png"/>
-    <div align="center">
-        <img alt="Latest version" src="https://img.shields.io/gitlab/v/release/kostya-zero/kamiya?style=flat-square&labelColor=303030&color=26A269">
-        <img alt="Commit activity" src="https://img.shields.io/github/commit-activity/w/kostya-zero/kamiya?style=flat-square&labelColor=303030&color=3584E4">
-        <img alt="Project License" src="https://img.shields.io/github/license/kostya-zero%2Fkamiya?style=flat-square&labelColor=303030&color=FFA348">
-        <img alt="Crates.io" src="https://img.shields.io/crates/v/kamiya?style=flat-square&labelColor=303030&color=F8E45C">
-    </div>
-    <h3>No-nonsense note taking app for terminal.</h3>
-</div>
+<h1> 🗒️ Kamiya <img alt="Latest version" src="https://img.shields.io/gitlab/v/release/kostya-zero/kamiya?style=flat-square&color=26A269&label="></h1>
 
-### 🗺️ Navigation
+<img src="imgs/logo.svg" align="right" width="128px" >
 
-- [Features](#✨-features)
-- [Installation](#💾-installation)
-- [Usage](#⌨%EF%B8%8F-usage)
-- [Configuration](#⚙%EF%B8%8F-configuration)
-- [Reporting Problems](#📨-reporting-problems)
-- [Contribution](#📦-contribution)
-- [Links](#🪐-links)
-
+Kamiya is a no-nonsense note taking app that runs in terminal. 
+It stores all your notes in database so it makes easier to store your notes.
 
 ### ✨ Features
 
@@ -148,4 +133,5 @@ Feel free to fork this reposotiry, make changes that you want to suggest and cre
 
 - [GitHub Repository](https://github.com/kostya-zero/kamiya)
 - [GitLab Repository](https://gitlab.com/kostya-zero/kamiya)
+
 
