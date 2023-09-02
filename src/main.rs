@@ -22,16 +22,14 @@ fn main() {
         Some(("take", _sub)) => {
             let content: &str = _sub
                 .get_one::<String>("content")
-                .unwrap()
-                .as_str();
+                .unwrap();
             let mut name: String = _sub
                 .get_one::<String>("name")
                 .unwrap()
                 .to_string();
             let desc: &str = _sub
                 .get_one::<String>("description")
-                .unwrap()
-                .as_str();
+                .unwrap();
 
             if content.is_empty() {
                 Term::fatal("You cant take a note with empty content.");
@@ -40,16 +38,30 @@ fn main() {
 
             Actions::take(content, &mut name, desc);
         }
+        Some(("add", _sub)) => {
+            let filename: &str = _sub
+                .get_one::<String>("filename")
+                .unwrap();
+            let mut name: String = _sub
+                .get_one::<String>("name")
+                .unwrap()
+                .to_string();
+
+            if filename.is_empty() {
+                Term::fatal("You give no path to file.");
+                exit(1);
+            }
+
+            Actions::add(filename, &mut name);
+        }
         Some(("desc", _sub)) => {
             let name: &str = _sub
                 .get_one::<String>("name")
-                .unwrap()
-                .as_str();
+                .unwrap();
 
             let desc: &str = _sub
                 .get_one::<String>("desc")
-                .unwrap()
-                .as_str();
+                .unwrap();
 
             if name.is_empty() {
                 Term::fatal("Cannot set description for the void.");
@@ -69,50 +81,22 @@ fn main() {
                 .as_str();
             Actions::rename(old_name, new_name);
         }
-        Some(("editor", _sub)) => {
-            let editor: &str = _sub
-                .get_one::<String>("editor")
-                .expect("Cannot read argument content.")
-                .as_str();
-
-            Actions::editor(editor);
-        }
-        Some(("db", _sub)) => {
-            Actions::db();
-        }
-        Some(("add", _sub)) => {
-            let filename: &str = _sub
-                .get_one::<String>("filename")
-                .expect("Cannot read argument content.")
-                .as_str();
-            let mut name: String = _sub
+        Some(("get", _sub)) => {
+            let name: &str = _sub
                 .get_one::<String>("name")
-                .expect("Cannot read argument content.")
-                .to_string();
+                .unwrap();
 
-            if filename.is_empty() {
-                Term::fatal("You give no path to file.");
+            if name.is_empty() {
+                Term::fatal("You didn't give a name for the note.");
                 exit(1);
             }
 
-            Actions::add(filename, &mut name);
-        }
-        Some(("list", _sub)) => {
-            Actions::list();
-        }
-        Some(("search", _sub)) => {
-            let pattern: &str = _sub
-                .get_one::<String>("pattern")
-                .expect("Cannot read argument content.")
-                .as_str();
-
-            Actions::search(pattern);
+            Actions::get(name);
         }
         Some(("edit", _sub)) => {
             let name: &str = _sub
                 .get_one::<String>("name")
-                .expect("Cannot read argument content.")
-                .as_str();
+                .unwrap();
 
             if name.is_empty() {
                 Term::fatal("You didn't give a name for the note.");
@@ -121,15 +105,46 @@ fn main() {
 
             Actions::edit(name);
         }
+        Some(("editor", _sub)) => {
+            let editor: &str = _sub
+                .get_one::<String>("editor")
+                .expect("Cannot read argument content.")
+                .as_str();
+
+            Actions::editor(editor);
+        }
+        Some(("rm", _sub)) => {
+            let name: &str = _sub
+                .get_one::<String>("name")
+                .unwrap();
+
+            if name.is_empty() {
+                Term::fatal("You didn't pass a name to search for.");
+                exit(1);
+            }
+
+            Actions::rm(name);
+        }
+        Some(("search", _sub)) => {
+            let pattern: &str = _sub
+                .get_one::<String>("pattern")
+                .unwrap();
+
+            Actions::search(pattern);
+        }
+        Some(("list", _sub)) => {
+            Actions::list();
+        }
+        Some(("db", _sub)) => {
+            Actions::db();
+        }
         Some(("save", _sub)) => {
             let name: &str = _sub
                 .get_one::<String>("name")
-                .unwrap()
-                .as_str();
+                .unwrap();
             let filename: &str = _sub
                 .get_one::<String>("filename")
-                .unwrap()
-                .as_str();
+                .unwrap();
 
             if name.is_empty() {
                 Term::fatal("You didn't give a name for the note.");
@@ -148,45 +163,17 @@ fn main() {
 
             Actions::save(name, filename);
         }
-        Some(("get", _sub)) => {
-            let name: &str = _sub
-                .get_one::<String>("name")
-                .unwrap()
-                .as_str();
-
-            if name.is_empty() {
-                Term::fatal("You didn't give a name for the note.");
-                exit(1);
-            }
-
-            Actions::get(name);
-        }
-        Some(("rm", _sub)) => {
-            let name: &str = _sub
-                .get_one::<String>("name")
-                .unwrap()
-                .as_str();
-
-            if name.is_empty() {
-                Term::fatal("You didn't pass a name to search for.");
-                exit(1);
-            }
-
-            Actions::rm(name);
-        }
         Some(("export", _sub)) => {
             let path: &str = _sub
                 .get_one::<String>("path")
-                .unwrap()
-                .as_str();
+                .unwrap();
 
             Actions::export(path);
         }
         Some(("import", _sub)) => {
             let filename: &str = _sub
                 .get_one::<String>("filename")
-                .unwrap()
-                .as_str();
+                .unwrap();
             let replace: bool = _sub.get_flag("replace");
             let interactive: bool = _sub.get_flag("interactive");
 

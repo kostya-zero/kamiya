@@ -80,43 +80,6 @@ pub fn args() -> Command {
                     .help("New note name.")
                     .value_parser(value_parser!(String)),
             ]),
-            Command::new("editor")
-                .about("Set editor for editing notes or check which are using now.")
-                .arg(
-                    Arg::new("editor")
-                        .help("Editor to use")
-                        .value_parser(value_parser!(String))
-                        .default_value("")
-                        .num_args(1),
-                ),
-            Command::new("list").about("Get a list of the notes in the storage."),
-            Command::new("db").about("Show information about database status."),
-            Command::new("search")
-                .about("Search for notes by name.")
-                .arg(
-                    Arg::new("pattern")
-                        .help("Part or full name of note.")
-                        .num_args(1)
-                        .required(true)
-                        .value_parser(clap::value_parser!(String)),
-                ),
-            Command::new("save")
-                .about("Save note from storage as file.")
-                .args([
-                    Arg::new("name")
-                        .short('n')
-                        .long("name")
-                        .help("Name of note.")
-                        .num_args(1)
-                        .required(true)
-                        .value_parser(clap::value_parser!(String)),
-                    Arg::new("filename")
-                        .short('f')
-                        .long("filename")
-                        .help("Name of file.")
-                        .num_args(1)
-                        .value_parser(clap::value_parser!(String)),
-                ]),
             Command::new("get")
                 .about("Get the contents of a note from the storage.")
                 .arg(
@@ -135,6 +98,15 @@ pub fn args() -> Command {
                         .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ),
+            Command::new("editor")
+                .about("Set editor for editing notes or check which are using now.")
+                .arg(
+                    Arg::new("editor")
+                        .help("Editor to use")
+                        .value_parser(value_parser!(String))
+                        .default_value("")
+                        .num_args(1),
+                ),
             Command::new("rm")
                 .about("Delete a note from the storage.")
                 .arg(
@@ -144,6 +116,34 @@ pub fn args() -> Command {
                         .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ),
+            Command::new("search")
+                .about("Search for notes by name.")
+                .arg(
+                    Arg::new("pattern")
+                        .help("Part or full name of note.")
+                        .num_args(1)
+                        .required(true)
+                        .value_parser(clap::value_parser!(String)),
+                ),
+            Command::new("list").about("Get a list of the notes in the storage."),
+            Command::new("db").about("Show information about database status."),
+            Command::new("save")
+                .about("Save note from storage as file.")
+                .args([
+                    Arg::new("name")
+                        .short('n')
+                        .long("name")
+                        .help("Name of note.")
+                        .num_args(1)
+                        .required(true)
+                        .value_parser(clap::value_parser!(String)),
+                    Arg::new("filename")
+                        .short('f')
+                        .long("filename")
+                        .help("Name of file.")
+                        .num_args(1)
+                        .value_parser(clap::value_parser!(String)),
+                ]),
             Command::new("export").about("Export database.").arg(
                 Arg::new("path")
                     .help("Path where database will be saved.")

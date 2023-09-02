@@ -2,6 +2,12 @@ use std::{fs, path::Path};
 use home::home_dir;
 use crate::{config::Config, database::Database};
 
+pub enum ManagerError {
+    BadFormat,
+    WriteError,
+    UnknownError
+}
+
 pub struct Manager;
 impl Manager {
     pub fn get_config_path() -> String {

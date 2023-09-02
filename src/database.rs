@@ -1,7 +1,5 @@
 use std::process::exit;
-
 use serde::{Serialize, Deserialize};
-
 use crate::term::Term;
 
 #[derive(Serialize, Deserialize, Default, Clone)]
