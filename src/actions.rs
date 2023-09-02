@@ -1,14 +1,14 @@
 use crate::{
     config::Config,
-    manager::Manager,
     database::{Database, Note},
+    manager::Manager,
     term::{AskDefaultAnswers, Term},
     utils::tempfile::TempFile,
 };
 use std::{
-    fs,
+    fs, mem,
     path::Path,
-    process::{exit, Command, Stdio}, mem,
+    process::{exit, Command, Stdio},
 };
 
 pub struct Actions;
@@ -37,13 +37,10 @@ impl Actions {
             content: content.to_string(),
             description: desc.to_string(),
         };
-        
+
         database.add_note(new_note);
         Manager::write_database(database);
-        Term::success(&format!(
-            "Note have been added to database as '{}'.",
-            name
-        ));
+        Term::success(&format!("Note have been added to database as '{}'.", name));
     }
 
     pub fn desc(name: &str, desc: &str) {
@@ -79,10 +76,7 @@ impl Actions {
         };
         database.add_note(new_note);
         Manager::write_database(database);
-        Term::success(&format!(
-            "Note have been added to database as '{}'.",
-            name
-        ));
+        Term::success(&format!("Note have been added to database as '{}'.", name));
     }
 
     pub fn rename(old_name: &str, new_name: &str) {
@@ -169,7 +163,9 @@ impl Actions {
         let note = database.get_note(name);
         match fs::write(new_filename, &note.content) {
             Ok(_s) => {
-                Term::success(format!("Note content saved as file called '{}'.", filename).as_str());
+                Term::success(
+                    format!("Note content saved as file called '{}'.", filename).as_str(),
+                );
             }
             Err(_err) => {
                 Term::fatal("Failed to write to file. Maybe permissions issue?");
@@ -254,8 +250,7 @@ impl Actions {
         let _config: Config = Manager::load_config();
         let mut database: Database = Manager::load_database();
 
-        if !database.note_exists(name)
-        {
+        if !database.note_exists(name) {
             Term::fatal("Note not found!");
             exit(1);
         }

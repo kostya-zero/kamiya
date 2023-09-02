@@ -1,6 +1,6 @@
-use std::process::exit;
-use serde::{Serialize, Deserialize};
 use crate::term::Term;
+use serde::{Deserialize, Serialize};
+use std::process::exit;
 
 #[derive(Serialize, Deserialize, Default, Clone)]
 pub struct Note {
@@ -12,13 +12,11 @@ pub struct Note {
 
 #[derive(Serialize, Deserialize, Default)]
 pub struct Database {
-    notes: Vec<Note>
+    notes: Vec<Note>,
 }
 impl Database {
     pub fn note_exists(&self, name: &str) -> bool {
-        self.notes
-            .iter()
-            .any(|item| item.name == *name.to_owned())
+        self.notes.iter().any(|item| item.name == *name.to_owned())
     }
 
     pub fn remove_note(&mut self, name: &str) {

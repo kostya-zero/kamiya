@@ -20,16 +20,9 @@ fn main() {
     let args = args().get_matches();
     match args.subcommand() {
         Some(("take", _sub)) => {
-            let content: &str = _sub
-                .get_one::<String>("content")
-                .unwrap();
-            let mut name: String = _sub
-                .get_one::<String>("name")
-                .unwrap()
-                .to_string();
-            let desc: &str = _sub
-                .get_one::<String>("description")
-                .unwrap();
+            let content: &str = _sub.get_one::<String>("content").unwrap();
+            let mut name: String = _sub.get_one::<String>("name").unwrap().to_string();
+            let desc: &str = _sub.get_one::<String>("description").unwrap();
 
             if content.is_empty() {
                 Term::fatal("You cant take a note with empty content.");
@@ -39,13 +32,8 @@ fn main() {
             Actions::take(content, &mut name, desc);
         }
         Some(("add", _sub)) => {
-            let filename: &str = _sub
-                .get_one::<String>("filename")
-                .unwrap();
-            let mut name: String = _sub
-                .get_one::<String>("name")
-                .unwrap()
-                .to_string();
+            let filename: &str = _sub.get_one::<String>("filename").unwrap();
+            let mut name: String = _sub.get_one::<String>("name").unwrap().to_string();
 
             if filename.is_empty() {
                 Term::fatal("You give no path to file.");
@@ -55,13 +43,9 @@ fn main() {
             Actions::add(filename, &mut name);
         }
         Some(("desc", _sub)) => {
-            let name: &str = _sub
-                .get_one::<String>("name")
-                .unwrap();
+            let name: &str = _sub.get_one::<String>("name").unwrap();
 
-            let desc: &str = _sub
-                .get_one::<String>("desc")
-                .unwrap();
+            let desc: &str = _sub.get_one::<String>("desc").unwrap();
 
             if name.is_empty() {
                 Term::fatal("Cannot set description for the void.");
@@ -71,20 +55,12 @@ fn main() {
             Actions::desc(name, desc);
         }
         Some(("rename", _sub)) => {
-            let old_name: &str = _sub
-                .get_one::<String>("old_name")
-                .unwrap()
-                .as_str();
-            let new_name: &str = _sub
-                .get_one::<String>("new_name")
-                .unwrap()
-                .as_str();
+            let old_name: &str = _sub.get_one::<String>("old_name").unwrap().as_str();
+            let new_name: &str = _sub.get_one::<String>("new_name").unwrap().as_str();
             Actions::rename(old_name, new_name);
         }
         Some(("get", _sub)) => {
-            let name: &str = _sub
-                .get_one::<String>("name")
-                .unwrap();
+            let name: &str = _sub.get_one::<String>("name").unwrap();
 
             if name.is_empty() {
                 Term::fatal("You didn't give a name for the note.");
@@ -94,9 +70,7 @@ fn main() {
             Actions::get(name);
         }
         Some(("edit", _sub)) => {
-            let name: &str = _sub
-                .get_one::<String>("name")
-                .unwrap();
+            let name: &str = _sub.get_one::<String>("name").unwrap();
 
             if name.is_empty() {
                 Term::fatal("You didn't give a name for the note.");
@@ -114,9 +88,7 @@ fn main() {
             Actions::editor(editor);
         }
         Some(("rm", _sub)) => {
-            let name: &str = _sub
-                .get_one::<String>("name")
-                .unwrap();
+            let name: &str = _sub.get_one::<String>("name").unwrap();
 
             if name.is_empty() {
                 Term::fatal("You didn't pass a name to search for.");
@@ -126,9 +98,7 @@ fn main() {
             Actions::rm(name);
         }
         Some(("search", _sub)) => {
-            let pattern: &str = _sub
-                .get_one::<String>("pattern")
-                .unwrap();
+            let pattern: &str = _sub.get_one::<String>("pattern").unwrap();
 
             Actions::search(pattern);
         }
@@ -139,12 +109,8 @@ fn main() {
             Actions::db();
         }
         Some(("save", _sub)) => {
-            let name: &str = _sub
-                .get_one::<String>("name")
-                .unwrap();
-            let filename: &str = _sub
-                .get_one::<String>("filename")
-                .unwrap();
+            let name: &str = _sub.get_one::<String>("name").unwrap();
+            let filename: &str = _sub.get_one::<String>("filename").unwrap();
 
             if name.is_empty() {
                 Term::fatal("You didn't give a name for the note.");
@@ -164,16 +130,12 @@ fn main() {
             Actions::save(name, filename);
         }
         Some(("export", _sub)) => {
-            let path: &str = _sub
-                .get_one::<String>("path")
-                .unwrap();
+            let path: &str = _sub.get_one::<String>("path").unwrap();
 
             Actions::export(path);
         }
         Some(("import", _sub)) => {
-            let filename: &str = _sub
-                .get_one::<String>("filename")
-                .unwrap();
+            let filename: &str = _sub.get_one::<String>("filename").unwrap();
             let replace: bool = _sub.get_flag("replace");
             let interactive: bool = _sub.get_flag("interactive");
 

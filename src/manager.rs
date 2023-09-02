@@ -1,37 +1,25 @@
-use std::{fs, path::Path};
-use home::home_dir;
 use crate::{config::Config, database::Database};
+use home::home_dir;
+use std::{fs, path::Path};
 
 pub enum ManagerError {
     BadFormat,
     WriteError,
-    UnknownError
+    UnknownError,
 }
 
 pub struct Manager;
 impl Manager {
     pub fn get_config_path() -> String {
-        home_dir()
-            .unwrap()
-            .display()
-            .to_string()
-            + "/.config/kamiya/config.toml"
+        home_dir().unwrap().display().to_string() + "/.config/kamiya/config.toml"
     }
 
     pub fn get_database_path() -> String {
-        home_dir()
-            .unwrap()
-            .display()
-            .to_string()
-            + "/.config/kamiya/database.json"
+        home_dir().unwrap().display().to_string() + "/.config/kamiya/database.json"
     }
 
     pub fn get_config_dir() -> String {
-        home_dir()
-            .unwrap()
-            .display()
-            .to_string()
-            + "/.config/kamiya"
+        home_dir().unwrap().display().to_string() + "/.config/kamiya"
     }
 
     pub fn load_config() -> Config {
@@ -59,8 +47,7 @@ impl Manager {
     }
 
     pub fn write_database(db: Database) {
-        let config_string =
-            toml::to_string(&db).expect("Error when parsing the database file.");
+        let config_string = toml::to_string(&db).expect("Error when parsing the database file.");
         fs::write(Self::get_database_path(), config_string).expect("Unable to write data to file.");
     }
 
@@ -78,11 +65,19 @@ impl Manager {
         }
 
         if !Path::new(&Self::get_config_path()).exists() {
-            fs::write(Self::get_config_path(), toml::to_string(&Config::default()).unwrap()).expect("Failed to create new config file.");
+            fs::write(
+                Self::get_config_path(),
+                toml::to_string(&Config::default()).unwrap(),
+            )
+            .expect("Failed to create new config file.");
         }
 
         if !Path::new(&Self::get_database_path()).exists() {
-            fs::write(Self::get_database_path(), toml::to_string(&Database::default()).unwrap()).expect("Failed to create new database file.");
+            fs::write(
+                Self::get_database_path(),
+                toml::to_string(&Database::default()).unwrap(),
+            )
+            .expect("Failed to create new database file.");
         }
     }
 }
