@@ -6,8 +6,6 @@ use std::{fs, path::Path, process::exit};
 
 mod actions;
 mod args;
-mod config;
-mod database;
 mod manager;
 mod term;
 mod utils;

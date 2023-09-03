@@ -1,10 +1,11 @@
 use crate::{
-    config::Config,
-    database::{Database, Note},
     manager::Manager,
     term::{AskDefaultAnswers, Term},
     utils::tempfile::TempFile,
 };
+
+use kamiya_config::Config;
+use kamiya_database::{Database, DatabaseError, Note};
 use std::{
     fs, mem,
     path::Path,
@@ -19,11 +20,21 @@ impl Actions {
         let mut database: Database = Manager::load_database();
 
         if name.is_empty() {
-            if !config.get_template().contains("&i") {
-                Term::fatal("You give empty name and your `name_template` option in config not contain `&i` symbol. Cannot continue.");
-                exit(1);
-            }
-            name.push_str(&database.generate_name(&config.get_template()));
+            let new_name = match database.generate_name(&config.get_template()) {
+                Ok(name) => name,
+                Err(e) => match e {
+                    DatabaseError::NoteNotFound => {
+                        Term::fatal("Note not found!");
+                        exit(1);
+                    }
+                    DatabaseError::BadTemplate => {
+                        Term::fatal("Your configuation have bad template name. Ensure that `name_template` option have `&i`.");
+                        exit(1);
+                    }
+                },
+            };
+            name.push_str(&new_name);
+            mem::forget(new_name);
         }
         mem::forget(config);
 
@@ -51,7 +62,16 @@ impl Actions {
             exit(1);
         }
 
-        database.set_note_description(name, desc);
+        match database.set_note_description(name, desc) {
+            Ok(_) => {}
+            Err(e) => match e {
+                DatabaseError::NoteNotFound => {
+                    Term::fatal("Note not found!");
+                    exit(1);
+                }
+                _ => panic!("Unrelated error occured."),
+            },
+        }
         Manager::write_database(database);
         Term::success("Description changed.");
     }
@@ -86,7 +106,16 @@ impl Actions {
             exit(1);
         }
 
-        database.set_note_name(old_name, new_name);
+        match database.set_note_name(old_name, new_name) {
+            Ok(_) => {}
+            Err(e) => match e {
+                DatabaseError::NoteNotFound => {
+                    Term::fatal("Note not found!");
+                    exit(1);
+                }
+                _ => panic!("Unrelated error occured."),
+            },
+        }
         Manager::write_database(database);
         Term::success(&format!(
             "Note '{}' now have name '{}'.",
@@ -148,10 +177,6 @@ impl Actions {
     pub fn save(name: &str, filename: &str) {
         let database: Database = Manager::load_database();
 
-        if !database.note_exists(name) {
-            Term::fatal("Note not found!");
-            exit(1);
-        }
         let mut new_filename = String::new();
         if filename.is_empty() {
             new_filename = name.to_string() + ".txt";
@@ -160,7 +185,16 @@ impl Actions {
         }
 
         Term::work("Writing note content to file...");
-        let note = database.get_note(name);
+        let note = match database.get_note(name) {
+            Ok(note) => note,
+            Err(e) => match e {
+                DatabaseError::NoteNotFound => {
+                    Term::fatal("Note not found!");
+                    exit(1);
+                }
+                _ => panic!("Unrelated error occured."),
+            },
+        };
         match fs::write(new_filename, &note.content) {
             Ok(_s) => {
                 Term::success(
@@ -178,12 +212,16 @@ impl Actions {
         let config: Config = Manager::load_config();
         let mut database: Database = Manager::load_database();
 
-        if !database.note_exists(name) {
-            Term::fatal("Note not found!");
-            exit(1);
-        }
-
-        let note = database.get_note(name);
+        let note = match database.get_note(name) {
+            Ok(note) => note,
+            Err(e) => match e {
+                DatabaseError::NoteNotFound => {
+                    Term::fatal("Note not found!");
+                    exit(1);
+                }
+                _ => panic!("Unrelated error occured."),
+            },
+        };
         let tmpfile_initializer = TempFile::new(name);
         let tmpfile = match tmpfile_initializer {
             Ok(provider) => provider,
@@ -229,7 +267,7 @@ impl Actions {
         Term::work("Recording changes...");
         let new_content: String = fs::read_to_string(tmpfile_path).expect("Error");
         tmpfile.destroy().unwrap();
-        database.set_note_content(name, &new_content);
+        database.set_note_content(name, &new_content).unwrap();
         Manager::write_database(database);
         Term::success("Changes have been saved.");
     }
@@ -237,11 +275,16 @@ impl Actions {
     pub fn get(name: &str) {
         let database: Database = Manager::load_database();
 
-        if !database.note_exists(name) {
-            Term::fatal("Note not found!");
-            exit(1);
-        }
-        let note = database.get_note(name);
+        let note = match database.get_note(name) {
+            Ok(note) => note,
+            Err(e) => match e {
+                DatabaseError::NoteNotFound => {
+                    Term::fatal("Note not found!");
+                    exit(1);
+                }
+                _ => panic!("Unrelated error occured."),
+            },
+        };
 
         println!("{}", note.content.trim_end());
     }
@@ -255,7 +298,16 @@ impl Actions {
             exit(1);
         }
 
-        database.remove_note(name);
+        match database.remove_note(name) {
+            Ok(_) => {}
+            Err(e) => match e {
+                DatabaseError::NoteNotFound => {
+                    Term::fatal("Note not found!");
+                    exit(1);
+                }
+                _ => panic!("Unrelated error occured."),
+            },
+        }
         Manager::write_database(database);
         Term::success("Note deleted!.");
     }
@@ -319,8 +371,10 @@ impl Actions {
                         "Replacing data of `{}` with from new one.",
                         &i.name
                     ));
-                    database.set_note_content(&i.name, &i.content);
-                    database.set_note_description(&i.name, &i.description);
+                    database.set_note_content(&i.name, &i.content).unwrap();
+                    database
+                        .set_note_description(&i.name, &i.description)
+                        .unwrap();
                 }
 
                 if interactive {
@@ -337,8 +391,10 @@ impl Actions {
                                 "Replacing data of `{}` with from new one.",
                                 &i.name
                             ));
-                            database.set_note_content(&i.name, &i.content);
-                            database.set_note_description(&i.name, &i.description);
+                            database.set_note_content(&i.name, &i.content).unwrap();
+                            database
+                                .set_note_description(&i.name, &i.description)
+                                .unwrap();
                         }
                         AskDefaultAnswers::No => Term::warn("Skipping..."),
                     }

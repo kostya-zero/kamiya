@@ -1,5 +1,6 @@
-use crate::{config::Config, database::Database};
 use home::home_dir;
+use kamiya_config::Config;
+use kamiya_database::Database;
 use std::{fs, path::Path};
 
 pub enum ManagerError {

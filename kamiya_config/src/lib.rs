@@ -5,7 +5,6 @@ pub struct Options {
     pub name_template: String,
     pub editor: String,
 }
-
 #[derive(Serialize, Deserialize)]
 pub struct Config {
     options: Options,
