@@ -151,7 +151,7 @@ impl Actions {
             }
             Term::info(&format!(
                 "Current file extension: {}",
-                config.get_extension()
+                config.get_template()
             ));
         } else {
             if !template.contains("&i") {
