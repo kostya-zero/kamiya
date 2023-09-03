@@ -93,6 +93,11 @@ fn main() {
 
             Actions::editor(editor);
         }
+        Some(("template", _sub)) => {
+            let template: &str = _sub.get_one::<String>("template").unwrap();
+
+            Actions::template(template);
+        }
         Some(("rm", _sub)) => {
             let name: &str = _sub.get_one::<String>("name").unwrap();
 

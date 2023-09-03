@@ -2,8 +2,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct Options {
-    pub name_template: String,
-    pub editor: String,
+    name_template: String,
+    editor: String,
 }
 #[derive(Serialize, Deserialize)]
 pub struct Config {
@@ -24,6 +24,10 @@ impl Default for Config {
 impl Config {
     pub fn get_template(&self) -> String {
         self.options.name_template.clone()
+    }
+
+    pub fn set_template(&mut self, new_template: &str) {
+        self.options.name_template = String::from(new_template);
     }
 
     pub fn get_editor(&self) -> String {

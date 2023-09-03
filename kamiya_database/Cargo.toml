@@ -1,5 +1,7 @@
 [package]
 name = "kamiya_database"
+description = "Library for interaction with Kamiya database."
+readme = "../README.md"
 version = "0.1.0"
 edition = "2021"
 

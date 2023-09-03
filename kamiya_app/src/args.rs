@@ -107,6 +107,15 @@ pub fn args() -> Command {
                         .default_value("")
                         .num_args(1),
                 ),
+            Command::new("template")
+                .about("Template for new notes.")
+                .arg(
+                    Arg::new("template")
+                        .help("New template.")
+                        .value_parser(value_parser!(String))
+                        .default_value("")
+                        .num_args(1),
+                ),
             Command::new("rm")
                 .about("Delete a note from the storage.")
                 .arg(

@@ -140,6 +140,30 @@ impl Actions {
         }
     }
 
+    pub fn template(template: &str) {
+        let mut config: Config = Manager::load_config();
+
+        if template.is_empty() {
+            if config.get_template().is_empty() {
+                Term::info("Template not set. Set it manually.");
+                Term::hint("Example: kamiya template Note&i");
+                exit(1)
+            }
+            Term::info(&format!(
+                "Current file extension: {}",
+                config.get_extension()
+            ));
+        } else {
+            if !template.contains("&i") {
+                Term::fatal("Template must contain `&i`.");
+                exit(1);
+            }
+            config.set_template(template);
+            Manager::write_config(config);
+            Term::success(&format!("Template changed to {}", template));
+        }
+    }
+
     pub fn list() {
         let database: Database = Manager::load_database();
         let notes: Vec<Note> = database.get_notes();
