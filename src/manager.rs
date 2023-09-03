@@ -14,6 +14,10 @@ impl Manager {
         home_dir().unwrap().display().to_string() + "/.config/kamiya/config.toml"
     }
 
+    pub fn get_old_config_path() -> String {
+        home_dir().unwrap().display().to_string() + "/.config/kamiya.yaml"
+    }
+
     pub fn get_database_path() -> String {
         home_dir().unwrap().display().to_string() + "/.config/kamiya/database.json"
     }

@@ -2,7 +2,7 @@ use crate::args::args;
 use crate::term::Term;
 use actions::Actions;
 use manager::Manager;
-use std::{path::Path, process::exit};
+use std::{fs, path::Path, process::exit};
 
 mod actions;
 mod args;
@@ -15,6 +15,14 @@ mod utils;
 fn main() {
     if !Manager::check_db() || !Manager::check_config() {
         Manager::make_default();
+    }
+
+    if Path::new(&Manager::get_old_config_path()).exists() {
+        Term::warn("In Kamiya 0.6.0 database structure has been changed. You old database has been saved as `kamiya.yaml.bak`.");
+        Term::warn("You should import all your old notes manually. Sorry for this!");
+        let old_database = fs::read_to_string(Manager::get_old_config_path()).unwrap();
+        fs::write(Manager::get_old_config_path() + ".bak", old_database).unwrap();
+        fs::remove_file(Manager::get_old_config_path()).unwrap();
     }
 
     let args = args().get_matches();
