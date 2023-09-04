@@ -246,8 +246,7 @@ impl Actions {
                 _ => panic!("Unrelated error occured."),
             },
         };
-        let tmpfile_initializer = TempFile::new(name);
-        let tmpfile = match tmpfile_initializer {
+        let tmpfile = match TempFile::new(name) {
             Ok(provider) => provider,
             Err(_) => {
                 Term::fatal("Failed initialize temporary file due to unknown error.");
@@ -255,7 +254,7 @@ impl Actions {
             }
         };
 
-        let tmpfile_path: &str = tmpfile.init().unwrap();
+        let tmpfile_path: &str = tmpfile.get_path();
         fs::write(tmpfile_path, note.content.clone())
             .expect("Failed to write content of note to temporary file.");
         let editor_name: String = config.get_editor().to_string();
