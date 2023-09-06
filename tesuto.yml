@@ -1,0 +1,20 @@
+name: Kamiya
+stages:
+  build:
+    before_script: []
+    script:
+    - cargo build
+    variables: {}
+    quite: false
+  clippy:
+    before_script: []
+    script:
+    - cargo clippy
+    variables: {}
+    quite: false
+  release:
+    before_script: []
+    script:
+      - cargo build --release
+    variables: {}
+    quite: false
