@@ -75,7 +75,7 @@ fn main() {
 
             Actions::get(name);
         }
-        Some(("edit", _sub)) => {
+        Some(("open", _sub)) => {
             let name: &str = _sub.get_one::<String>("name").unwrap();
 
             if name.is_empty() {
@@ -83,7 +83,7 @@ fn main() {
                 exit(1);
             }
 
-            Actions::edit(name);
+            Actions::open(name);
         }
         Some(("editor", _sub)) => {
             let editor: &str = _sub

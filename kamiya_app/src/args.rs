@@ -89,15 +89,13 @@ pub fn args() -> Command {
                         .required(true)
                         .value_parser(clap::value_parser!(String)),
                 ),
-            Command::new("edit")
-                .about("Edit the note using the editor.")
-                .arg(
-                    Arg::new("name")
-                        .help("Name of the note to edit.")
-                        .num_args(1)
-                        .required(true)
-                        .value_parser(clap::value_parser!(String)),
-                ),
+            Command::new("open").about("Open note in your editor.").arg(
+                Arg::new("name")
+                    .help("Name of note to open.")
+                    .num_args(1)
+                    .required(true)
+                    .value_parser(clap::value_parser!(String)),
+            ),
             Command::new("editor")
                 .about("Set editor for editing notes or check which are using now.")
                 .arg(

@@ -232,7 +232,7 @@ impl Actions {
         }
     }
 
-    pub fn edit(name: &str) {
+    pub fn open(name: &str) {
         let config: Config = Manager::load_config();
         let mut database: Database = Manager::load_database();
 
