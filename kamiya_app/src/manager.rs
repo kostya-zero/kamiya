@@ -3,12 +3,6 @@ use kamiya_config::Config;
 use kamiya_database::Database;
 use std::{fs, path::Path};
 
-pub enum ManagerError {
-    BadFormat,
-    WriteError,
-    UnknownError,
-}
-
 pub struct Manager;
 impl Manager {
     pub fn get_config_path() -> String {

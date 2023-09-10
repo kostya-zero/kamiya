@@ -157,7 +157,7 @@ pub fn args() -> Command {
                     .short('p')
                     .long("path")
                     .value_parser(value_parser!(String))
-                    .default_value("kamiya_exported.yml"),
+                    .default_value("kamiya_exported.json"),
             ),
             Command::new("import")
                 .about("Import notes from new database.")
