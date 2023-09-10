@@ -254,8 +254,8 @@ impl Actions {
             }
         };
 
-        let tmpfile_path: &str = tmpfile.get_path();
-        fs::write(tmpfile_path, note.content.clone())
+        let tmpfile_path: String = tmpfile.get_path();
+        fs::write(tmpfile_path.clone(), note.content.clone())
             .expect("Failed to write content of note to temporary file.");
         let editor_name: String = config.get_editor().to_string();
         if editor_name.is_empty() {
@@ -267,7 +267,7 @@ impl Actions {
         Term::work(format!("Launching {}", editor_name).as_str());
 
         let mut cmd = Command::new(editor_name);
-        cmd.args([tmpfile_path])
+        cmd.args([tmpfile_path.clone()])
             .stdout(Stdio::inherit())
             .stdin(Stdio::inherit())
             .stderr(Stdio::inherit());
