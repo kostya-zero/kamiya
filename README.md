@@ -107,18 +107,22 @@ kamiya take --help # Get help for `take` command.
 
 ### ⚙️ Configuration
 
-The first time Kamiya is started, it will create a configuration file in the user's `.config` directory called `kamiya.yml`.
-It's a YAML file and has the following structure.
+The first time Kamiya is started, it will create a configuration file at user's home directory at `.config/kamiya/config.toml`.
+It's a TOML file and has the following structure.
 
-```yml
-options:
-    name_template: NewNote&i
-    editor: nano
-entries: []
+```toml
+[options]
+name_template = "Note&i"
+editor = "nano"
 ```
 - `name_template` - An example of a title for a new note. Note that the contents of this option must contain `&i`, otherwise the program will give an error.
 - `editor` - Which editor will be opened to edit note content.
-- `entries` - Array of notes that you have saved. **Do not edit.**
+
+
+You can edit this options with Kamiya by using this commands:
+
+- `editor` - set editor.
+- `template` set note name template.
 
 ### 📨 Reporting problems
 
