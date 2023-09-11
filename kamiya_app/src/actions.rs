@@ -88,7 +88,13 @@ impl Actions {
             name.push_str(Path::new(filename).file_stem().unwrap().to_str().unwrap());
         }
 
-        let file_content: String = fs::read_to_string(filename).expect("Failed to read file.");
+        let file_content: String = match fs::read_to_string(filename) {
+            Ok(content) => content,
+            Err(_) => {
+                Term::fatal("Failed to read file.");
+                exit(1);
+            }
+        };
         let new_note: Note = Note {
             name: name.clone(),
             content: file_content,
@@ -96,7 +102,7 @@ impl Actions {
         };
         database.add_note(new_note);
         Manager::write_database(database);
-        Term::success(&format!("Note have been added to database as '{}'.", name));
+        Term::success(format!("Note have been added to database as '{}'.", name).as_str());
     }
 
     pub fn rename(old_name: &str, new_name: &str) {
@@ -219,7 +225,7 @@ impl Actions {
                 _ => panic!("Unrelated error occured."),
             },
         };
-        match fs::write(new_filename, &note.content) {
+        match fs::write(new_filename, note.content) {
             Ok(_s) => {
                 Term::success(
                     format!("Note content saved as file called '{}'.", filename).as_str(),
@@ -313,7 +319,6 @@ impl Actions {
     }
 
     pub fn rm(name: &str) {
-        let _config: Config = Manager::load_config();
         let mut database: Database = Manager::load_database();
 
         if !database.note_exists(name) {
@@ -374,7 +379,6 @@ impl Actions {
     }
 
     pub fn import(filename: &str, replace: bool, interactive: bool) {
-        let config: Config = Manager::load_config();
         let mut database: Database = Manager::load_database();
 
         if !Path::new(filename).exists() {
@@ -382,10 +386,28 @@ impl Actions {
             exit(1);
         }
 
+        if !Path::new(filename).extension().unwrap().eq("json") {
+            Term::fatal("Database file must be in JSON format.");
+            exit(1);
+        }
+
         Term::work("Getting new database content...");
-        let new_db_file: String = fs::read_to_string(filename).expect("Failed to read file.");
-        let new_db: Database = serde_json::from_str(new_db_file.as_str())
-            .expect("Failed to import notes. Maybe, bad config formatting.");
+        let new_db_file: String = match fs::read_to_string(filename) {
+            Ok(path) => path,
+            Err(_) => {
+                Term::fatal(
+                    "Failed to read new database file. Maybe it's corrupted.",
+                );
+                exit(1);
+            }
+        };
+        let new_db: Database = match serde_json::from_str(new_db_file.as_str()) {
+            Ok(path) => path,
+            Err(_) => {
+                Term::fatal("Failed to serialize new database because it's bad formatted.");
+                exit(1);
+            },
+        };
         Term::work("Importing...");
         for i in new_db.get_notes() {
             if database.note_exists(&i.name) {
@@ -436,10 +458,7 @@ impl Actions {
                 database.add_note(i);
             }
         }
-        let config_content: String =
-            serde_json::to_string(&config).expect("Failed to format config.");
-        fs::write(Manager::get_config_path(), config_content)
-            .expect("Failed to write content to file.");
+        Manager::write_database(database);
         Term::success("Import finished.");
     }
 }
