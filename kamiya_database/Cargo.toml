@@ -5,6 +5,7 @@ readme = "../README.md"
 license = "GPL-3.0"
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/kostya-zero/kamiya"
 
 [dependencies]
 serde = { version = "1.0.160", features = ["derive"] }
