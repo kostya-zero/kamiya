@@ -364,15 +364,6 @@ impl Actions {
         }
     }
 
-    pub fn size() {
-        let file_size = fs::metadata(Manager::get_config_path())
-            .expect("Failed to get metadata about config.")
-            .len();
-
-        Term::display_data("Storage size", file_size.to_string().as_str());
-        Term::hint("Storage size is displayed as number of bytes.");
-    }
-
     pub fn import(filename: &str, replace: bool, interactive: bool) {
         let mut database: Database = Manager::load_database();
 

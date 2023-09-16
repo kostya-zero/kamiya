@@ -116,9 +116,6 @@ fn main() {
         Some(("list", _sub)) => {
             Actions::list();
         }
-        Some(("size", _sub)) => {
-            Actions::size();
-        }
         Some(("save", _sub)) => {
             let name: &str = _sub.get_one::<String>("name").unwrap();
             let filename: &str = _sub.get_one::<String>("filename").unwrap();
