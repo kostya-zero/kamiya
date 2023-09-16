@@ -133,7 +133,7 @@ pub fn args() -> Command {
                         .value_parser(clap::value_parser!(String)),
                 ),
             Command::new("list").about("Get a list of the notes in the storage."),
-            Command::new("db").about("Show information about database status."),
+            Command::new("size").about("Get size of database."),
             Command::new("save")
                 .about("Save note from storage as file.")
                 .args([

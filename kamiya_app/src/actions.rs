@@ -364,18 +364,13 @@ impl Actions {
         }
     }
 
-    pub fn db() {
-        let database: Database = Manager::load_database();
-
+    pub fn size() {
         let file_size = fs::metadata(Manager::get_config_path())
             .expect("Failed to get metadata about config.")
             .len();
-        let notes_count = database.notes_count();
 
-        Term::title("Information about storage.");
         Term::display_data("Storage size", file_size.to_string().as_str());
-        Term::display_data("Notes in storage", notes_count.to_string().as_str());
-        Term::hint("Storage size are displayed as nubmer of bytes.");
+        Term::hint("Storage size is displayed as number of bytes.");
     }
 
     pub fn import(filename: &str, replace: bool, interactive: bool) {
@@ -395,9 +390,7 @@ impl Actions {
         let new_db_file: String = match fs::read_to_string(filename) {
             Ok(path) => path,
             Err(_) => {
-                Term::fatal(
-                    "Failed to read new database file. Maybe it's corrupted.",
-                );
+                Term::fatal("Failed to read new database file. Maybe it's corrupted.");
                 exit(1);
             }
         };
@@ -406,7 +399,7 @@ impl Actions {
             Err(_) => {
                 Term::fatal("Failed to serialize new database because it's bad formatted.");
                 exit(1);
-            },
+            }
         };
         Term::work("Importing...");
         for i in new_db.get_notes() {

@@ -116,8 +116,8 @@ fn main() {
         Some(("list", _sub)) => {
             Actions::list();
         }
-        Some(("db", _sub)) => {
-            Actions::db();
+        Some(("size", _sub)) => {
+            Actions::size();
         }
         Some(("save", _sub)) => {
             let name: &str = _sub.get_one::<String>("name").unwrap();
