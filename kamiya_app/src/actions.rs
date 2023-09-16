@@ -1,8 +1,8 @@
 use crate::{
     manager::Manager,
     term::{AskDefaultAnswers, Term},
-    utils::tempfile::TempFile,
 };
+use kamiya_utils::tempfile::TempFile;
 
 use kamiya_config::Config;
 use kamiya_database::{Database, DatabaseError, Note};
@@ -204,14 +204,12 @@ impl Actions {
         }
     }
 
-    pub fn save(name: &str, filename: &str) {
+    pub fn save(name: &str, filename: &mut String) {
         let database: Database = Manager::load_database();
 
-        let mut new_filename = String::new();
         if filename.is_empty() {
-            new_filename = name.to_string() + ".txt";
-        } else {
-            new_filename = filename.to_string();
+            filename.push_str(name);
+            filename.push_str(".md");
         }
 
         Term::work("Writing note content to file...");
@@ -225,7 +223,7 @@ impl Actions {
                 _ => panic!("Unrelated error occured."),
             },
         };
-        match fs::write(new_filename, note.content) {
+        match fs::write(&filename, note.content) {
             Ok(_s) => {
                 Term::success(
                     format!("Note content saved as file called '{}'.", filename).as_str(),
@@ -318,7 +316,7 @@ impl Actions {
         println!("{}", note.content.trim_end());
     }
 
-    pub fn rm(name: &str) {
+    pub fn delete(name: &str) {
         let mut database: Database = Manager::load_database();
 
         if !database.note_exists(name) {

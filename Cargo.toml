@@ -2,7 +2,8 @@
 members = [
   "kamiya_app",
   "kamiya_database",
-  "kamiya_config"
+  "kamiya_config",
+  "kamiya_utils",
 ]
 
 resolver = "2"

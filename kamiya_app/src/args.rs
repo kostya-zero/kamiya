@@ -114,7 +114,7 @@ pub fn args() -> Command {
                         .default_value("")
                         .num_args(1),
                 ),
-            Command::new("rm")
+            Command::new("delete")
                 .about("Delete a note from the storage.")
                 .arg(
                     Arg::new("name")

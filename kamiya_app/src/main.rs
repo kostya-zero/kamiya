@@ -8,7 +8,6 @@ mod actions;
 mod args;
 mod manager;
 mod term;
-mod utils;
 
 fn main() {
     if !Manager::check_db() || !Manager::check_config() {
@@ -98,7 +97,7 @@ fn main() {
 
             Actions::template(template);
         }
-        Some(("rm", _sub)) => {
+        Some(("delete", _sub)) => {
             let name: &str = _sub.get_one::<String>("name").unwrap();
 
             if name.is_empty() {
@@ -106,7 +105,7 @@ fn main() {
                 exit(1);
             }
 
-            Actions::rm(name);
+            Actions::delete(name);
         }
         Some(("search", _sub)) => {
             let pattern: &str = _sub.get_one::<String>("pattern").unwrap();
@@ -118,7 +117,7 @@ fn main() {
         }
         Some(("save", _sub)) => {
             let name: &str = _sub.get_one::<String>("name").unwrap();
-            let filename: &str = _sub.get_one::<String>("filename").unwrap();
+            let mut filename: String = _sub.get_one::<String>("filename").unwrap().to_string();
 
             if name.is_empty() {
                 Term::fatal("You didn't give a name for the note.");
@@ -135,7 +134,7 @@ fn main() {
                 exit(1);
             }
 
-            Actions::save(name, filename);
+            Actions::save(name, &mut filename);
         }
         Some(("export", _sub)) => {
             let path: &str = _sub.get_one::<String>("path").unwrap();

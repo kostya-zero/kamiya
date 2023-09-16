@@ -1,0 +1,8 @@
+[package]
+name = "kamiya_utils"
+description = "Utilities for Kamiya."
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+home = "0.5.4"

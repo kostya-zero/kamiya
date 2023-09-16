@@ -13,6 +13,10 @@ edition = "2021"
 version = "0.1.0"
 path = "../kamiya_database"
 
+[dependencies.kamiya_utils]
+version = "0.1.0"
+path = "../kamiya_utils"
+
 [dependencies.kamiya_config]
 version = "0.1.0"
 path = "../kamiya_config"
