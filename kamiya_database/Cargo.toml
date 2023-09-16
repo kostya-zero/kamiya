@@ -3,7 +3,7 @@ name = "kamiya_database"
 description = "Library for interaction with Kamiya database."
 readme = "../README.md"
 license = "GPL-3.0"
-version = "0.1.0"
+version = "0.1.1-dev"
 edition = "2021"
 repository = "https://github.com/kostya-zero/kamiya"
 

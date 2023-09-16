@@ -53,10 +53,6 @@ impl Term {
         }
     }
 
-    pub fn display_data(name: &str, data: &str) {
-        println!("\x1b[1m   {}:\x1b[0m {}", name, data);
-    }
-
     pub fn info(msg: &str) {
         println!("\x1b[1m \x1b[0m\x1b[1m {}\x1b[0m", msg);
     }
