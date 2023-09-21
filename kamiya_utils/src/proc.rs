@@ -23,12 +23,11 @@ pub fn run_editor(editor: &str, path: &str) -> Result<(), ProcessError> {
             }
 
             Ok(())
-        },
-        Err(e) => {
-            match e.kind() {
+        }
+        Err(e) => match e.kind() {
             ErrorKind::Interrupted => Err(ProcessError::Interrupted),
             ErrorKind::NotFound => Err(ProcessError::ExecutableNotFound),
-            _ => Err(ProcessError::Unknown)
-        }},
+            _ => Err(ProcessError::Unknown),
+        },
     }
 }

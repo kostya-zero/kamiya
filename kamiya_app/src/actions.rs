@@ -2,15 +2,14 @@ use crate::{
     manager::Manager,
     term::{AskDefaultAnswers, Term},
 };
-use kamiya_utils::{tempfile::TempFile, proc::{run_editor, ProcessError}};
+use kamiya_utils::{
+    proc::{run_editor, ProcessError},
+    tempfile::TempFile,
+};
 
 use kamiya_config::Config;
 use kamiya_database::{Database, DatabaseError, Note};
-use std::{
-    fs, mem,
-    path::Path,
-    process::{exit, Command, Stdio},
-};
+use std::{fs, mem, path::Path, process::exit};
 
 pub struct Actions;
 
@@ -271,29 +270,35 @@ impl Actions {
         Term::work(format!("Launching {}", editor_name).as_str());
 
         match run_editor(&editor_name, &tmpfile_path) {
-            Ok(_) => {},
-            Err(e) => {
-                match e {
-                    ProcessError::BadExitCode => {
-                        Term::fatal("Editor has exited with bad exit code.");
-                        tmpfile.destroy().expect("Failed to destroy temporary file.");
-                        exit(1);
-                    },
-                    ProcessError::Interrupted => {
-                        Term::fatal("Editor process has been interrupted. Exiting...");
-                        tmpfile.destroy().expect("Failed to destroy temporary file.");
-                        exit(1);
-                    },
-                    ProcessError::ExecutableNotFound => {
-                        Term::fatal("Editor executable not found. Exiting...");
-                        tmpfile.destroy().expect("Failed to destroy temporary file.");
-                        exit(1);
-                    },
-                    ProcessError::Unknown => {
-                        Term::fatal("Unknown error occured. Exiting...");
-                        tmpfile.destroy().expect("Failed to destroy temporary file.");
-                        exit(1);
-                    },
+            Ok(_) => {}
+            Err(e) => match e {
+                ProcessError::BadExitCode => {
+                    Term::fatal("Editor has exited with bad exit code.");
+                    tmpfile
+                        .destroy()
+                        .expect("Failed to destroy temporary file.");
+                    exit(1);
+                }
+                ProcessError::Interrupted => {
+                    Term::fatal("Editor process has been interrupted. Exiting...");
+                    tmpfile
+                        .destroy()
+                        .expect("Failed to destroy temporary file.");
+                    exit(1);
+                }
+                ProcessError::ExecutableNotFound => {
+                    Term::fatal("Editor executable not found. Exiting...");
+                    tmpfile
+                        .destroy()
+                        .expect("Failed to destroy temporary file.");
+                    exit(1);
+                }
+                ProcessError::Unknown => {
+                    Term::fatal("Unknown error occured. Exiting...");
+                    tmpfile
+                        .destroy()
+                        .expect("Failed to destroy temporary file.");
+                    exit(1);
                 }
             },
         }

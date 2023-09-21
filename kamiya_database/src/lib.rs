@@ -15,7 +15,7 @@ pub struct Database {
     notes: Vec<Note>,
 }
 
-// Errors which may occur. 
+// Errors which may occur.
 #[derive(Debug)]
 pub enum DatabaseError {
     NoteNotFound,
