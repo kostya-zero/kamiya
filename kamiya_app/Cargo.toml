@@ -10,7 +10,7 @@ version = "0.6.1-dev"
 edition = "2021"
 
 [dependencies.kamiya_database]
-version = "0.1.0"
+version = "0.1.1-dev"
 path = "../kamiya_database"
 
 [dependencies.kamiya_utils]

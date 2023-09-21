@@ -2,7 +2,7 @@ use crate::{
     manager::Manager,
     term::{AskDefaultAnswers, Term},
 };
-use kamiya_utils::tempfile::TempFile;
+use kamiya_utils::{tempfile::TempFile, proc::{run_editor, ProcessError}};
 
 use kamiya_config::Config;
 use kamiya_database::{Database, DatabaseError, Note};
@@ -270,28 +270,35 @@ impl Actions {
 
         Term::work(format!("Launching {}", editor_name).as_str());
 
-        let mut cmd = Command::new(editor_name);
-        cmd.args([tmpfile_path.clone()])
-            .stdout(Stdio::inherit())
-            .stdin(Stdio::inherit())
-            .stderr(Stdio::inherit());
-
-        let result = cmd.output();
-
-        if result.is_err() {
-            Term::fatal("Failed to launch editor!");
-            exit(1);
+        match run_editor(&editor_name, &tmpfile_path) {
+            Ok(_) => {},
+            Err(e) => {
+                match e {
+                    ProcessError::BadExitCode => {
+                        Term::fatal("Editor has exited with bad exit code.");
+                        tmpfile.destroy().expect("Failed to destroy temporary file.");
+                        exit(1);
+                    },
+                    ProcessError::Interrupted => {
+                        Term::fatal("Editor process has been interrupted. Exiting...");
+                        tmpfile.destroy().expect("Failed to destroy temporary file.");
+                        exit(1);
+                    },
+                    ProcessError::ExecutableNotFound => {
+                        Term::fatal("Editor executable not found. Exiting...");
+                        tmpfile.destroy().expect("Failed to destroy temporary file.");
+                        exit(1);
+                    },
+                    ProcessError::Unknown => {
+                        Term::fatal("Unknown error occured. Exiting...");
+                        tmpfile.destroy().expect("Failed to destroy temporary file.");
+                        exit(1);
+                    },
+                }
+            },
         }
 
-        let status = result.unwrap();
-
-        if !status.status.success() {
-            Term::fatal("Editor finished their work with bad exit code.");
-            tmpfile.destroy().unwrap();
-            exit(1);
-        }
-
-        Term::work("Recording changes...");
+        Term::work("Saving changes...");
         let new_content: String = fs::read_to_string(tmpfile_path).expect("Error");
         tmpfile.destroy().unwrap();
         database.set_note_content(name, &new_content).unwrap();
